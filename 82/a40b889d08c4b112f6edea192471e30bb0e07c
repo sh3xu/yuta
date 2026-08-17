@@ -1,0 +1,49 @@
+apps/desktop/src/features/debug/DebugPanel.tsx
+  s_25d5404da13888::t_58d260f0578fc5 21-23
+  s_25d5404da13888::t_33e66ee22d0a5f 10-12
+apps/desktop/src/app/session.ts
+  s_25d5404da13888::t_df6917299dd6e7 93-95
+  s_25d5404da13888::t_3af31b33aa4236 28-30
+packages/ai/src/orchestrator.ts
+  s_25d5404da13888::t_ceefbea7d66885 28
+packages/ai/src/prompts.ts
+  s_25d5404da13888::t_75a202571d4021 17-19
+apps/desktop/src/stores/companion-store.ts
+  s_25d5404da13888::t_dc5c0693e1cb12 68-70
+  s_25d5404da13888::t_355d113b0d4f92 20-22
+packages/character-engine/src/live2d/renderer.ts
+  s_25d5404da13888::t_ab28178f582a99 48
+  s_25d5404da13888::t_45b81c4332329a 116
+  s_25d5404da13888::t_1b15c4442be217 154-157
+  s_25d5404da13888::t_7b96964ff1b722 94-97
+  s_25d5404da13888::t_3dd85722ff734f 111
+  s_25d5404da13888::t_e3e3b306b54b71 158-159
+apps/desktop/src/features/character/CharacterStage.tsx
+  s_ccf19b2795b93b::t_fc1d24ce674216 18-26
+packages/emotion-engine/src/planner.ts
+  s_ccf19b2795b93b::t_ad937b1a84d6a4 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "82a40b889d08c4b112f6edea192471e30bb0e07c",
+  "prompts": {},
+  "sessions": {
+    "s_25d5404da13888": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "28164b82-03ac-455a-b01d-1c6381a2c99f",
+        "model": "default"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    },
+    "s_ccf19b2795b93b": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a3a44b8b-4d68-4aff-97d7-52ef784bbc55",
+        "model": "default"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    }
+  }
+}
