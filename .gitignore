@@ -1,0 +1,12 @@
+node_modules
+dist
+target
+.nx
+.tmp-cubism
+*.log
+.DS_Store
+Thumbs.db
+apps/desktop/public/lib/live2dcubismcore.min.js
+.idea
+.vscode/*
+!.vscode/extensions.json

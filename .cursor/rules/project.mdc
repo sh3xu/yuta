@@ -1,0 +1,20 @@
+---
+description: Core Yuta architecture, scope, and non-negotiables
+alwaysApply: true
+---
+
+# Yuta
+
+Local-first AI companion. Desktop shell is Tauri + Vite. Domain logic lives in `packages/*` so a future web app can reuse it.
+
+- Keep packages focused. Do not import `@yuta/ai` from `@yuta/character-engine` or `@yuta/emotion-engine`.
+- Character rendering consumes only `CharacterState`.
+- AI output is JSON validated with Zod against the closed emotion/action lists in `@yuta/shared`.
+- Orchestration stays in TypeScript. Rust is for FS, OS paths, lifecycle, and secret storage.
+- Personal data stays on disk via the filesystem adapter. No cloud memory.
+- User-supplied Gemini key only. Never ship or commit API keys. Never put production secrets in `.env`.
+- Prefer extending an existing package over adding a new abstraction.
+- No vector DB, cloud backend, or extra LLM providers unless explicitly requested.
+- Comments only when needed. Prefix with `NOTE:`, `TODO:`, `FIXME:`, `HACK:`, or `BUG:`.
+- No emojis in logs or comments.
+- Reuse shared helpers. Do not duplicate retrieval, parsing, or UI primitives.

@@ -1,0 +1,14 @@
+---
+description: TypeScript and React conventions
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# TypeScript
+
+- Strict TypeScript. Use `import type` for type-only imports.
+- Export public APIs from each package `src/index.ts`. App code imports `@yuta/<package>`, not deep paths.
+- Validate external/AI data with Zod in `@yuta/ai`. Do not trust raw JSON.
+- UI: functional components, hooks for reusable logic, Zustand for session state, TanStack Query only for async resources that benefit from cache.
+- Styling: Tailwind utilities + `@yuta/ui` primitives. Do not add one-off CSS frameworks.
+- Latest dependencies unless something breaks. Do not pin versions in new instructions unless required.

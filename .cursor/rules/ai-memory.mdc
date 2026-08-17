@@ -1,0 +1,14 @@
+---
+description: AI contract, memory levels, and emotion safety
+globs: packages/{ai,memory,emotion-engine,behavior}/**/*.ts
+alwaysApply: false
+---
+
+# AI and memory
+
+- Providers return data that matches `aiResponseSchema`. Invalid emotion/action names become `neutral` / omitted action.
+- Prompt the model with L0 + L1 + retrieved L2 only. Never dump the archive.
+- Router picks a category first, then scores a small candidate set (tags, keywords, importance, recency).
+- Memory files are markdown with YAML-like frontmatter. Human-readable on purpose.
+- Behavior is not memory: memory is facts/preferences; behavior is recent interaction patterns and response hints.
+- Emotion engine is the only place that maps emotion names to intensities, expressions, and default actions.

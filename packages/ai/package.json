@@ -1,0 +1,17 @@
+{
+  "name": "@yuta/ai",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@google/genai": "latest",
+    "@yuta/behavior": "workspace:*",
+    "@yuta/emotion-engine": "workspace:*",
+    "@yuta/memory": "workspace:*",
+    "@yuta/shared": "workspace:*",
+    "zod": "latest"
+  }
+}

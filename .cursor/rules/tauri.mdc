@@ -1,0 +1,13 @@
+---
+description: Tauri and desktop-shell rules
+globs: apps/desktop/**/*.{ts,tsx,rs,json}
+alwaysApply: false
+---
+
+# Tauri
+
+- Put native work in `apps/desktop/src-tauri`: filesystem, app data paths, store/key storage, window lifecycle.
+- Do not port the orchestrator, memory router, or emotion engine to Rust.
+- Scope FS permissions to app data. Do not request whole-disk access.
+- Feature screens live under `apps/desktop/src/features/<name>/`.
+- Session wiring (construct adapters, orchestrator, engines) lives in `apps/desktop/src/app/`, not inside feature components.

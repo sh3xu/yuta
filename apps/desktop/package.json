@@ -1,0 +1,41 @@
+{
+  "name": "@yuta/desktop",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit -p tsconfig.json && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "latest",
+    "@tauri-apps/api": "latest",
+    "@tauri-apps/plugin-fs": "latest",
+    "@tauri-apps/plugin-store": "latest",
+    "@yuta/ai": "workspace:*",
+    "@yuta/behavior": "workspace:*",
+    "@yuta/character-engine": "workspace:*",
+    "@yuta/emotion-engine": "workspace:*",
+    "@yuta/memory": "workspace:*",
+    "@yuta/shared": "workspace:*",
+    "@yuta/ui": "workspace:*",
+    "@yuta/voice": "workspace:*",
+    "lucide-react": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "zustand": "latest"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "latest",
+    "@tauri-apps/cli": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@vitejs/plugin-react": "latest",
+    "tailwindcss": "latest",
+    "typescript": "~5.9.0",
+    "vite": "latest"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@yuta/character-engine",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@yuta/emotion-engine": "workspace:*",
+    "@yuta/shared": "workspace:*",
+    "@pixi/sound": "latest",
+    "pixi.js": "latest",
+    "untitled-pixi-live2d-engine": "latest"
+  }
+}

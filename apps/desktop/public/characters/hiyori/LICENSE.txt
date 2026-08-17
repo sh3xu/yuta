@@ -1,0 +1,7 @@
+Hiyori Momose sample model is provided by Live2D Inc.
+
+License: Live2D Free Material License Agreement
+https://www.live2d.com/eula/live2d-free-material-license-agreement_en.html
+
+Terms of Use for Live2D Cubism Sample Data also apply.
+This prototype is a non-commercial friends-only project.

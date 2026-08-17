@@ -1,0 +1,21 @@
+---
+description: Package boundaries and where new code belongs
+globs: packages/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Package boundaries
+
+| Package | Owns |
+| --- | --- |
+| `shared` | Constants, shared types, tiny utils |
+| `ai` | `AIProvider`, Gemini/mock, prompts, schemas, orchestrator |
+| `memory` | Storage adapter, router, scoring, markdown format |
+| `emotion-engine` | Emotion/action vocabulary, transitions |
+| `character-engine` | Live2D/renderer, motions, parameter control |
+| `voice` | STT, TTS, lip-sync |
+| `behavior` | Observation window and response hints |
+| `ui` | Reusable primitives only |
+
+Memory depends on a `FileSystemAdapter` injected by the app. Do not import Tauri inside `packages/memory`.
+New LLM backends implement `AIProvider`. Do not fork the orchestrator.

@@ -1,0 +1,14 @@
+packages:
+  - apps/*
+  - packages/*
+
+allowBuilds:
+  "@google/genai": true
+  nx: true
+  protobufjs: true
+
+onlyBuiltDependencies:
+  - esbuild
+  - nx
+  - "@google/genai"
+  - protobufjs

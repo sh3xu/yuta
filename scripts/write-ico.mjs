@@ -1,0 +1,21 @@
+import { readFileSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const pngPath = join(dirname(fileURLToPath(import.meta.url)), '../apps/desktop/src-tauri/icons/32x32.png');
+const icoPath = join(dirname(fileURLToPath(import.meta.url)), '../apps/desktop/src-tauri/icons/icon.ico');
+const png = readFileSync(pngPath);
+const header = Buffer.alloc(22);
+header.writeUInt16LE(0, 0);
+header.writeUInt16LE(1, 2);
+header.writeUInt16LE(1, 4);
+header.writeUInt8(32, 6);
+header.writeUInt8(32, 7);
+header.writeUInt8(0, 8);
+header.writeUInt8(0, 9);
+header.writeUInt16LE(1, 10);
+header.writeUInt16LE(32, 12);
+header.writeUInt32LE(png.length, 14);
+header.writeUInt32LE(22, 18);
+writeFileSync(icoPath, Buffer.concat([header, png]));
+console.log(`Wrote ${icoPath}`);

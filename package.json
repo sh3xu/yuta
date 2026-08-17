@@ -1,0 +1,19 @@
+{
+  "name": "yuta",
+  "private": true,
+  "packageManager": "pnpm@11.18.0",
+  "scripts": {
+    "dev": "pnpm --filter @yuta/desktop tauri dev",
+    "dev:web": "pnpm --filter @yuta/desktop dev",
+    "build": "pnpm --filter @yuta/desktop tauri build",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "setup:assets": "node scripts/setup-assets.mjs",
+    "postinstall": "node scripts/setup-assets.mjs"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "latest",
+    "nx": "latest",
+    "typescript": "~5.9.0"
+  }
+}

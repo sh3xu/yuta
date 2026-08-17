@@ -1,0 +1,8 @@
+{
+  "id": "hiyori",
+  "name": "Hiyori",
+  "model": "/characters/hiyori/Hiyori.model3.json",
+  "license": "Live2D Free Material License Agreement",
+  "source": "https://github.com/Live2D/CubismWebSamples",
+  "credit": "Sample model Hiyori Momose by Live2D Inc."
+}
