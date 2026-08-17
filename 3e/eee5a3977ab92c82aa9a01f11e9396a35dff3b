@@ -1,0 +1,148 @@
+data/example-character/hiyori/motions/Hiyori_m04.motion3.json
+  s_25d5404da13888::t_b5076833d74c0c 1-882
+apps/desktop/public/characters/hiyori/motions/Hiyori_m03.motion3.json
+  s_25d5404da13888::t_080bd7ab800f89 1-1331
+data/example-character/hiyori/motions/Hiyori_m05.motion3.json
+  s_25d5404da13888::t_e53a625ba547bd 1-1670
+data/example-character/hiyori/Hiyori.model3.json
+  s_25d5404da13888::t_211d8915c6d2e9 1-93
+apps/desktop/public/characters/hiyori/motions/Hiyori_m05.motion3.json
+  s_25d5404da13888::t_80b2265da03912 1-1670
+packages/emotion-engine/src/index.ts
+  s_25d5404da13888::t_e8817bac659033 2-4
+  s_25d5404da13888::t_daf6a465f62248 5
+  s_25d5404da13888::t_7d05e18e686fba 1
+packages/shared/src/types.ts
+  s_25d5404da13888::t_89135af6965ae5 1-83
+apps/desktop/public/characters/hiyori/Hiyori.cdi3.json
+  s_25d5404da13888::t_28d5451e9fd4be 1-523
+packages/character-engine/src/live2d/renderer.ts
+  s_25d5404da13888::t_1b15c4442be217 147-148
+  s_ccf19b2795b93b::t_fce52e51d4ec79 1-103,107-146,149-199
+  s_25d5404da13888::t_3dd85722ff734f 104-106
+  s_ccf19b2795b93b::t_138404fe4d91ad 200
+packages/shared/src/constants.ts
+  s_25d5404da13888::t_8ce6e583f7d2bd 1-23
+apps/desktop/public/characters/hiyori/motions/Hiyori_m09.motion3.json
+  s_25d5404da13888::t_ee8746547c6b43 1-1198
+data/example-character/hiyori/motions/Hiyori_m02.motion3.json
+  s_25d5404da13888::t_8fa514e4288589 1-1478
+packages/emotion-engine/src/planner.ts
+  s_25d5404da13888::t_6809f34423becf 4
+  s_25d5404da13888::t_04495239f61a00 1-3,5-19
+package.json
+  s_25d5404da13888::t_072d8253a44322 1-19
+apps/desktop/public/characters/hiyori/motions/Hiyori_m01.motion3.json
+  s_25d5404da13888::t_165637b4f80096 1-1085
+.npmrc
+  s_25d5404da13888::t_934fa166c453cc 1
+nx.json
+  s_25d5404da13888::t_4a9cd75e9210ed 1-13
+data/example-character/hiyori/Hiyori.pose3.json
+  s_25d5404da13888::t_1fa386eeb99c6e 1-16
+apps/desktop/public/characters/hiyori/LICENSE.txt
+  s_25d5404da13888::t_e013ce5d351b28 1-7
+apps/desktop/public/characters/hiyori/motions/Hiyori_m06.motion3.json
+  s_25d5404da13888::t_ec9d5e18f0d309 1-1990
+apps/desktop/public/characters/hiyori/Hiyori.physics3.json
+  s_25d5404da13888::t_d08826cdf3894d 1-1569
+packages/ai/tsconfig.json
+  s_25d5404da13888::t_3be089d77508f9 1-4
+data/example-character/hiyori/Hiyori.cdi3.json
+  s_25d5404da13888::t_d4261a4cebdee7 1-523
+data/example-character/hiyori/motions/Hiyori_m03.motion3.json
+  s_25d5404da13888::t_071f26b4e2bec6 1-1331
+apps/desktop/src/app/session.ts
+  s_25d5404da13888::t_df6917299dd6e7 75-76,121
+  s_25d5404da13888::t_b4359706f01063 72-74
+  s_25d5404da13888::t_825273c05899a3 77-79,118-120
+  s_25d5404da13888::t_2046764a6adbd8 122-124
+apps/desktop/src/features/character/CharacterStage.tsx
+  s_25d5404da13888::t_146d5e6dfe9adf 18-26
+  s_ccf19b2795b93b::t_f176f69f5cec9e 1-17,27-39
+README.md
+  s_25d5404da13888::t_71c7d10f454322 1-11
+data/example-character/hiyori/motions/Hiyori_m09.motion3.json
+  s_25d5404da13888::t_a7295e4563e23e 1-1198
+packages/shared/tsconfig.json
+  s_25d5404da13888::t_c72eb3e8a4caa5 1-4
+data/example-character/hiyori/motions/Hiyori_m10.motion3.json
+  s_25d5404da13888::t_c3fef39796105d 1-974
+packages/ai/src/orchestrator.ts
+  s_25d5404da13888::t_c7a19cb3136dbf 6-62,65,69-72
+  s_25d5404da13888::t_1c7c9011b107a9 3-5
+  s_25d5404da13888::t_ceefbea7d66885 63-64,66-68
+  s_25d5404da13888::t_2964223309bc0c 1-2
+  s_25d5404da13888::t_74b55175d0e3a4 73-75
+data/example-character/hiyori/motions/Hiyori_m06.motion3.json
+  s_25d5404da13888::t_58e2d9b7f9a45d 1-1990
+apps/desktop/public/characters/hiyori/motions/Hiyori_m02.motion3.json
+  s_25d5404da13888::t_28b343f1120b85 1-1478
+apps/desktop/public/characters/character.json
+  s_25d5404da13888::t_0ddf219e4868a9 1-8
+apps/desktop/public/characters/hiyori/Hiyori.pose3.json
+  s_25d5404da13888::t_b068f4d8e2cc8f 1-16
+.gitignore
+  s_25d5404da13888::t_9d6f24b81a1d9d 1-12
+biome.json
+  s_25d5404da13888::t_800bd4bc102c72 1-32
+apps/desktop/public/characters/hiyori/motions/Hiyori_m04.motion3.json
+  s_25d5404da13888::t_a8412d686ff358 1-882
+packages/ai/src/schemas.ts
+  s_25d5404da13888::t_aa669c90ebf1b7 8-177
+  s_25d5404da13888::t_e96e4d20751f24 3-5
+  s_25d5404da13888::t_d031ed7a94eef1 1-2
+  s_25d5404da13888::t_fdf84ec09ff2ab 6-7
+apps/desktop/public/characters/hiyori/Hiyori.userdata3.json
+  s_25d5404da13888::t_e8b7a28626401c 1-44
+apps/desktop/public/characters/hiyori/motions/Hiyori_m08.motion3.json
+  s_25d5404da13888::t_eb1b020db5a026 1-1087
+data/example-character/hiyori/motions/Hiyori_m08.motion3.json
+  s_25d5404da13888::t_0775c8333db038 1-1087
+packages/shared/src/index.ts
+  s_25d5404da13888::t_43c0d8f8b3375b 1-2
+data/example-character/hiyori/Hiyori.userdata3.json
+  s_25d5404da13888::t_e6b2591e875674 1-44
+data/example-character/hiyori/motions/Hiyori_m01.motion3.json
+  s_25d5404da13888::t_45190be7b21316 1-1085
+packages/ai/src/prompts.ts
+  s_25d5404da13888::t_cb1ccf4dc4b04b 27
+  s_25d5404da13888::t_15313fc8109daa 24-26
+  s_25d5404da13888::t_768b2f20c5501b 28-30
+data/example-character/hiyori/Hiyori.physics3.json
+  s_25d5404da13888::t_da9291b1515813 1-1569
+tsconfig.base.json
+  s_25d5404da13888::t_554ad853ddf278 1-20
+apps/desktop/public/characters/hiyori/motions/Hiyori_m07.motion3.json
+  s_25d5404da13888::t_57cf21d59ea782 1-991
+apps/desktop/public/characters/hiyori/motions/Hiyori_m10.motion3.json
+  s_25d5404da13888::t_051a778e3d3114 1-974
+apps/desktop/public/characters/hiyori/Hiyori.model3.json
+  s_25d5404da13888::t_17948325f8491f 1-93
+data/example-character/hiyori/motions/Hiyori_m07.motion3.json
+  s_25d5404da13888::t_b05d8ed792f6ed 1-991
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "3eeee5a3977ab92c82aa9a01f11e9396a35dff3b",
+  "prompts": {},
+  "sessions": {
+    "s_25d5404da13888": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "28164b82-03ac-455a-b01d-1c6381a2c99f",
+        "model": "default"
+      },
+      "human_author": null
+    },
+    "s_ccf19b2795b93b": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a3a44b8b-4d68-4aff-97d7-52ef784bbc55",
+        "model": "default"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    }
+  }
+}
