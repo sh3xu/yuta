@@ -15,9 +15,15 @@ export function CharacterStage() {
     if (!host) return;
     const renderer = new Live2DRenderer();
     rendererRef.current = renderer;
-    void renderer.mount(host, MODEL_URL).catch((error: unknown) => {
-      console.error('Live2D failed to load', error);
-    });
+    void renderer
+      .mount(host, MODEL_URL)
+      .then(() => {
+        if (rendererRef.current !== renderer) return;
+        renderer.applyState(useCompanionStore.getState().characterState);
+      })
+      .catch((error: unknown) => {
+        console.error('Live2D failed to load', error);
+      });
     return () => {
       renderer.destroy();
       rendererRef.current = null;

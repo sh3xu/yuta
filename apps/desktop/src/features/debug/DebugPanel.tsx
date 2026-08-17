@@ -7,6 +7,9 @@ export function DebugPanel() {
   const memories = useCompanionStore((state) => state.memories);
   const behavior = useCompanionStore((state) => state.behaviorSummary);
   const lastError = useCompanionStore((state) => state.lastError);
+  const plannedAction = useCompanionStore((state) => state.plannedAction);
+  const llmAction = useCompanionStore((state) => state.llmAction);
+  const playedAction = useCompanionStore((state) => state.playedAction);
 
   return (
     <div className="space-y-4 font-mono text-xs">
@@ -15,6 +18,9 @@ export function DebugPanel() {
         <Row label="Emotion" value={characterState.emotion} />
         <Row label="Intensity" value={characterState.emotionIntensity.toFixed(2)} />
         <Row label="Action" value={characterState.action ?? 'none'} />
+        <Row label="Planned" value={plannedAction ?? 'none'} />
+        <Row label="LLM action" value={llmAction ?? 'none'} />
+        <Row label="Played" value={playedAction ?? characterState.action ?? 'none'} />
         <Row label="Speaking" value={String(characterState.speaking)} />
         <Row label="Mouth" value={characterState.mouthOpen.toFixed(2)} />
         <Row label="LLM" value={provider} />

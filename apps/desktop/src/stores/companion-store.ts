@@ -17,6 +17,9 @@ interface CompanionStore {
   behaviorSummary: string;
   provider: string;
   lastError?: AppError;
+  llmAction?: string;
+  plannedAction?: string;
+  playedAction?: string;
   sending: boolean;
   init: () => Promise<void>;
   setScreen: (screen: Screen) => void;
@@ -62,6 +65,9 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
         behaviorSummary: session.debug.behavior,
         provider: session.debug.provider,
         lastError: session.debug.lastError,
+        llmAction: session.debug.llmAction,
+        plannedAction: session.debug.plannedAction,
+        playedAction: session.debug.playedAction,
       });
       if (session.debug.lastError) notifyError(session.debug.lastError);
       try {

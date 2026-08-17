@@ -25,6 +25,9 @@ export interface DebugInfo {
   loadedMemories: RetrievedMemory[];
   behavior: string;
   lastError?: AppError;
+  llmAction?: string;
+  plannedAction?: string;
+  playedAction?: string;
 }
 
 export class CompanionSession {
@@ -72,7 +75,8 @@ export class CompanionSession {
     }
 
     this.history.push({ role: 'user', content: userMessage });
-    const { response, memories, characterState } = await this.orchestrator.respond({
+    const { response, memories, characterState, plannedAction, llmAction } =
+      await this.orchestrator.respond({
       companionName: this.settings.companionName,
       personality: this.settings.personality,
       userMessage,
@@ -86,6 +90,9 @@ export class CompanionSession {
       loadedMemories: memories,
       behavior: this.behavior.getHint().summary,
       lastError: undefined,
+      llmAction: llmAction?.name,
+      plannedAction: plannedAction?.name,
+      playedAction: this.characterState.action ?? undefined,
     };
     onState(this.characterState);
 

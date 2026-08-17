@@ -3,8 +3,6 @@ import {
   EMOTIONS,
   MEMORY_CATEGORIES,
   type AIResponse,
-  type ActionName,
-  type EmotionName,
   clamp01,
 } from '@yuta/shared';
 import { z } from 'zod';

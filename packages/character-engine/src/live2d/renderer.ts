@@ -44,8 +44,8 @@ export class Live2DRenderer implements CharacterRenderer {
   private host: HTMLElement | null = null;
   private current: CharacterState = { ...IDLE_CHARACTER_STATE };
   private target: CharacterState = { ...IDLE_CHARACTER_STATE };
-  private lastAction: string | null = null;
   private lastActionToken = -1;
+  private pending: CharacterState | null = null;
   private restX = 0;
   private restY = 0;
   private hopUntil = 0;
@@ -91,7 +91,10 @@ export class Live2DRenderer implements CharacterRenderer {
     this.fit();
     requestAnimationFrame(() => this.fit());
     this.playAction('idle');
-    this.lastAction = 'idle';
+    if (this.pending) {
+      this.applyState(this.pending);
+      this.pending = null;
+    }
 
     this.tickerFn = (ticker) => this.tick(ticker.deltaMS);
     app.ticker.add(this.tickerFn);
@@ -101,15 +104,16 @@ export class Live2DRenderer implements CharacterRenderer {
 
   applyState(state: CharacterState): void {
     this.target = state;
-    if (state.actionToken !== this.lastActionToken) {
-      this.playAction(state.action);
-      this.lastAction = state.action;
-      this.lastActionToken = state.actionToken;
+    if (!this.model) {
+      this.pending = state;
+      return;
     }
+    this.consumeAction(state);
   }
 
   destroy(): void {
     this.destroyed = true;
+    this.pending = null;
     this.resizeObserver?.disconnect();
     if (this.app && this.tickerFn) this.app.ticker.remove(this.tickerFn);
     this.model?.destroy?.();
@@ -145,6 +149,12 @@ export class Live2DRenderer implements CharacterRenderer {
     this.setParam(PARAM.angleX, Math.sin(performance.now() / 420) * action.headNod * 0.15);
     this.setParam(PARAM.mouthOpen, this.current.mouthOpen);
     this.applyHop(action.hop * this.current.actionIntensity);
+  }
+
+  private consumeAction(state: CharacterState): void {
+    if (state.actionToken === this.lastActionToken) return;
+    this.playAction(state.action);
+    this.lastActionToken = state.actionToken;
   }
 
   private playAction(actionName: CharacterState['action']): void {
