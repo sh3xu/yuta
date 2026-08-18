@@ -3,7 +3,6 @@ import { BehaviorTracker } from '@yuta/behavior';
 import { EMOTION_PROFILES, EmotionEngine } from '@yuta/emotion-engine';
 import { MemoryService } from '@yuta/memory';
 import {
-  type ActionName,
   APP_ID,
   type CharacterState,
   type ChatTurn,
@@ -68,25 +67,6 @@ export class CompanionSession {
   async persist(settings: AppSettings): Promise<void> {
     this.configure(settings);
     await saveSettings(settings);
-  }
-
-  preview(action: ActionName, intensity = 1): CharacterState {
-    const characterState = this.emotion.apply({
-      emotion: this.emotion.currentEmotion(),
-      action: { name: action, intensity },
-    });
-    this.characterState = {
-      ...characterState,
-      speaking: this.characterState.speaking,
-      mouthOpen: this.characterState.mouthOpen,
-    };
-    this.debug = {
-      ...this.debug,
-      llmAction: undefined,
-      plannedAction: action,
-      playedAction: action,
-    };
-    return this.characterState;
   }
 
   async send(userMessage: string, onState: (state: CharacterState) => void): Promise<string> {

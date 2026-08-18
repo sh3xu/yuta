@@ -1,9 +1,11 @@
-import { MEMORY_CATEGORIES, MEMORY_HIT_LIMIT, type MemoryCategory } from '@yuta/shared';
-import type { FileSystemAdapter } from './storage/adapter';
-import { parseMemory, serializeMemory, slugify, type MemoryRecord, type NewMemory } from './format';
-import { routeCategory } from './retrieval/router';
-import { scoreMemory, toRetrieved } from './retrieval/score';
 import type { RetrievedMemory } from '@yuta/shared';
+import { MEMORY_CATEGORIES, MEMORY_HIT_LIMIT, type MemoryCategory } from '@yuta/shared';
+import { type MemoryRecord, type NewMemory, parseMemory, serializeMemory, slugify } from './format';
+import { routeCategory, tokenize } from './retrieval/router';
+import { scoreMemory, toRetrieved } from './retrieval/score';
+import type { FileSystemAdapter } from './storage/adapter';
+
+const LOOKUP_FILE_LIMIT = 24;
 
 export class MemoryService {
   constructor(
@@ -18,18 +20,35 @@ export class MemoryService {
     }
   }
 
-  async retrieve(query: string): Promise<RetrievedMemory[]> {
-    const preferred = routeCategory(query);
-    const primary = await this.list(preferred);
-    const extra =
-      primary.length < MEMORY_HIT_LIMIT ? await this.listAllExcept(preferred) : [];
-    const ranked = [...primary, ...extra]
-      .map((record) => ({ record, score: scoreMemory(query, record) }))
-      .filter((item) => item.score > 0.08)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, MEMORY_HIT_LIMIT);
+  async retrieve(query: string, category?: MemoryCategory): Promise<RetrievedMemory[]> {
+    const needle = query.trim();
+    if (!needle) return [];
 
-    return ranked.map((item) => toRetrieved(item.record, item.score));
+    await this.init();
+    const cat = category ?? routeCategory(needle);
+    const dir = this.join(cat);
+    if (!(await this.fs.exists(dir))) return [];
+
+    const entries = (await this.fs.readDir(dir)).filter(
+      (entry) => !entry.isDirectory && entry.name.endsWith('.md'),
+    );
+    const tokens = tokenize(needle);
+    const matching = tokens.length
+      ? entries.filter((entry) => tokens.some((token) => entry.name.toLowerCase().includes(token)))
+      : [];
+    const pool = (matching.length > 0 ? matching : entries).slice(-LOOKUP_FILE_LIMIT);
+    const ranked: Array<{ record: MemoryRecord; score: number }> = [];
+
+    for (const entry of pool) {
+      const record = parseMemory(entry.path, await this.fs.readText(entry.path));
+      const score = scoreMemory(needle, record);
+      if (score > 0.08) ranked.push({ record, score });
+    }
+
+    return ranked
+      .sort((a, b) => b.score - a.score)
+      .slice(0, MEMORY_HIT_LIMIT)
+      .map((item) => toRetrieved(item.record, item.score));
   }
 
   async write(input: NewMemory): Promise<MemoryRecord> {
@@ -80,15 +99,6 @@ export class MemoryService {
         if (!entry.isDirectory) await this.fs.remove(entry.path);
       }
     }
-  }
-
-  private async listAllExcept(category: MemoryCategory): Promise<MemoryRecord[]> {
-    const records: MemoryRecord[] = [];
-    for (const item of MEMORY_CATEGORIES) {
-      if (item === category) continue;
-      records.push(...(await this.list(item)));
-    }
-    return records;
   }
 
   private join(...parts: string[]): string {

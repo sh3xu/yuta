@@ -2,7 +2,6 @@ import { Button, Field, Input, Switch, Textarea, toast } from '@yuta/ui';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useState } from 'react';
 import { useCompanionStore } from '../../stores/companion-store';
-import { AnimationPreview } from './AnimationPreview';
 
 export function SettingsPanel() {
   const settings = useCompanionStore((state) => state.settings);
@@ -82,7 +81,6 @@ export function SettingsPanel() {
           </Button>
         </div>
       </form>
-      <AnimationPreview />
     </div>
   );
 }

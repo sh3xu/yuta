@@ -1,5 +1,4 @@
 import {
-  type ActionName,
   type CharacterState,
   type ChatTurn,
   IDLE_CHARACTER_STATE,
@@ -20,6 +19,7 @@ interface CompanionStore {
   messages: ChatTurn[];
   characterState: CharacterState;
   memories: RetrievedMemory[];
+  lookupHits: RetrievedMemory[];
   behaviorSummary: string;
   provider: string;
   lastError?: AppError;
@@ -31,7 +31,6 @@ interface CompanionStore {
   setScreen: (screen: Screen) => void;
   send: (text: string) => Promise<void>;
   saveSettings: (settings: AppSettings) => Promise<void>;
-  playAction: (action: ActionName, intensity?: number) => void;
   refreshMemories: () => Promise<void>;
   clearMemories: () => Promise<void>;
 }
@@ -43,6 +42,7 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
   messages: [],
   characterState: { ...IDLE_CHARACTER_STATE },
   memories: [],
+  lookupHits: [],
   behaviorSummary: '',
   provider: 'mock',
   sending: false,
@@ -68,7 +68,7 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
       const reply = await session.send(trimmed, (characterState) => set({ characterState }));
       set({
         messages: [...get().messages, { role: 'assistant', content: reply }],
-        memories: session.debug.loadedMemories,
+        lookupHits: session.debug.loadedMemories,
         behaviorSummary: session.debug.behavior,
         provider: session.debug.provider,
         lastError: session.debug.lastError,
@@ -77,17 +77,6 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
         playedAction: session.debug.playedAction,
       });
       if (session.debug.lastError) notifyError(session.debug.lastError);
-      try {
-        await get().refreshMemories();
-      } catch (error) {
-        const lastError = {
-          source: 'memory' as const,
-          message: error instanceof Error ? error.message : 'Memory refresh failed.',
-          detail: error instanceof Error ? error.stack : String(error),
-        };
-        set({ lastError });
-        notifyError(lastError);
-      }
     } catch (error) {
       const lastError = {
         source: 'ai' as const,
@@ -108,16 +97,6 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
     toast({ variant: 'success', title: 'settings', description: 'Saved on this machine.' });
   },
 
-  playAction(action, intensity = 1) {
-    const characterState = session.preview(action, intensity);
-    set({
-      characterState,
-      playedAction: action,
-      plannedAction: action,
-      llmAction: undefined,
-    });
-  },
-
   async refreshMemories() {
     const records = (await session.memory?.list()) ?? [];
     set({
@@ -136,6 +115,6 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
 
   async clearMemories() {
     await session.memory?.clear();
-    set({ memories: [] });
+    set({ memories: [], lookupHits: [] });
   },
 }));

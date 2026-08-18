@@ -53,3 +53,7 @@ export const BEHAVIOR_WINDOW = 20;
 export type EmotionName = (typeof EMOTIONS)[number];
 export type ActionName = (typeof ACTIONS)[number];
 export type MemoryCategory = (typeof MEMORY_CATEGORIES)[number];
+
+export function isMemoryCategory(value: unknown): value is MemoryCategory {
+  return typeof value === 'string' && (MEMORY_CATEGORIES as readonly string[]).includes(value);
+}

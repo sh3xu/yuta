@@ -1,5 +1,5 @@
 import type { ActionName, AIRequest, AIResponse, EmotionName } from '@yuta/shared';
-import type { AIProvider } from './types';
+import type { AIGenerateOptions, AIProvider } from './types';
 
 const KEYWORDS: Array<{ match: RegExp; emotion: EmotionName; action?: ActionName; line?: string }> =
   [
@@ -47,16 +47,19 @@ const KEYWORDS: Array<{ match: RegExp; emotion: EmotionName; action?: ActionName
 export class MockProvider implements AIProvider {
   readonly id = 'mock';
 
-  async generate(request: AIRequest): Promise<AIResponse> {
+  async generate(request: AIRequest, options?: AIGenerateOptions): Promise<AIResponse> {
     const hit = KEYWORDS.find((item) => item.match.test(request.userMessage));
     const emotion = hit?.emotion ?? 'neutral';
     const action = hit?.action ?? 'nod';
     const memoryMatch = request.userMessage.match(
       /(?:i (?:like|love|prefer)|my name is|remember that)\s+(.+)/i,
     );
+    const lookups = needsMemoryLookup(request.userMessage)
+      ? ((await options?.lookupMemory?.(request.userMessage)) ?? [])
+      : [];
 
     return {
-      message: hit?.line ?? buildMockReply(request, emotion),
+      message: hit?.line ?? buildMockReply(emotion, lookups[0]?.title),
       emotion: { name: emotion, intensity: hit ? 0.85 : 0.5 },
       action: { name: action, intensity: 1 },
       memory: memoryMatch
@@ -71,9 +74,15 @@ export class MockProvider implements AIProvider {
   }
 }
 
-function buildMockReply(request: AIRequest, emotion: EmotionName): string {
-  const memoryNote =
-    request.memories[0] != null ? ` I still have this nearby: ${request.memories[0].title}.` : '';
+const LOOKUP_QUERY =
+  /\b(remember|who is|what's my|whats my|what is my|did i (tell|say)|have i told|my name|favorite)\b/i;
+
+function needsMemoryLookup(message: string): boolean {
+  return LOOKUP_QUERY.test(message);
+}
+
+function buildMockReply(emotion: EmotionName, memoryTitle?: string): string {
+  const memoryNote = memoryTitle ? ` I found this: ${memoryTitle}.` : '';
 
   switch (emotion) {
     case 'happy':

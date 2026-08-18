@@ -4,7 +4,7 @@ import { useCompanionStore } from '../../stores/companion-store';
 export function DebugPanel() {
   const characterState = useCompanionStore((state) => state.characterState);
   const provider = useCompanionStore((state) => state.provider);
-  const memories = useCompanionStore((state) => state.memories);
+  const lookupHits = useCompanionStore((state) => state.lookupHits);
   const behavior = useCompanionStore((state) => state.behaviorSummary);
   const lastError = useCompanionStore((state) => state.lastError);
   const plannedAction = useCompanionStore((state) => state.plannedAction);
@@ -30,16 +30,20 @@ export function DebugPanel() {
           <div className="text-mute">Last error</div>
           <div>source: {lastError.source}</div>
           <div>{lastError.message}</div>
-          {lastError.detail ? <pre className="whitespace-pre-wrap text-[11px] text-rose-200/80">{lastError.detail}</pre> : null}
+          {lastError.detail ? (
+            <pre className="whitespace-pre-wrap text-[11px] text-rose-200/80">
+              {lastError.detail}
+            </pre>
+          ) : null}
         </div>
       ) : (
         <p className="text-mute">No error this session.</p>
       )}
       <div>
-        <p className="mb-2 text-mute">Loaded memories</p>
+        <p className="mb-2 text-mute">This-turn lookups</p>
         <div className="flex flex-wrap gap-2">
-          {memories.length === 0 ? <span className="text-mute">none</span> : null}
-          {memories.map((memory) => (
+          {lookupHits.length === 0 ? <span className="text-mute">none</span> : null}
+          {lookupHits.map((memory) => (
             <Badge key={memory.id}>{memory.path}</Badge>
           ))}
         </div>

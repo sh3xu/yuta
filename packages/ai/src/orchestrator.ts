@@ -1,9 +1,9 @@
-import type { AIProvider } from './providers/types';
+import type { BehaviorTracker } from '@yuta/behavior';
+import { type EmotionEngine, planAction } from '@yuta/emotion-engine';
+import type { MemoryService } from '@yuta/memory';
 import type { AIRequest, AIResponse, RetrievedMemory } from '@yuta/shared';
 import { RECENT_TURN_LIMIT } from '@yuta/shared';
-import type { BehaviorTracker } from '@yuta/behavior';
-import type { MemoryService } from '@yuta/memory';
-import { EmotionEngine, planAction } from '@yuta/emotion-engine';
+import type { AIProvider } from './providers/types';
 
 export interface OrchestratorDeps {
   provider: AIProvider;
@@ -27,19 +27,25 @@ export class Orchestrator {
     plannedAction?: AIResponse['action'];
     llmAction?: AIResponse['action'];
   }> {
-    const memories = await this.deps.memory.retrieve(input.userMessage);
     const plannedAction = planAction(input.userMessage);
+    const lookups = new Map<string, RetrievedMemory>();
     const request: AIRequest = {
       companionName: input.companionName,
       personality: input.personality,
       userMessage: input.userMessage,
       history: input.history.slice(-RECENT_TURN_LIMIT),
-      memories,
+      memories: [],
       behavior: this.deps.behavior.getHint(),
       emotion: this.deps.emotion.currentEmotion(),
     };
 
-    const generated = await this.deps.provider.generate(request);
+    const generated = await this.deps.provider.generate(request, {
+      lookupMemory: async (query, category) => {
+        const hits = await this.deps.memory.retrieve(query, category);
+        for (const hit of hits) lookups.set(hit.id, hit);
+        return hits;
+      },
+    });
     const response: AIResponse = {
       ...generated,
       action: plannedAction ?? generated.action,
@@ -63,7 +69,7 @@ export class Orchestrator {
 
     return {
       response,
-      memories,
+      memories: [...lookups.values()],
       characterState,
       plannedAction,
       llmAction: generated.action,
