@@ -1,0 +1,154 @@
+packages/character-engine/src/motion/index.ts
+  s_49b2daa5ac6fc2::t_e88eb121b6eb0c 1
+  s_49b2daa5ac6fc2::t_e059d82555c42d 2-5
+packages/ai/src/providers/mock.ts
+  s_49b2daa5ac6fc2::t_7b23a0502af69d 6-7,11-22,32,38,41-43,60-61
+  s_49b2daa5ac6fc2::t_e059d82555c42d 1,4-5,8-10,23-31,33-37,39-40,44-45,76
+packages/emotion-engine/src/emotions.ts
+  s_49b2daa5ac6fc2::t_39ffcd4990d01f 54-55
+  s_49b2daa5ac6fc2::t_63d825ad04d8b3 31
+  s_49b2daa5ac6fc2::t_a016842ef4511b 62-64
+  s_49b2daa5ac6fc2::t_5260ffc332f88f 46-48
+  s_49b2daa5ac6fc2::t_13e14ba3de93f1 38-40
+  s_49b2daa5ac6fc2::t_97137093b0b701 11
+apps/desktop/src/features/settings/AnimationPreview.tsx
+  s_49b2daa5ac6fc2::t_e059d82555c42d 2
+  s_49b2daa5ac6fc2::t_6f133aec57abe3 30
+  s_49b2daa5ac6fc2::t_a10c63d72e4b6a 1,3-29,31-45
+packages/character-engine/src/live2d/mappings.ts
+  s_49b2daa5ac6fc2::t_466af14b2487f8 33-38
+  s_49b2daa5ac6fc2::t_2d20de618d786a 88
+  s_49b2daa5ac6fc2::t_026f58bfb40224 87
+  s_49b2daa5ac6fc2::t_a114a25745c061 46-73,78-79
+  s_49b2daa5ac6fc2::t_a5bca0225c9bc9 74-77
+  s_49b2daa5ac6fc2::t_e059d82555c42d 2
+  s_49b2daa5ac6fc2::t_c3d688bc28cd3c 11-12,20-32,39-43
+apps/desktop/src/features/settings/SettingsPanel.tsx
+  s_49b2daa5ac6fc2::t_1721cb81040dab 85-86
+  s_49b2daa5ac6fc2::t_e059d82555c42d 50-53
+  s_49b2daa5ac6fc2::t_fea2304d3ec2fd 30
+  s_49b2daa5ac6fc2::t_36ec936fab0f2a 31
+  s_49b2daa5ac6fc2::t_b04dbba01a427c 32-49,54-77,79-84
+  s_49b2daa5ac6fc2::t_2e50d466f4281a 5
+packages/character-engine/src/live2d/renderer.ts
+  s_49b2daa5ac6fc2::t_7be46e3e9881cb 52-53,161-164,166,175,178
+  s_49b2daa5ac6fc2::t_404eb79f9ea53d 2-3,5-12,14-17,21,25,54-56,92,95-96,98,100-103,128-130,136,139-140,142-144,155
+  s_49b2daa5ac6fc2::t_e059d82555c42d 1
+  s_49b2daa5ac6fc2::t_88e81b2348891a 83
+  s_49b2daa5ac6fc2::t_02f1be5b8b9a5a 99
+  s_49b2daa5ac6fc2::t_d3c5f8694ae21f 141
+  s_49b2daa5ac6fc2::t_5eaf57fdf690b0 13
+  s_49b2daa5ac6fc2::t_0b3f9ecd280cb0 97
+packages/character-engine/src/index.ts
+  s_49b2daa5ac6fc2::t_e059d82555c42d 1,3
+packages/emotion-engine/src/planner.ts
+  s_49b2daa5ac6fc2::t_fa6691c4e14db9 22
+  s_49b2daa5ac6fc2::t_b457e87f73c3b5 4-5,8-17,19-20,31,39
+  s_49b2daa5ac6fc2::t_48f83c36dc9827 6-7,21,23-29
+  s_49b2daa5ac6fc2::t_fc61601a03462d 18
+packages/character-engine/src/live2d/params.ts
+  s_49b2daa5ac6fc2::t_77b2fc93742cc9 136-137,140-186
+  s_49b2daa5ac6fc2::t_ed1dd4ae9f6af0 114
+  s_49b2daa5ac6fc2::t_75657b93634bc2 189,191
+  s_49b2daa5ac6fc2::t_c309fd988e97e4 235-238
+  s_49b2daa5ac6fc2::t_67d25dcc1664ed 1-2,12,19,68,76,106,125-132,134-135,138,190,192,201-204,223-230
+  s_49b2daa5ac6fc2::t_cbdc9f2f9841e5 53-56,64-65,69
+  s_49b2daa5ac6fc2::t_883600a90371ac 211,213
+  s_49b2daa5ac6fc2::t_8566d37b447a08 92-102
+  s_49b2daa5ac6fc2::t_c097626ff1f145 107-110,119-120,193-200,231-232
+  s_49b2daa5ac6fc2::t_31c1ad59eaa285 3,30,47-49,51,57,70-73,80-82,89-91,233,239
+  s_49b2daa5ac6fc2::t_01b4de56d5d185 42
+  s_49b2daa5ac6fc2::t_03d4b13acd5aa0 133
+  s_49b2daa5ac6fc2::t_953929f133b505 4-11,13-18,20-29,31-34,36-41,43-46,50,52,58-63,66-67,74-75,77-79,83-88,103-105,111-113,115-118,121-124,139,187-188,205-210,212,214-222,234
+  s_49b2daa5ac6fc2::t_2ba4c95a500c5c 35
+packages/character-engine/src/live2d/engine-shim.d.ts
+  s_49b2daa5ac6fc2::t_19106cdaa5db7b 11-13,16
+  s_49b2daa5ac6fc2::t_30651754014321 15
+packages/ai/src/prompts.ts
+  s_49b2daa5ac6fc2::t_e059d82555c42d 15
+  s_49b2daa5ac6fc2::t_5b4eac72dfde0c 16-18,20
+packages/character-engine/src/motion/easing.ts
+  s_49b2daa5ac6fc2::t_5bca404441a251 1-38
+packages/character-engine/src/live2d/controller.ts
+  s_49b2daa5ac6fc2::t_9f2126a8455c08 29-30
+  s_49b2daa5ac6fc2::t_56ff6b6565975a 2,4
+  s_49b2daa5ac6fc2::t_651be3d7ed0f13 3
+  s_49b2daa5ac6fc2::t_ccd1795ad78f2c 42
+  s_49b2daa5ac6fc2::t_1e803f4df3b65c 22-28,31-32,39-41
+  s_49b2daa5ac6fc2::t_360d0b3130c9f0 14-15
+  s_49b2daa5ac6fc2::t_2f289465aa5c2a 1,5-13,16,18,20-21,33-38,43
+  s_49b2daa5ac6fc2::t_152e40e1f5ba6e 17,19
+packages/character-engine/src/motion/idle.ts
+  s_49b2daa5ac6fc2::t_9ce2d3372c8c96 2,4,12-16
+  s_49b2daa5ac6fc2::t_d551054781c553 1,3,5-11,17-18
+packages/character-engine/src/motion/clips.ts
+  s_49b2daa5ac6fc2::t_e28fdb11c7376e 147
+  s_49b2daa5ac6fc2::t_19fcf99b8d6349 407-417
+  s_49b2daa5ac6fc2::t_445d7d0a6e5df3 4,12-15
+  s_49b2daa5ac6fc2::t_af6aa2a156e5ee 140-141
+  s_49b2daa5ac6fc2::t_bfa860ea39ff43 58-70,86
+  s_49b2daa5ac6fc2::t_3b2cdbf70e647d 40-44
+  s_49b2daa5ac6fc2::t_a71551b4f9a3a8 261,263-277
+  s_49b2daa5ac6fc2::t_3e90b7314a051c 311-317,323-325,328-329,333-340
+  s_49b2daa5ac6fc2::t_1bf08700b2097e 202
+  s_49b2daa5ac6fc2::t_5e8157be603edf 214
+  s_49b2daa5ac6fc2::t_bfeb75200c40ca 72,130
+  s_49b2daa5ac6fc2::t_ae850c4ae0460b 468,470-496
+  s_49b2daa5ac6fc2::t_05ea7fbd1512fc 21,27-34,36-37,45,47-51,55,57,71,75-82,84-85,87-89,94-95,98-99,106,110-116,121-125,128-129,133-138,142-146,148-176,179-182,190-193,201,203,205-206,213,215-216,225,227-230,237-239,246,248,283,291,293,295,300-301,304-309,320-322,326-327,330-332,341-343,345,400-406,418-429,436-440,446-451,463-467,469,497-501,509-512,516-520,530-534,543-546,559-561,563-564,572-573,587-588,596-607
+  s_49b2daa5ac6fc2::t_96ad4e5e305f5a 547-558,565-571
+  s_49b2daa5ac6fc2::t_7a1199e56fafc9 231-236,240-241
+  s_49b2daa5ac6fc2::t_b2c963a1ec47db 107-109,127
+  s_49b2daa5ac6fc2::t_1b6dbb17f143b0 285-290,294
+  s_49b2daa5ac6fc2::t_9c2aaa6a45e221 502-508,514-515,521-529,535-541
+  s_49b2daa5ac6fc2::t_785ecd4806f5db 513
+  s_49b2daa5ac6fc2::t_5b86d6067cae48 292
+  s_49b2daa5ac6fc2::t_93c93d80205b11 96-97,100-103
+  s_49b2daa5ac6fc2::t_4417bf11e4747e 344,346-399
+  s_49b2daa5ac6fc2::t_4f671215e28645 430-435
+  s_49b2daa5ac6fc2::t_1bf72a5a857137 1-3,5-11,16-20,22-26,35,52-54,56,90-93,104-105,177-178,188-189,199-200,211-212,222-224,226,242-245,258-260,262,278-282,284,296-299,318-319,542,562,574-586,589-595,608
+  s_49b2daa5ac6fc2::t_714bc127328069 38-39,46,73-74,83,131-132,139,302-303,310
+  s_49b2daa5ac6fc2::t_75016ff3ba7e22 441-445
+  s_49b2daa5ac6fc2::t_c097626ff1f145 117-120,126
+  s_49b2daa5ac6fc2::t_5e479837965303 183-187,194-198,204,207-210,217-221
+  s_49b2daa5ac6fc2::t_bf5c8a9b4c8425 452-462
+  s_49b2daa5ac6fc2::t_1a737508d25b38 247,249-257
+packages/shared/src/constants.ts
+  s_49b2daa5ac6fc2::t_923e98cd7b9709 16-17,25-36
+  s_49b2daa5ac6fc2::t_f797d732bb1be6 5-15,18-24,37
+packages/emotion-engine/src/actions.ts
+  s_49b2daa5ac6fc2::t_ac36c2b5cc1b73 2,8-10
+packages/character-engine/src/motion/types.ts
+  s_49b2daa5ac6fc2::t_0e4051346bedc4 1-13,15-22,25-26
+  s_49b2daa5ac6fc2::t_c9c1349c81606c 14,23-24
+apps/desktop/src/stores/companion-store.ts
+  s_49b2daa5ac6fc2::t_e059d82555c42d 1-7,10,12
+  s_49b2daa5ac6fc2::t_fa9f9c67c7898e 34
+  s_49b2daa5ac6fc2::t_7c1cc2e20c72b5 111-120
+packages/character-engine/src/motion/player.ts
+  s_49b2daa5ac6fc2::t_714bc127328069 113
+  s_49b2daa5ac6fc2::t_da25068af5ee18 100,102-108
+  s_49b2daa5ac6fc2::t_8ba7b391ee0257 69-73
+  s_49b2daa5ac6fc2::t_b6d7c417b8ec29 2
+  s_49b2daa5ac6fc2::t_99df7f004825cb 4,9,50,65-68,81,98-99,101
+  s_49b2daa5ac6fc2::t_1fc9cdcb48d964 1,3,5-8,10-49,51-64,74-80,82-97,109-112,114-115
+apps/desktop/src/app/session.ts
+  s_49b2daa5ac6fc2::t_0e3e7e0a611d21 73-91
+  s_49b2daa5ac6fc2::t_559a48d92f23f2 6
+  s_49b2daa5ac6fc2::t_e059d82555c42d 10,15,100-104,146-149
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "e07a7307467c722469371aaf2c59eeee0dd15b6b",
+  "prompts": {},
+  "sessions": {
+    "s_49b2daa5ac6fc2": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "d5a3b1d2-4f8a-4e9b-8087-3d06baa9d6fe",
+        "model": "grok-4.6"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    }
+  }
+}
