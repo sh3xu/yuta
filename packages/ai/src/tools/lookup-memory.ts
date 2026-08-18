@@ -6,7 +6,7 @@ export const LOOKUP_MEMORY_TOOL_NAME = 'lookup_memory';
 export const lookupMemoryDeclaration: FunctionDeclaration = {
   name: LOOKUP_MEMORY_TOOL_NAME,
   description:
-    'Search local companion memory for a specific fact, person, preference, or past event. Call only when the recent conversation is not enough. Do not request a dump of all memories.',
+    'Search local companion memory for a specific fact about the user. Folders are profile, preferences/likes, preferences/dislikes, people, experiences, knowledge, and private. Search with a short query like bananas or favorite fruit. Do not request a dump of all memories.',
   parameters: {
     type: Type.OBJECT,
     properties: {

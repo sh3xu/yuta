@@ -16,6 +16,11 @@ export function buildSystemPrompt(request: AIRequest): string {
     'You already have the recent conversation. That is the only memory loaded by default.',
     'Call lookup_memory only when you need a stored fact, person, preference, or past event that is not in this conversation.',
     'Never invent memories. If a lookup returns nothing, say you are not sure instead of guessing.',
+    'Only store durable facts about the user, and only when they stated it or asked you to remember.',
+    'Do not store greetings, jokes, questions, one-off chat, your own feelings, or anything not about the user.',
+    'Each stored fact must be 2 to 6 words. Split distinct facts. Never store the original sentence.',
+    'Example: "i dont like bananas but mangoes are fav" stores two facts: "dislike bananas" and "fav fruit mango".',
+    'Put likes under topic likes and dislikes under topic dislikes. profile/name, people, and similar topics get their own folders.',
     `Current emotion before this turn: ${request.emotion.name} (${request.emotion.intensity}).`,
     `Behavior hint: ${request.behavior.summary}. Verbosity=${request.behavior.verbosity}. Tone=${request.behavior.tone}.`,
     request.behavior.avoid.length > 0 ? `Avoid: ${request.behavior.avoid.join(', ')}.` : '',
@@ -23,7 +28,8 @@ export function buildSystemPrompt(request: AIRequest): string {
     `emotion.name must be one of: ${EMOTIONS.join(', ')}.`,
     `action is required. action.name must be one of: ${ACTIONS.join(', ')}.`,
     `memory.category if present must be one of: ${MEMORY_CATEGORIES.join(', ')}.`,
-    'Set memory.shouldStore true only for durable facts, preferences, people, or events worth keeping.',
+    'If storing, set memory.shouldStore true and memory.facts to an array of { category, topic, content }.',
+    'Set memory.shouldStore false when there is nothing necessary to keep.',
   ]
     .filter(Boolean)
     .join('\n');

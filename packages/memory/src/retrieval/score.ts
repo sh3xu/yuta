@@ -6,7 +6,9 @@ export function scoreMemory(query: string, record: MemoryRecord): number {
   const queryTokens = new Set(tokenize(query));
   if (queryTokens.size === 0) return record.importance * 0.2;
 
-  const haystack = tokenize(`${record.title} ${record.content} ${record.tags.join(' ')}`);
+  const haystack = tokenize(
+    `${record.title} ${record.content} ${record.tags.join(' ')} ${record.path}`,
+  );
   let overlap = 0;
   for (const token of haystack) {
     if (queryTokens.has(token)) overlap += 1;

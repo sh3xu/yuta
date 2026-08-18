@@ -20,9 +20,17 @@ export interface ActionSignal {
   intensity: number;
 }
 
+export interface MemoryFact {
+  category: MemoryCategory;
+  topic?: string;
+  content: string;
+}
+
 export interface MemoryWriteHint {
   shouldStore: boolean;
+  facts?: MemoryFact[];
   category?: MemoryCategory;
+  topic?: string;
   content?: string;
   tags?: string[];
 }

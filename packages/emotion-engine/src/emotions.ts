@@ -64,4 +64,27 @@ export const EMOTION_PROFILES: Record<EmotionName, EmotionProfile> = {
     head: { tiltZ: 22, bounceY: 1 },
     voice: { pitch: 1.03, speed: 1.0, energy: 0.6 },
   },
+  embarrassed: {
+    name: 'embarrassed',
+    expressions: ['blush'],
+    actions: ['coverFace', 'shy'],
+    face: {
+      eyeOpen: 0.65,
+      eyeSmile: 0.35,
+      browY: 0.15,
+      browForm: -0.25,
+      mouthForm: 0.35,
+      cheek: 1,
+    },
+    head: { tiltZ: 16, bounceY: -1 },
+    voice: { pitch: 1.08, speed: 0.96, energy: 0.42 },
+  },
+  angry: {
+    name: 'angry',
+    expressions: ['frown'],
+    actions: ['handsOnHips'],
+    face: { eyeOpen: 0.85, eyeSmile: 0, browY: -1, browForm: -1, mouthForm: -1, cheek: 0 },
+    head: { tiltZ: -8, bounceY: 2 },
+    voice: { pitch: 0.96, speed: 1.08, energy: 0.86 },
+  },
 };

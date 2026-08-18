@@ -1,4 +1,4 @@
-import type { MemoryCategory } from '@yuta/shared';
+import { MEMORY_CATEGORIES, type MemoryCategory } from '@yuta/shared';
 
 export interface MemoryRecord {
   id: string;
@@ -15,6 +15,7 @@ export interface MemoryRecord {
 export interface NewMemory {
   category: MemoryCategory;
   content: string;
+  topic?: string;
   tags?: string[];
   importance?: number;
   title?: string;
@@ -23,29 +24,16 @@ export interface NewMemory {
 const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/;
 
 export function serializeMemory(record: MemoryRecord): string {
-  const tags = record.tags.map((tag) => `  - ${tag}`).join('\n');
-  return [
-    '---',
-    `id: ${record.id}`,
-    `type: ${record.category}`,
-    `title: ${escapeScalar(record.title)}`,
-    `importance: ${record.importance}`,
-    `created: ${record.created}`,
-    `updated: ${record.updated}`,
-    'tags:',
-    tags.length > 0 ? tags : '  []',
-    '---',
-    '',
-    record.content.trim(),
-    '',
-  ].join('\n');
+  return `${record.content.trim()}\n`;
 }
 
 export function parseMemory(path: string, raw: string): MemoryRecord {
   const match = raw.match(FRONTMATTER);
   const body = match ? match[2].trim() : raw.trim();
   const meta = match ? parseFrontmatter(match[1]) : {};
-  const category = (typeof meta.type === 'string' ? meta.type : categoryFromPath(path)) as MemoryCategory;
+  const category = (
+    typeof meta.type === 'string' ? meta.type : categoryFromPath(path)
+  ) as MemoryCategory;
   const title = typeof meta.title === 'string' ? meta.title : titleFromContent(body);
   const tags = Array.isArray(meta.tags)
     ? meta.tags.filter(Boolean)
@@ -61,8 +49,10 @@ export function parseMemory(path: string, raw: string): MemoryRecord {
     content: body,
     tags,
     importance: Number(meta.importance ?? 0.5),
-    created: typeof meta.created === 'string' ? meta.created : new Date().toISOString().slice(0, 10),
-    updated: typeof meta.updated === 'string' ? meta.updated : new Date().toISOString().slice(0, 10),
+    created:
+      typeof meta.created === 'string' ? meta.created : new Date().toISOString().slice(0, 10),
+    updated:
+      typeof meta.updated === 'string' ? meta.updated : new Date().toISOString().slice(0, 10),
   };
 }
 
@@ -102,9 +92,7 @@ function parseFrontmatter(block: string): Record<string, string | string[]> {
 
 function categoryFromPath(path: string): MemoryCategory {
   const parts = path.replaceAll('\\', '/').split('/');
-  const hit = parts.find((part) =>
-    ['profile', 'preferences', 'people', 'experiences', 'knowledge', 'private'].includes(part),
-  );
+  const hit = parts.find((part) => (MEMORY_CATEGORIES as readonly string[]).includes(part));
   return (hit as MemoryCategory | undefined) ?? 'knowledge';
 }
 
@@ -117,18 +105,16 @@ function titleFromContent(content: string): string {
   return line?.slice(0, 80) ?? 'memory';
 }
 
-function escapeScalar(value: string): string {
-  return value.includes(':') ? `"${value.replaceAll('"', '\\"')}"` : value;
-}
-
 function unquote(value: string): string {
   return value.replace(/^["']|["']$/g, '');
 }
 
 export function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-    .slice(0, 48) || 'memory';
+  return (
+    value
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '')
+      .slice(0, 48) || 'memory'
+  );
 }

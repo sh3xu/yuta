@@ -1,10 +1,4 @@
-import {
-  ACTIONS,
-  EMOTIONS,
-  MEMORY_CATEGORIES,
-  type AIResponse,
-  clamp01,
-} from '@yuta/shared';
+import { ACTIONS, type AIResponse, clamp01, EMOTIONS, MEMORY_CATEGORIES } from '@yuta/shared';
 import { z } from 'zod';
 
 export const emotionSignalSchema = z.object({
@@ -17,9 +11,17 @@ export const actionSignalSchema = z.object({
   intensity: z.number().min(0).max(1),
 });
 
+export const memoryFactSchema = z.object({
+  category: z.enum(MEMORY_CATEGORIES),
+  topic: z.string().max(24).optional(),
+  content: z.string().min(1).max(120),
+});
+
 export const memoryWriteHintSchema = z.object({
   shouldStore: z.boolean(),
+  facts: z.array(memoryFactSchema).max(4).optional(),
   category: z.enum(MEMORY_CATEGORIES).optional(),
+  topic: z.string().max(24).optional(),
   content: z.string().optional(),
   tags: z.array(z.string()).optional(),
 });
@@ -55,7 +57,20 @@ export const geminiJsonSchema = {
       type: 'object',
       properties: {
         shouldStore: { type: 'boolean' },
+        facts: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              category: { type: 'string', enum: [...MEMORY_CATEGORIES] },
+              topic: { type: 'string' },
+              content: { type: 'string' },
+            },
+            required: ['category', 'content'],
+          },
+        },
         category: { type: 'string', enum: [...MEMORY_CATEGORIES] },
+        topic: { type: 'string' },
         content: { type: 'string' },
         tags: { type: 'array', items: { type: 'string' } },
       },
@@ -154,7 +169,10 @@ function coerceAction(input: unknown): AIResponse['action'] | undefined {
 }
 
 function matchEnum<T extends string>(value: string, options: readonly T[]): T | undefined {
-  const needle = value.trim().toLowerCase().replace(/[\s_-]+/g, '');
+  const needle = value
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_-]+/g, '');
   return options.find((option) => option.toLowerCase() === needle);
 }
 

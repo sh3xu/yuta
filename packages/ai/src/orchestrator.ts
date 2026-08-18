@@ -1,6 +1,6 @@
 import type { BehaviorTracker } from '@yuta/behavior';
 import { type EmotionEngine, planAction } from '@yuta/emotion-engine';
-import type { MemoryService } from '@yuta/memory';
+import { type MemoryService, memoriesFromHint } from '@yuta/memory';
 import type { AIRequest, AIResponse, RetrievedMemory } from '@yuta/shared';
 import { RECENT_TURN_LIMIT } from '@yuta/shared';
 import type { AIProvider } from './providers/types';
@@ -53,13 +53,8 @@ export class Orchestrator {
     this.deps.behavior.observe(input.userMessage, 'user');
     this.deps.behavior.observe(response.message, 'assistant');
 
-    if (response.memory?.shouldStore && response.memory.content) {
-      await this.deps.memory.write({
-        category: response.memory.category ?? 'knowledge',
-        content: response.memory.content,
-        tags: response.memory.tags ?? [],
-        importance: 0.7,
-      });
+    for (const fact of memoriesFromHint(response.memory)) {
+      await this.deps.memory.write(fact);
     }
 
     const characterState = this.deps.emotion.apply({

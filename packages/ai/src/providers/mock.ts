@@ -1,4 +1,5 @@
-import type { ActionName, AIRequest, AIResponse, EmotionName } from '@yuta/shared';
+import { compactFact } from '@yuta/memory';
+import type { ActionName, AIRequest, AIResponse, EmotionName, MemoryFact } from '@yuta/shared';
 import type { AIGenerateOptions, AIProvider } from './types';
 
 const KEYWORDS: Array<{ match: RegExp; emotion: EmotionName; action?: ActionName; line?: string }> =
@@ -9,6 +10,18 @@ const KEYWORDS: Array<{ match: RegExp; emotion: EmotionName; action?: ActionName
     { match: /\b(look right|glance right)\b/i, emotion: 'curious', action: 'lookRight' },
     { match: /\b(shake (your )?head|nope)\b/i, emotion: 'neutral', action: 'shakeNo' },
     { match: /\b(blow (a )?kiss)\b/i, emotion: 'happy', action: 'blowKiss' },
+    {
+      match: /\b(cover (your )?face|both hands on (your )?face)\b/i,
+      emotion: 'embarrassed',
+      action: 'coverFace',
+    },
+    {
+      match: /\b(embarrass|embarrassed|awkward|blush)\b/i,
+      emotion: 'embarrassed',
+      action: 'coverFace',
+    },
+    { match: /\b(hands on (your )?hips|akimbo)\b/i, emotion: 'angry', action: 'handsOnHips' },
+    { match: /\b(angry|mad|annoyed|furious|pissed)\b/i, emotion: 'angry', action: 'handsOnHips' },
     { match: /\b(facepalm)\b/i, emotion: 'sad', action: 'facepalm' },
     { match: /\b(salute)\b/i, emotion: 'happy', action: 'salute' },
     { match: /\b(clap|applause)\b/i, emotion: 'happy', action: 'clap' },
@@ -27,7 +40,7 @@ const KEYWORDS: Array<{ match: RegExp; emotion: EmotionName; action?: ActionName
     { match: /\b(wink)\b/i, emotion: 'happy', action: 'wink' },
     { match: /\b(lean in|lean closer)\b/i, emotion: 'curious', action: 'leanIn' },
     { match: /\b(think|hmm|ponder)\b/i, emotion: 'curious', action: 'think' },
-    { match: /\b(shy|embarrassed|blush)\b/i, emotion: 'happy', action: 'shy' },
+    { match: /\b(shy)\b/i, emotion: 'embarrassed', action: 'shy' },
     {
       match: /\b(jump|hop|leap)\b/i,
       emotion: 'happy',
@@ -51,9 +64,7 @@ export class MockProvider implements AIProvider {
     const hit = KEYWORDS.find((item) => item.match.test(request.userMessage));
     const emotion = hit?.emotion ?? 'neutral';
     const action = hit?.action ?? 'nod';
-    const memoryMatch = request.userMessage.match(
-      /(?:i (?:like|love|prefer)|my name is|remember that)\s+(.+)/i,
-    );
+    const facts = extractMockFacts(request.userMessage);
     const lookups = needsMemoryLookup(request.userMessage)
       ? ((await options?.lookupMemory?.(request.userMessage)) ?? [])
       : [];
@@ -62,20 +73,59 @@ export class MockProvider implements AIProvider {
       message: hit?.line ?? buildMockReply(emotion, lookups[0]?.title),
       emotion: { name: emotion, intensity: hit ? 0.85 : 0.5 },
       action: { name: action, intensity: 1 },
-      memory: memoryMatch
-        ? {
-            shouldStore: true,
-            category: /name/i.test(request.userMessage) ? 'profile' : 'preferences',
-            content: request.userMessage,
-            tags: ['mock', 'user-stated'],
-          }
-        : { shouldStore: false },
+      memory: facts.length > 0 ? { shouldStore: true, facts } : { shouldStore: false },
     };
   }
 }
 
 const LOOKUP_QUERY =
   /\b(remember|who is|what's my|whats my|what is my|did i (tell|say)|have i told|my name|favorite)\b/i;
+
+function extractMockFacts(message: string): MemoryFact[] {
+  const facts: MemoryFact[] = [];
+  const dislike = message.match(/i (?:don't|dont|do not) like\s+([^,.]+?)(?=\s+but\b|[.,]|$)/i);
+  if (dislike?.[1]) {
+    facts.push({
+      category: 'preferences',
+      topic: 'dislikes',
+      content: compactFact(`dislike ${dislike[1]}`),
+    });
+  }
+  const fav =
+    message.match(/\bbut\s+([^,.]+?)\s+(?:are|is)\s+fav/i) ??
+    message.match(/\bfav(?:orite)?(?:\s+fruit)?(?:\s+is)?\s+([^,.]+)/i);
+  if (fav?.[1] && !/^i\b/i.test(fav[1].trim())) {
+    facts.push({
+      category: 'preferences',
+      topic: 'likes',
+      content: compactFact(`fav ${fav[1]}`),
+    });
+  }
+  const name = message.match(/my name is\s+(.+)/i);
+  if (name?.[1]) {
+    facts.push({
+      category: 'profile',
+      topic: 'name',
+      content: compactFact(`name ${name[1]}`),
+    });
+  }
+  const like = message.match(/\bi (?:like|love|prefer)\s+(.+)/i);
+  if (like?.[1] && facts.every((fact) => fact.topic !== 'likes')) {
+    facts.push({
+      category: 'preferences',
+      topic: 'likes',
+      content: compactFact(`like ${like[1]}`),
+    });
+  }
+  const remember = message.match(/remember that\s+(.+)/i);
+  if (remember?.[1] && facts.length === 0) {
+    facts.push({
+      category: 'knowledge',
+      content: compactFact(remember[1]),
+    });
+  }
+  return facts.filter((fact) => fact.content.length > 0);
+}
 
 function needsMemoryLookup(message: string): boolean {
   return LOOKUP_QUERY.test(message);
@@ -85,6 +135,10 @@ function buildMockReply(emotion: EmotionName, memoryTitle?: string): string {
   const memoryNote = memoryTitle ? ` I found this: ${memoryTitle}.` : '';
 
   switch (emotion) {
+    case 'embarrassed':
+      return `Ah — that got to me.${memoryNote} Give me a second.`;
+    case 'angry':
+      return `Okay, that is not sitting well.${memoryNote} Say that again?`;
     case 'happy':
       return `Hey — that made me smile.${memoryNote} Want to keep going?`;
     case 'sad':

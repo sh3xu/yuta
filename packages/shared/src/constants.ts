@@ -1,7 +1,15 @@
 export const APP_ID = 'yuta';
 export const APP_NAME = 'Yuta';
 
-export const EMOTIONS = ['neutral', 'happy', 'sad', 'surprised', 'curious'] as const;
+export const EMOTIONS = [
+  'neutral',
+  'happy',
+  'sad',
+  'surprised',
+  'curious',
+  'embarrassed',
+  'angry',
+] as const;
 export const ACTIONS = [
   'idle',
   'nod',
@@ -34,6 +42,8 @@ export const ACTIONS = [
   'sleep',
   'blowKiss',
   'dance',
+  'coverFace',
+  'handsOnHips',
 ] as const;
 export const MEMORY_CATEGORIES = [
   'profile',
@@ -44,7 +54,7 @@ export const MEMORY_CATEGORIES = [
   'private',
 ] as const;
 
-export const DEFAULT_COMPANION_NAME = 'Hiyori';
+export const DEFAULT_COMPANION_NAME = 'Yuta';
 export const DEFAULT_GEMINI_MODEL = 'gemini-2.5-flash';
 export const RECENT_TURN_LIMIT = 12;
 export const MEMORY_HIT_LIMIT = 6;
