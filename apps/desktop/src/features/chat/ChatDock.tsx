@@ -6,7 +6,8 @@ import { ThoughtBubble } from './ThoughtBubble';
 export function ChatDock({ className }: { className?: string }) {
   const composerOpen = useCompanionStore((state) => state.composerOpen);
   const bubbleVisible = useCompanionStore((state) => state.bubbleVisible);
-  const showBubble = bubbleVisible;
+  const sending = useCompanionStore((state) => state.sending);
+  const showBubble = bubbleVisible || sending;
   const showComposer = composerOpen;
 
   if (!showBubble && !showComposer) return null;

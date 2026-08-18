@@ -1,42 +1,55 @@
 import type { AppSettings } from './settings';
 import type { StickerMode } from './sticker';
-import { stickerSize } from './sticker';
+import { SETTINGS_CHANGED_EVENT, stickerSize } from './sticker';
 import { isTauri } from './tauri-fs';
 
 export const UNLOCK_POSITION_EVENT = 'unlock-position';
+export const SET_POSITION_LOCKED_EVENT = 'set-position-locked';
+export const SETTINGS_WINDOW_LABEL = 'settings';
+export const MAIN_WINDOW_LABEL = 'main';
+
+async function stickerWindow() {
+  const { WebviewWindow } = await import('@tauri-apps/api/webviewWindow');
+  return WebviewWindow.getByLabel(MAIN_WINDOW_LABEL);
+}
 
 export async function setStickerSize(mode: StickerMode, settings: AppSettings): Promise<void> {
   if (!isTauri()) return;
   const { LogicalSize } = await import('@tauri-apps/api/dpi');
-  const { getCurrentWindow } = await import('@tauri-apps/api/window');
+  const window = await stickerWindow();
+  if (!window) return;
   const size = stickerSize(mode, settings);
-  await getCurrentWindow().setSize(new LogicalSize(size.width, size.height));
+  await window.setSize(new LogicalSize(size.width, size.height));
 }
 
 export async function setAlwaysOnTop(value: boolean): Promise<void> {
   if (!isTauri()) return;
-  const { getCurrentWindow } = await import('@tauri-apps/api/window');
-  await getCurrentWindow().setAlwaysOnTop(value);
+  const window = await stickerWindow();
+  if (!window) return;
+  await window.setAlwaysOnTop(value);
 }
 
 export async function getOuterPosition(): Promise<{ x: number; y: number } | null> {
   if (!isTauri()) return null;
-  const { getCurrentWindow } = await import('@tauri-apps/api/window');
-  const position = await getCurrentWindow().outerPosition();
+  const window = await stickerWindow();
+  if (!window) return null;
+  const position = await window.outerPosition();
   return { x: position.x, y: position.y };
 }
 
 export async function getScaleFactor(): Promise<number> {
   if (!isTauri()) return window.devicePixelRatio || 1;
-  const { getCurrentWindow } = await import('@tauri-apps/api/window');
-  return getCurrentWindow().scaleFactor();
+  const current = await stickerWindow();
+  if (!current) return window.devicePixelRatio || 1;
+  return await current.scaleFactor();
 }
 
 export async function setOuterPosition(x: number, y: number): Promise<void> {
   if (!isTauri()) return;
   const { PhysicalPosition } = await import('@tauri-apps/api/dpi');
-  const { getCurrentWindow } = await import('@tauri-apps/api/window');
-  await getCurrentWindow().setPosition(new PhysicalPosition(x, y));
+  const window = await stickerWindow();
+  if (!window) return;
+  await window.setPosition(new PhysicalPosition(x, y));
 }
 
 export async function startWindowDrag(): Promise<void> {
@@ -55,6 +68,30 @@ export async function subscribeUnlockPosition(handler: () => void): Promise<() =
   if (!isTauri()) return () => undefined;
   const { listen } = await import('@tauri-apps/api/event');
   return listen(UNLOCK_POSITION_EVENT, handler);
+}
+
+export async function requestPositionLocked(locked: boolean): Promise<void> {
+  if (!isTauri()) return;
+  const { emit } = await import('@tauri-apps/api/event');
+  await emit(SET_POSITION_LOCKED_EVENT, { locked });
+  try {
+    const window = await stickerWindow();
+    if (!window) return;
+    await window.show();
+    await window.setFocus();
+  } catch (error) {
+    console.error('[yuta] focus sticker', error);
+  }
+}
+
+export async function subscribePositionLocked(
+  handler: (locked: boolean) => void,
+): Promise<() => void> {
+  if (!isTauri()) return () => undefined;
+  const { listen } = await import('@tauri-apps/api/event');
+  return listen<{ locked: boolean }>(SET_POSITION_LOCKED_EVENT, (event) => {
+    handler(event.payload.locked);
+  });
 }
 
 export async function subscribeCursorMove(
@@ -78,4 +115,40 @@ export async function restoreWindow(settings: {
   if (settings.windowX != null && settings.windowY != null) {
     await setOuterPosition(settings.windowX, settings.windowY);
   }
+}
+
+export async function currentWindowLabel(): Promise<string> {
+  if (!isTauri()) return 'main';
+  const { getCurrentWindow } = await import('@tauri-apps/api/window');
+  return getCurrentWindow().label;
+}
+
+export async function showSettingsWindow(): Promise<void> {
+  if (!isTauri()) return;
+  const { WebviewWindow } = await import('@tauri-apps/api/webviewWindow');
+  const existing = await WebviewWindow.getByLabel(SETTINGS_WINDOW_LABEL);
+  if (!existing) return;
+  await existing.show();
+  await existing.unminimize();
+  await existing.setFocus();
+}
+
+export async function hideSettingsWindow(): Promise<void> {
+  if (!isTauri()) return;
+  const { getCurrentWindow } = await import('@tauri-apps/api/window');
+  await getCurrentWindow().hide();
+}
+
+export async function broadcastSettings(settings: AppSettings): Promise<void> {
+  if (!isTauri()) return;
+  const { emit } = await import('@tauri-apps/api/event');
+  await emit(SETTINGS_CHANGED_EVENT, settings);
+}
+
+export async function subscribeSettingsChanged(
+  handler: (settings: AppSettings) => void,
+): Promise<() => void> {
+  if (!isTauri()) return () => undefined;
+  const { listen } = await import('@tauri-apps/api/event');
+  return listen<AppSettings>(SETTINGS_CHANGED_EVENT, (event) => handler(event.payload));
 }

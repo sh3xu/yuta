@@ -1,6 +1,8 @@
 import { APP_ID, DEFAULT_COMPANION_NAME, DEFAULT_GEMINI_MODEL } from '@yuta/shared';
 import { isTauri } from './tauri-fs';
 
+export type InputCorner = 'left-top' | 'right-top' | 'left-bottom' | 'right-bottom';
+
 export interface AppSettings {
   companionName: string;
   personality: string;
@@ -22,7 +24,15 @@ export interface AppSettings {
   dockGap: number;
   dockOffsetY: number;
   followCursor: boolean;
+  inputCorner: InputCorner;
 }
+
+export const INPUT_CORNERS: InputCorner[] = [
+  'left-top',
+  'right-top',
+  'left-bottom',
+  'right-bottom',
+];
 
 export const DEFAULT_SETTINGS: AppSettings = {
   companionName: DEFAULT_COMPANION_NAME,
@@ -46,6 +56,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   dockGap: 2,
   dockOffsetY: 0.08,
   followCursor: true,
+  inputCorner: 'left-top',
 };
 
 const KEY = `${APP_ID}-settings`;

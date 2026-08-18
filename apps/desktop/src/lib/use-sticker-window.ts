@@ -1,13 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { useCompanionStore } from '../stores/companion-store';
 import { stickerMode } from './sticker';
-import { restoreWindow, setStickerSize, subscribeUnlockPosition } from './window';
+import { restoreWindow, setStickerSize, subscribePositionLocked, subscribeUnlockPosition } from './window';
 
 export function useStickerWindow(): void {
   const ready = useCompanionStore((state) => state.ready);
   const settings = useCompanionStore((state) => state.settings);
   const composerOpen = useCompanionStore((state) => state.composerOpen);
-  const settingsOpen = useCompanionStore((state) => state.settingsOpen);
+  const sending = useCompanionStore((state) => state.sending);
   const bubbleVisible = useCompanionStore((state) => state.bubbleVisible);
   const setPositionLocked = useCompanionStore((state) => state.setPositionLocked);
   const restored = useRef(false);
@@ -16,8 +16,8 @@ export function useStickerWindow(): void {
     onboardingComplete: settings.onboardingComplete,
     positionLocked: settings.positionLocked,
     composerOpen,
-    settingsOpen,
     bubbleVisible,
+    sending,
   });
 
   useEffect(() => {
@@ -40,11 +40,13 @@ export function useStickerWindow(): void {
     settings.dockWidth,
     settings.dockGap,
     settings.dockOffsetY,
+    settings.inputCorner,
   ]);
 
   useEffect(() => {
     if (!ready) return;
-    let unlisten: (() => void) | undefined;
+    let unlistenUnlock: (() => void) | undefined;
+    let unlistenLock: (() => void) | undefined;
     let cancelled = false;
     void subscribeUnlockPosition(() => {
       void setPositionLocked(false);
@@ -53,11 +55,21 @@ export function useStickerWindow(): void {
         fn();
         return;
       }
-      unlisten = fn;
+      unlistenUnlock = fn;
+    });
+    void subscribePositionLocked((locked) => {
+      void setPositionLocked(locked);
+    }).then((fn) => {
+      if (cancelled) {
+        fn();
+        return;
+      }
+      unlistenLock = fn;
     });
     return () => {
       cancelled = true;
-      unlisten?.();
+      unlistenUnlock?.();
+      unlistenLock?.();
     };
   }, [ready, setPositionLocked]);
 }

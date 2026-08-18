@@ -1,6 +1,9 @@
 import { Switch } from '@yuta/ui';
 import { Minimize2, Pin, Scaling } from 'lucide-react';
+import { isTauri } from '../../lib/tauri-fs';
+import { requestPositionLocked } from '../../lib/window';
 import { applyAlwaysOnTop, useCompanionStore } from '../../stores/companion-store';
+import { InputPositionPicker } from './input-position-picker';
 import { RangeField } from './range-field';
 import { SectionCard } from './section-card';
 
@@ -14,26 +17,47 @@ export function DesktopSection() {
   const settings = useCompanionStore((state) => state.settings);
   const setPositionLocked = useCompanionStore((state) => state.setPositionLocked);
   const placeCompanion = useCompanionStore((state) => state.placeCompanion);
+  const setLocked = async (locked: boolean) => {
+    if (isTauri()) {
+      useCompanionStore.setState({
+        settings: { ...useCompanionStore.getState().settings, positionLocked: locked },
+      });
+      await requestPositionLocked(locked);
+      return;
+    }
+    await setPositionLocked(locked);
+  };
   const applyAppearance = useCompanionStore((state) => state.applyAppearance);
 
   return (
     <div className="flex flex-col gap-3">
       <SectionCard
         title="Placement"
-        description="The sticker stays where you put it until you unlock it."
+        description="Lock keeps the sticker where it is. Unlock lets you drag it."
         icon={<Pin className="size-4" />}
       >
-        <div className="flex h-10 items-center justify-between gap-3 rounded-lg border border-line bg-ink px-3">
-          <span className="text-sm">Lock position</span>
-          <Switch
-            checked={settings.positionLocked}
-            onCheckedChange={(locked) => void setPositionLocked(locked)}
-          />
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            disabled={settings.positionLocked}
+            className="h-9 rounded-lg border border-line bg-panel text-sm text-cream hover:bg-white/10 disabled:opacity-40"
+            onClick={() => void setLocked(true)}
+          >
+            Lock
+          </button>
+          <button
+            type="button"
+            disabled={!settings.positionLocked}
+            className="h-9 rounded-lg border border-line bg-panel text-sm text-cream hover:bg-white/10 disabled:opacity-40"
+            onClick={() => void setLocked(false)}
+          >
+            Unlock
+          </button>
         </div>
         <p className="text-[11px] leading-4 text-mute">
           {settings.positionLocked
-            ? 'Unlock to drag the companion, then lock it again.'
-            : 'Drag the companion, then lock or press Place here.'}
+            ? 'Position is locked. Unlock, drag the companion, then lock again.'
+            : 'Position is unlocked. Drag the companion, then press Lock.'}
         </p>
         {settings.positionLocked ? null : (
           <button
@@ -137,11 +161,12 @@ export function DesktopSection() {
       </SectionCard>
 
       <SectionCard
-        title="Chat dock"
-        description="Input and settings sit next to the head. Size and placement scale with the model."
+        title="Chat input"
+        description="Where the input sits around the companion. Default is top left."
       >
+        <InputPositionPicker />
         <RangeField
-          label="Dock width"
+          label="Input width"
           min={180}
           max={420}
           step={4}
@@ -157,14 +182,6 @@ export function DesktopSection() {
           suffix="px"
           value={settings.dockGap}
           onChange={(dockGap) => applyAppearance({ dockGap })}
-        />
-        <RangeField
-          label="Vertical offset"
-          min={0}
-          max={0.55}
-          step={0.01}
-          value={settings.dockOffsetY}
-          onChange={(dockOffsetY) => applyAppearance({ dockOffsetY })}
         />
       </SectionCard>
     </div>

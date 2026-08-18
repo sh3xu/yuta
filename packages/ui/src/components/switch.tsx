@@ -18,6 +18,7 @@ export function Switch({
         'relative inline-flex h-6 w-10 shrink-0 cursor-pointer rounded-full border border-line bg-white/10 outline-none data-[state=checked]:bg-accent',
         className,
       )}
+      type="button"
     >
       <SwitchPrimitive.Thumb className="pointer-events-none block size-5 translate-x-0.5 rounded-full bg-cream transition-transform data-[state=checked]:translate-x-4 data-[state=checked]:bg-ink" />
     </SwitchPrimitive.Root>

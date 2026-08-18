@@ -26,6 +26,20 @@
         "skipTaskbar": true,
         "visible": true,
         "backgroundColor": "#00000000"
+      },
+      {
+        "label": "settings",
+        "title": "Yuta Settings",
+        "width": 400,
+        "height": 680,
+        "resizable": true,
+        "maximizable": false,
+        "decorations": true,
+        "transparent": false,
+        "alwaysOnTop": false,
+        "skipTaskbar": false,
+        "visible": false,
+        "backgroundColor": "#12151c"
       }
     ],
     "security": {

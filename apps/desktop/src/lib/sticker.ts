@@ -1,4 +1,4 @@
-import type { AppSettings } from './settings';
+import type { AppSettings, InputCorner } from './settings';
 
 export const BASE_STAGE_WIDTH = 280;
 export const BASE_STAGE_HEIGHT = 520;
@@ -6,6 +6,7 @@ export const WINDOW_PAD = 8;
 export const PLACE_CHIP_HEIGHT = 40;
 export const BUBBLE_MS = 4500;
 export const CURSOR_MOVE_EVENT = 'cursor-move';
+export const SETTINGS_CHANGED_EVENT = 'settings-changed';
 
 export type StickerMode = 'collapsed' | 'place' | 'linger' | 'chat' | 'settings' | 'onboarding';
 
@@ -51,37 +52,40 @@ export function visibleStage(settings: AppSettings): VisibleStage {
   };
 }
 
+export function isInputLeft(corner: InputCorner): boolean {
+  return corner.startsWith('left');
+}
+
+export function isInputTop(corner: InputCorner): boolean {
+  return corner.endsWith('top');
+}
+
 export function stickerSize(
   mode: StickerMode,
   settings: AppSettings,
 ): { width: number; height: number } {
   const stage = visibleStage(settings);
   const dockOpen = mode !== 'collapsed' && mode !== 'place';
-  const dockWidth = mode === 'settings' ? Math.max(settings.dockWidth, 280) : settings.dockWidth;
-  const dock = dockOpen ? dockWidth + settings.dockGap : 0;
+  const dock = dockOpen ? settings.dockWidth + settings.dockGap : 0;
   const placeExtra = mode === 'place' ? PLACE_CHIP_HEIGHT : 0;
-  const dockTop = Math.round(stage.height * clamp(settings.dockOffsetY, 0, 0.7));
+  const width = Math.max(stage.width + WINDOW_PAD * 2, stage.width + dock + WINDOW_PAD * 2);
   let height = stage.height + placeExtra + WINDOW_PAD * 2;
-  if (mode === 'settings' || mode === 'onboarding') {
-    height = Math.max(height, dockTop + 420 + WINDOW_PAD * 2);
+  if (mode === 'onboarding') {
+    height = Math.max(height, 420 + WINDOW_PAD * 2);
   }
-  return {
-    width: Math.max(stage.width + WINDOW_PAD * 2, stage.width + dock + WINDOW_PAD * 2),
-    height,
-  };
+  return { width, height };
 }
 
 export function stickerMode(input: {
   onboardingComplete: boolean;
   positionLocked: boolean;
   composerOpen: boolean;
-  settingsOpen: boolean;
   bubbleVisible: boolean;
+  sending?: boolean;
 }): StickerMode {
   if (!input.onboardingComplete) return 'onboarding';
-  if (input.settingsOpen) return 'settings';
   if (input.composerOpen) return 'chat';
-  if (input.bubbleVisible) return 'linger';
+  if (input.bubbleVisible || input.sending) return 'linger';
   if (!input.positionLocked) return 'place';
   return 'collapsed';
 }

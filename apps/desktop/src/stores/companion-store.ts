@@ -10,16 +10,21 @@ import { type AppError, session } from '../app/session';
 import { notifyError } from '../lib/notify';
 import { type AppSettings, DEFAULT_SETTINGS, saveSettings } from '../lib/settings';
 import { BUBBLE_MS } from '../lib/sticker';
-import { closeWindow, getOuterPosition, setAlwaysOnTop } from '../lib/window';
-
-export type SettingsHud = 'scale' | 'crop' | 'dock' | 'profile' | 'ai' | null;
+import { isTauri } from '../lib/tauri-fs';
+import {
+  broadcastSettings,
+  closeWindow,
+  getOuterPosition,
+  setAlwaysOnTop,
+  showSettingsWindow,
+} from '../lib/window';
 
 interface CompanionStore {
   ready: boolean;
   composerOpen: boolean;
   settingsOpen: boolean;
-  settingsHud: SettingsHud;
   bubbleVisible: boolean;
+  bubbleText: string | null;
   settings: AppSettings;
   messages: ChatTurn[];
   characterState: CharacterState;
@@ -35,8 +40,7 @@ interface CompanionStore {
   init: () => Promise<void>;
   toggleChat: () => void;
   closeOverlays: () => void;
-  openSettings: () => void;
-  setSettingsHud: (hud: SettingsHud) => void;
+  openSettings: () => Promise<void>;
   send: (text: string) => Promise<void>;
   saveSettings: (settings: AppSettings, options?: { silent?: boolean }) => Promise<void>;
   patchSettings: (patch: Partial<AppSettings>, options?: { silent?: boolean }) => Promise<void>;
@@ -58,20 +62,23 @@ function clearLingerTimer(): void {
   }
 }
 
-function hideBubbleLater(set: (partial: { bubbleVisible: boolean }) => void): void {
+function hideBubbleLater(
+  set: (partial: { bubbleVisible: boolean; bubbleText?: string | null }) => void,
+): void {
   clearLingerTimer();
+  const ms = BUBBLE_MS > 0 ? BUBBLE_MS : 4500;
   lingerTimer = setTimeout(() => {
-    set({ bubbleVisible: false });
+    set({ bubbleVisible: false, bubbleText: null });
     lingerTimer = undefined;
-  }, BUBBLE_MS);
+  }, ms);
 }
 
 export const useCompanionStore = create<CompanionStore>((set, get) => ({
   ready: false,
   composerOpen: false,
   settingsOpen: false,
-  settingsHud: null,
   bubbleVisible: false,
+  bubbleText: null,
   settings: DEFAULT_SETTINGS,
   messages: [],
   characterState: { ...IDLE_CHARACTER_STATE },
@@ -92,20 +99,16 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
   },
 
   closeOverlays() {
-    set({ composerOpen: false, settingsOpen: false, settingsHud: null });
+    set({ composerOpen: false, settingsOpen: false });
   },
 
-  openSettings() {
+  async openSettings() {
     if (!get().settings.onboardingComplete) return;
-    if (get().settingsOpen) {
-      set({ settingsOpen: false, settingsHud: null });
+    if (isTauri()) {
+      await showSettingsWindow();
       return;
     }
-    set({ settingsOpen: true });
-  },
-
-  setSettingsHud(settingsHud) {
-    set({ settingsOpen: true, settingsHud });
+    set({ settingsOpen: !get().settingsOpen });
   },
 
   async send(text) {
@@ -116,16 +119,21 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
       sending: true,
       composerOpen: false,
       bubbleVisible: true,
+      bubbleText: null,
       lastError: undefined,
       messages: [...get().messages, { role: 'user', content: trimmed }],
     });
     try {
+      let replied = false;
       await session.send(
         trimmed,
         (characterState) => set({ characterState }),
         (reply) => {
+          const content = reply.trim();
+          if (!content) return;
+          replied = true;
           set({
-            messages: [...get().messages, { role: 'assistant', content: reply }],
+            messages: [...get().messages, { role: 'assistant', content }],
             lookupHits: session.debug.loadedMemories,
             behaviorSummary: session.debug.behavior,
             provider: session.debug.provider,
@@ -134,6 +142,7 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
             plannedAction: session.debug.plannedAction,
             playedAction: session.debug.playedAction,
             bubbleVisible: true,
+            bubbleText: content,
           });
         },
       );
@@ -147,7 +156,16 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
         playedAction: session.debug.playedAction,
       });
       if (session.debug.lastError) notifyError(session.debug.lastError);
-      hideBubbleLater(set);
+      if (replied) hideBubbleLater(set);
+      else {
+        const fallback = 'I could not come up with a reply.';
+        set({
+          bubbleVisible: true,
+          bubbleText: fallback,
+          messages: [...get().messages, { role: 'assistant', content: fallback }],
+        });
+        hideBubbleLater(set);
+      }
     } catch (error) {
       const lastError = {
         source: 'ai' as const,
@@ -155,9 +173,14 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
         detail: error instanceof Error ? error.stack : String(error),
       };
       console.error('[yuta:ai]', error);
-      clearLingerTimer();
-      set({ lastError, bubbleVisible: false });
       notifyError(lastError);
+      set({
+        lastError,
+        bubbleVisible: true,
+        bubbleText: lastError.message,
+        messages: [...get().messages, { role: 'assistant', content: lastError.message }],
+      });
+      hideBubbleLater(set);
     } finally {
       set({ sending: false });
     }
@@ -166,6 +189,7 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
   async saveSettings(settings, options) {
     await session.persist(settings);
     set({ settings, provider: session.debug.provider });
+    await broadcastSettings(settings);
     if (!options?.silent) {
       toast({ variant: 'success', title: 'settings', description: 'Saved on this machine.' });
     }
@@ -178,6 +202,7 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
   applyAppearance(patch) {
     const settings = { ...get().settings, ...patch };
     set({ settings });
+    void broadcastSettings(settings);
     if (appearanceTimer !== undefined) clearTimeout(appearanceTimer);
     appearanceTimer = setTimeout(() => {
       void saveSettings(get().settings);
@@ -198,20 +223,23 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
     toast({
       variant: 'success',
       title: 'desktop',
-      description: 'Placed. Unlock in settings to move again.',
+      description: 'Placed. Unlock from tray Settings to move again.',
     });
   },
 
   async setPositionLocked(locked) {
-    const position = locked ? await getOuterPosition() : null;
-    await get().patchSettings(
-      {
-        positionLocked: locked,
-        windowX: position?.x ?? get().settings.windowX,
-        windowY: position?.y ?? get().settings.windowY,
-      },
-      { silent: true },
-    );
+    let windowX = get().settings.windowX;
+    let windowY = get().settings.windowY;
+    if (locked) {
+      try {
+        const position = await getOuterPosition();
+        windowX = position?.x ?? windowX;
+        windowY = position?.y ?? windowY;
+      } catch (error) {
+        console.error('[yuta] position', error);
+      }
+    }
+    await get().patchSettings({ positionLocked: locked, windowX, windowY }, { silent: true });
   },
 
   async quit() {

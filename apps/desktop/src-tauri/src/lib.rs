@@ -51,11 +51,12 @@ pub fn run() {
 
             let show = MenuItem::with_id(app, "show", "Show", true, None::<&str>)?;
             let hide = MenuItem::with_id(app, "hide", "Hide", true, None::<&str>)?;
+            let settings = MenuItem::with_id(app, "settings", "Settings", true, None::<&str>)?;
             let unlock = MenuItem::with_id(app, "unlock", "Unlock position", true, None::<&str>)?;
             let quit = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
             let sep = PredefinedMenuItem::separator(app)?;
             let sep2 = PredefinedMenuItem::separator(app)?;
-            let menu = Menu::with_items(app, &[&show, &hide, &sep, &unlock, &sep2, &quit])?;
+            let menu = Menu::with_items(app, &[&show, &hide, &sep, &settings, &unlock, &sep2, &quit])?;
 
             let mut tray = TrayIconBuilder::with_id("main")
                 .menu(&menu)
@@ -71,6 +72,13 @@ pub fn run() {
                     "hide" => {
                         if let Some(window) = app.get_webview_window("main") {
                             let _ = window.hide();
+                        }
+                    }
+                    "settings" => {
+                        if let Some(window) = app.get_webview_window("settings") {
+                            let _ = window.show();
+                            let _ = window.unminimize();
+                            let _ = window.set_focus();
                         }
                     }
                     "unlock" => {
