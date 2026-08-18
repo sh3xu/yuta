@@ -1,0 +1,182 @@
+packages/ui/src/components/tabs.tsx
+  s_1c0ceae8e5ebe9::t_bd861c8addb496 1-22,27-35
+  s_1c0ceae8e5ebe9::t_f4d6705addd3ba 23
+  s_1c0ceae8e5ebe9::t_4984b8bf030cc9 24-26
+apps/desktop/src/features/debug/DebugPanel.tsx
+  s_1c0ceae8e5ebe9::t_8f78c4856e6d77 15-17,43-44,51,58
+  s_1c0ceae8e5ebe9::t_4984b8bf030cc9 34
+apps/desktop/src/features/placement/PlaceChip.tsx
+  s_1c0ceae8e5ebe9::t_8513f141e6127d 4-5,14-15
+  s_1c0ceae8e5ebe9::t_4984b8bf030cc9 8-13
+apps/desktop/src/features/settings/desktop-section.tsx
+  s_1c0ceae8e5ebe9::t_703d48524ee4c2 4,7-12,17,20-84,86-170
+  s_1c0ceae8e5ebe9::t_1d1510eace8e0e 85
+  s_1c0ceae8e5ebe9::t_fc4394c60058a5 2
+  s_1c0ceae8e5ebe9::t_72f092a97e69dd 1,3,5-6,13-16,18-19,171-172
+apps/desktop/src/features/behavior/BehaviorPanel.tsx
+  s_1c0ceae8e5ebe9::t_1e5aec254fa537 10-16,20,24,26,29,35
+  s_1c0ceae8e5ebe9::t_4984b8bf030cc9 31-34
+apps/desktop/src/components/layout/Shell.tsx
+  s_1c0ceae8e5ebe9::t_50d4dedb04162a 3,19,45-52,57,60-63,68-90,95,99
+  s_1c0ceae8e5ebe9::t_6b708a79c61d9e 8
+  s_1c0ceae8e5ebe9::t_84b7ada917cc5e 6-7,9,14-15,17,22-24,27-28,30,33-34,36-44,56,59,91-93,105
+  s_1c0ceae8e5ebe9::t_dd344a1a02e3db 13,16,25-26,29,31-32,35,58,94,101-103
+  s_1c0ceae8e5ebe9::t_9cebf465eb3eeb 96,98,100
+  s_1c0ceae8e5ebe9::t_bbb23ac5cd3563 97
+  s_1c0ceae8e5ebe9::t_630e11cda7949e 53
+  s_1c0ceae8e5ebe9::t_5f2434e76cb76b 64-67
+  s_1c0ceae8e5ebe9::t_4a5b1eb6fd72e4 20
+  s_1c0ceae8e5ebe9::t_78a8ea257a6c8a 1-2,18
+  s_1c0ceae8e5ebe9::t_de4d40023564be 5
+  s_1c0ceae8e5ebe9::t_4ba96fb2f6f399 21
+apps/desktop/src/features/settings/companion-section.tsx
+  s_1c0ceae8e5ebe9::t_665d92c6fe8e95 1-39
+apps/desktop/src/styles.css
+  s_1c0ceae8e5ebe9::t_01e62031a7c5c7 26
+apps/desktop/src/features/chat/ChatDock.tsx
+  s_1c0ceae8e5ebe9::t_af48a63e800184 17
+  s_1c0ceae8e5ebe9::t_2457493ed79ccf 9-11
+  s_1c0ceae8e5ebe9::t_32ec40c902f07f 3,22
+  s_1c0ceae8e5ebe9::t_90af8bdd0853b4 2,4-8,12-16,18-21,23-27
+  s_1c0ceae8e5ebe9::t_54c54307eb2997 1
+packages/character-engine/src/motion/clips.ts
+  h_54cccc4af8e4fc 861-863
+apps/desktop/src/lib/window.ts
+  s_1c0ceae8e5ebe9::t_2accda406866a2 12,29-34,58-69
+  s_1c0ceae8e5ebe9::t_2867690e52a625 2-3,5-7,9-11,13-28,35-57,70-81
+  s_1c0ceae8e5ebe9::t_4984b8bf030cc9 4
+  s_1c0ceae8e5ebe9::t_7c2f1d9b162222 1,8
+apps/desktop/src/features/settings/section-card.tsx
+  s_1c0ceae8e5ebe9::t_4984b8bf030cc9 20-22
+  s_1c0ceae8e5ebe9::t_6d731f5dcbcef2 1-19,23-28
+apps/desktop/src/features/chat/Composer.tsx
+  s_1c0ceae8e5ebe9::t_c6329ba2b97c1b 6,12,15-18,29-30,41-42,63,76-77,82-83,88
+  s_1c0ceae8e5ebe9::t_a206742d06dd19 2,9,28,31-40,43-60,64-75,78-81,84-87,89-90
+packages/character-engine/src/live2d/renderer.ts
+  s_1c0ceae8e5ebe9::t_3693b4dfc198c4 128-132
+  s_1c0ceae8e5ebe9::t_8f98fe8e60f208 168-173
+  s_1c0ceae8e5ebe9::t_7880458e051974 56-59
+  s_1c0ceae8e5ebe9::t_50a34ed397839b 29
+  s_1c0ceae8e5ebe9::t_7bb8803a5b465e 195
+  s_1c0ceae8e5ebe9::t_72f9ff008d1941 146-149
+packages/ui/src/components/button.tsx
+  s_1c0ceae8e5ebe9::t_4984b8bf030cc9 13-14
+apps/desktop/src/features/chat/ThoughtBubble.tsx
+  s_1c0ceae8e5ebe9::t_185e856eafeaad 2-6,8,15-18,39-53
+  s_1c0ceae8e5ebe9::t_9a4d79c7870dff 1,7,9-14,19-38
+packages/ui/src/index.ts
+  s_1c0ceae8e5ebe9::t_4984b8bf030cc9 1,3,7,9-10
+  s_1c0ceae8e5ebe9::t_22b8828dd5dff6 6
+apps/desktop/src/lib/use-sticker-window.ts
+  s_1c0ceae8e5ebe9::t_1060359784f6d3 3-7,9-10,12,14-15,18-19,21-29,31,44-63
+  s_1c0ceae8e5ebe9::t_e40e62ee4e0c50 8,11,16-17,20,30,32-43
+  s_1c0ceae8e5ebe9::t_78ab69173250b3 1,13
+  s_1c0ceae8e5ebe9::t_4984b8bf030cc9 2
+apps/desktop/src-tauri/tauri.conf.json
+  s_1c0ceae8e5ebe9::t_4043238e80c568 27-28
+  s_1c0ceae8e5ebe9::t_b34f1e3ba4dd58 15,17-26
+apps/desktop/src/lib/settings.ts
+  s_1c0ceae8e5ebe9::t_4984b8bf030cc9 29-30
+  s_1c0ceae8e5ebe9::t_0f7a49566633ca 12-15,36-39
+  s_1c0ceae8e5ebe9::t_b41772e64016d1 16-24,40-48
+apps/desktop/src/features/settings/ai-section.tsx
+  s_1c0ceae8e5ebe9::t_2ad18fb5a39077 19,22-23,60,64,67,80,95-98
+  s_1c0ceae8e5ebe9::t_cc6d3208bef85c 1,3,5,7,9,11-18,20-21,26-37,39,41-42,48-59,61-63,65-66,68-79,81,89-94,99-100,102
+  s_1c0ceae8e5ebe9::t_4984b8bf030cc9 2,4
+apps/desktop/src/lib/browser-fs.ts
+  s_1c0ceae8e5ebe9::t_4984b8bf030cc9 2
+packages/character-engine/src/live2d/controller.ts
+  s_1c0ceae8e5ebe9::t_803c42278b7c23 6-10,16,20-21,25,27-31
+apps/desktop/src/app/App.tsx
+  s_1c0ceae8e5ebe9::t_089f8f32ea5293 15-17
+packages/ui/src/components/toaster.tsx
+  s_1c0ceae8e5ebe9::t_941c1b73663da6 20
+  s_1c0ceae8e5ebe9::t_998b18095b96da 25
+  s_1c0ceae8e5ebe9::t_4984b8bf030cc9 32-34
+packages/ui/src/lib/cn.ts
+  s_1c0ceae8e5ebe9::t_4984b8bf030cc9 1
+apps/desktop/src/lib/sticker.ts
+  s_1c0ceae8e5ebe9::t_82afd680b4a323 6
+  s_1c0ceae8e5ebe9::t_e9657106e13204 81-82
+  s_1c0ceae8e5ebe9::t_f723927c7ab77c 5,9-10,53,66,71-77,79-80,84-85,90
+  s_1c0ceae8e5ebe9::t_7b9513be444afc 1-4,7-8,11-52,54-63,67-70,78,83,86-89
+  s_1c0ceae8e5ebe9::t_a46d410cd135a4 65
+  s_1c0ceae8e5ebe9::t_30a516c21d9ba1 64
+apps/desktop/src/features/memory/MemoryPanel.tsx
+  s_1c0ceae8e5ebe9::t_8b48e3421cae89 15-17,22,24-26,29-30,32,34-35
+apps/desktop/src/lib/notify.ts
+  s_1c0ceae8e5ebe9::t_4984b8bf030cc9 9-11
+apps/desktop/src/features/settings/range-field.tsx
+  s_1c0ceae8e5ebe9::t_080d32602e4f49 1-41,43
+  s_1c0ceae8e5ebe9::t_295bcb972d0fea 42
+apps/desktop/src-tauri/Cargo.toml
+  s_1c0ceae8e5ebe9::t_0ed7efd53ba311 16
+apps/desktop/src/features/character/CharacterStage.tsx
+  s_1c0ceae8e5ebe9::t_04905302de064c 3-10,20-22,24-25,27-33,59,64-74,76-116,123,159-168,172-174
+  s_1c0ceae8e5ebe9::t_9d0a354c0ac6aa 119-120
+  s_1c0ceae8e5ebe9::t_eb7731db180dac 60-63
+  s_1c0ceae8e5ebe9::t_f47c8234524318 14,19,26,128-148,154-158
+  s_1c0ceae8e5ebe9::t_1a2e8aac8f4f55 121
+  s_1c0ceae8e5ebe9::t_cdec525f84eb7e 122
+  s_1c0ceae8e5ebe9::t_21b1ccfb1eb07f 124-127,149-153
+  s_1c0ceae8e5ebe9::t_93cf32906add14 169
+  s_1c0ceae8e5ebe9::t_58fcfd554d859a 75,117,175
+apps/desktop/src/stores/companion-store.ts
+  s_1c0ceae8e5ebe9::t_aeeaaf0bc869c4 105-109
+  s_1c0ceae8e5ebe9::t_deb3807523c14d 39
+  s_1c0ceae8e5ebe9::t_23326a06133c09 13,19-20,36-38,41-42,44-46,51,53-60,71-72,89-94,96-99,101-104,110,119,122,156,159-165,176-187,193,195-208,232-236
+  s_1c0ceae8e5ebe9::t_4984b8bf030cc9 188-192
+  s_1c0ceae8e5ebe9::t_4b79bf3ad473ce 100,112-113
+  s_1c0ceae8e5ebe9::t_745549cb81dbfa 11-12,22,43,52,61-68,74,95,123,149,166-175
+  s_1c0ceae8e5ebe9::t_d418fa85602569 73
+  s_1c0ceae8e5ebe9::t_e0d7580f3fe66a 15,21
+  s_1c0ceae8e5ebe9::t_cf57a0cc8a97b1 140-141
+  s_1c0ceae8e5ebe9::t_a59a9112a15cec 111
+  s_1c0ceae8e5ebe9::t_ffd6dca75654aa 194
+apps/desktop/src/lib/tauri-fs.ts
+  s_1c0ceae8e5ebe9::t_4984b8bf030cc9 1-9
+apps/desktop/src/features/settings/settings-hud.tsx
+  s_1c0ceae8e5ebe9::t_3de7b7a11d8393 1-3,5-7,9-22,24-260
+  s_1c0ceae8e5ebe9::t_3f857f4dfda704 23
+  s_1c0ceae8e5ebe9::t_52d61523ae4eb9 4
+  s_1c0ceae8e5ebe9::t_62fda38fe9ebf6 8
+apps/desktop/src/features/settings/settings-orb.tsx
+  s_1c0ceae8e5ebe9::t_f8252a0c2cea43 29-32
+  s_1c0ceae8e5ebe9::t_4f99d73a02d4dd 116-117
+  s_1c0ceae8e5ebe9::t_5589e961f7e729 111
+  s_1c0ceae8e5ebe9::t_6167504b78ce77 53,105-108,112,128,132-133,137-140,151,158-161,167-171
+  s_1c0ceae8e5ebe9::t_dc6030729562d3 15
+  s_1c0ceae8e5ebe9::t_6ac7b14867a356 1-13,16-28,33-52,54-104,109-110,113-115,118-127,129-131,134-136,141-150,152-157,162-166,172-174
+  s_1c0ceae8e5ebe9::t_31c56f1d21765d 14
+apps/desktop/src-tauri/src/lib.rs
+  s_1c0ceae8e5ebe9::t_9a2946c44af073 2-7,45,52-56,59-93
+  s_1c0ceae8e5ebe9::t_2dea711433fb46 1,8-39,46-51
+  s_1c0ceae8e5ebe9::t_f7dba9e870a31a 57-58
+apps/desktop/src/features/onboarding/Onboarding.tsx
+  s_1c0ceae8e5ebe9::t_4984b8bf030cc9 2
+  s_1c0ceae8e5ebe9::t_b8f89f153a88bb 16,23-77,79-80,82-84
+apps/desktop/src-tauri/capabilities/default.json
+  s_1c0ceae8e5ebe9::t_016d26d1b93940 17
+  s_1c0ceae8e5ebe9::t_9eee758de38539 7-16,18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "ea73b77ad65d02501292759b19d0a1bcf191a7ae",
+  "prompts": {},
+  "humans": {
+    "h_54cccc4af8e4fc": {
+      "author": "sh3xu <s43khu@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_1c0ceae8e5ebe9": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "de4cbb72-71b7-4fca-aa28-b88b3eb39475",
+        "model": "default"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    }
+  }
+}
