@@ -165,8 +165,8 @@ export class Live2DRenderer implements CharacterRenderer {
       speaking: this.target.speaking,
       mouthOpen: lerp(this.current.mouthOpen, this.target.mouthOpen, 0.35),
     };
-    this.lookX = lerp(this.lookX, this.targetLookX, 0.18);
-    this.lookY = lerp(this.lookY, this.targetLookY, 0.18);
+    this.lookX = lerp(this.lookX, this.targetLookX, 0.28);
+    this.lookY = lerp(this.lookY, this.targetLookY, 0.28);
     applyLive2D(this.params, this.current, this.player.sample(now), now, {
       x: this.lookX,
       y: this.lookY,

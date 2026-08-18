@@ -151,7 +151,7 @@ export function DesktopSection() {
         />
         <RangeField
           label="Gap from model"
-          min={0}
+          min={-80}
           max={24}
           step={1}
           suffix="px"

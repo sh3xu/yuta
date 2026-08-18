@@ -96,12 +96,16 @@ export function CharacterStage() {
       const win = winRef.current;
       const headX = win.x + headRef.current.x * win.scale;
       const headY = win.y + headRef.current.y * win.scale;
-      const reachX = 420 * win.scale;
-      const reachY = 320 * win.scale;
-      renderer.setLookTarget(
-        clamp((point.x - headX) / reachX, -1, 1),
-        clamp((headY - point.y) / reachY, -1, 1),
-      );
+      const dx = point.x - headX;
+      const dy = headY - point.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 1) {
+        renderer.setLookTarget(0, 0);
+        return;
+      }
+      const reach = 72 * win.scale;
+      const strength = Math.min(1, dist / reach);
+      renderer.setLookTarget((dx / dist) * strength, (dy / dist) * strength);
     }).then((fn) => {
       if (cancelled) {
         fn();
@@ -168,8 +172,4 @@ export function CharacterStage() {
       </div>
     </button>
   );
-}
-
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, value));
 }

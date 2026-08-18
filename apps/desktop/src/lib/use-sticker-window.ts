@@ -6,7 +6,7 @@ import { restoreWindow, setStickerSize, subscribeUnlockPosition } from './window
 export function useStickerWindow(): void {
   const ready = useCompanionStore((state) => state.ready);
   const settings = useCompanionStore((state) => state.settings);
-  const chatOpen = useCompanionStore((state) => state.chatOpen);
+  const composerOpen = useCompanionStore((state) => state.composerOpen);
   const settingsOpen = useCompanionStore((state) => state.settingsOpen);
   const bubbleVisible = useCompanionStore((state) => state.bubbleVisible);
   const setPositionLocked = useCompanionStore((state) => state.setPositionLocked);
@@ -15,7 +15,7 @@ export function useStickerWindow(): void {
   const mode = stickerMode({
     onboardingComplete: settings.onboardingComplete,
     positionLocked: settings.positionLocked,
-    chatOpen,
+    composerOpen,
     settingsOpen,
     bubbleVisible,
   });

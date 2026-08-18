@@ -16,7 +16,7 @@ export type SettingsHud = 'scale' | 'crop' | 'dock' | 'profile' | 'ai' | null;
 
 interface CompanionStore {
   ready: boolean;
-  chatOpen: boolean;
+  composerOpen: boolean;
   settingsOpen: boolean;
   settingsHud: SettingsHud;
   bubbleVisible: boolean;
@@ -68,7 +68,7 @@ function hideBubbleLater(set: (partial: { bubbleVisible: boolean }) => void): vo
 
 export const useCompanionStore = create<CompanionStore>((set, get) => ({
   ready: false,
-  chatOpen: false,
+  composerOpen: false,
   settingsOpen: false,
   settingsHud: null,
   bubbleVisible: false,
@@ -88,16 +88,11 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
 
   toggleChat() {
     if (!get().settings.onboardingComplete) return;
-    if (get().chatOpen) {
-      get().closeOverlays();
-      return;
-    }
-    set({ chatOpen: true });
+    set({ composerOpen: !get().composerOpen });
   },
 
   closeOverlays() {
-    clearLingerTimer();
-    set({ chatOpen: false, settingsOpen: false, settingsHud: null, bubbleVisible: false });
+    set({ composerOpen: false, settingsOpen: false, settingsHud: null });
   },
 
   openSettings() {
@@ -106,11 +101,11 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
       set({ settingsOpen: false, settingsHud: null });
       return;
     }
-    set({ chatOpen: true, settingsOpen: true });
+    set({ settingsOpen: true });
   },
 
   setSettingsHud(settingsHud) {
-    set({ settingsOpen: true, chatOpen: true, settingsHud });
+    set({ settingsOpen: true, settingsHud });
   },
 
   async send(text) {
@@ -119,15 +114,30 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
     clearLingerTimer();
     set({
       sending: true,
-      chatOpen: true,
+      composerOpen: false,
       bubbleVisible: true,
       lastError: undefined,
       messages: [...get().messages, { role: 'user', content: trimmed }],
     });
     try {
-      const reply = await session.send(trimmed, (characterState) => set({ characterState }));
+      await session.send(
+        trimmed,
+        (characterState) => set({ characterState }),
+        (reply) => {
+          set({
+            messages: [...get().messages, { role: 'assistant', content: reply }],
+            lookupHits: session.debug.loadedMemories,
+            behaviorSummary: session.debug.behavior,
+            provider: session.debug.provider,
+            lastError: session.debug.lastError,
+            llmAction: session.debug.llmAction,
+            plannedAction: session.debug.plannedAction,
+            playedAction: session.debug.playedAction,
+            bubbleVisible: true,
+          });
+        },
+      );
       set({
-        messages: [...get().messages, { role: 'assistant', content: reply }],
         lookupHits: session.debug.loadedMemories,
         behaviorSummary: session.debug.behavior,
         provider: session.debug.provider,
@@ -137,8 +147,7 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
         playedAction: session.debug.playedAction,
       });
       if (session.debug.lastError) notifyError(session.debug.lastError);
-      if (get().chatOpen) hideBubbleLater(set);
-      else set({ bubbleVisible: false });
+      hideBubbleLater(set);
     } catch (error) {
       const lastError = {
         source: 'ai' as const,
@@ -146,6 +155,7 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
         detail: error instanceof Error ? error.stack : String(error),
       };
       console.error('[yuta:ai]', error);
+      clearLingerTimer();
       set({ lastError, bubbleVisible: false });
       notifyError(lastError);
     } finally {

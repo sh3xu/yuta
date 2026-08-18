@@ -69,7 +69,11 @@ export class CompanionSession {
     await saveSettings(settings);
   }
 
-  async send(userMessage: string, onState: (state: CharacterState) => void): Promise<string> {
+  async send(
+    userMessage: string,
+    onState: (state: CharacterState) => void,
+    onReply?: (text: string) => void,
+  ): Promise<string> {
     if (!this.orchestrator || !this.settings) {
       throw new Error('Session is not ready');
     }
@@ -95,6 +99,7 @@ export class CompanionSession {
       playedAction: this.characterState.action ?? undefined,
     };
     onState(this.characterState);
+    onReply?.(response.message);
 
     if (this.settings.voiceEnabled) {
       const voice = EMOTION_PROFILES[response.emotion.name].voice;

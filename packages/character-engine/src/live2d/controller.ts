@@ -22,13 +22,13 @@ export function applyLive2D(
 
   for (const [id, value] of Object.entries(BODY_REST)) table.set(id, value);
 
-  table.add(PARAM.bodyX, idle.bodyX * idleMix - look.x * 6);
+  table.add(PARAM.bodyX, idle.bodyX * idleMix - look.x * 12);
   table.add(PARAM.bodyZ, idle.bodyZ);
   table.add(PARAM.angleZ, idle.angleZ * idleMix);
-  table.add(PARAM.angleX, -look.x * 18);
-  table.add(PARAM.angleY, look.y * 12);
-  table.add(PARAM.eyeBallX, idle.eyeBallX * idleMix + look.x * 0.8);
-  table.add(PARAM.eyeBallY, idle.eyeBallY * idleMix + look.y * 0.6);
+  table.add(PARAM.angleX, -look.x * 30);
+  table.add(PARAM.angleY, look.y * 22);
+  table.add(PARAM.eyeBallX, idle.eyeBallX * idleMix + look.x);
+  table.add(PARAM.eyeBallY, idle.eyeBallY * idleMix + look.y * 0.85);
 
   table.set(PARAM.eyeLSmile, face.eyeSmile);
   table.set(PARAM.eyeRSmile, face.eyeSmile);

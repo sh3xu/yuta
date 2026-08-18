@@ -5,7 +5,9 @@ export function ThoughtBubble() {
   const messages = useCompanionStore((state) => state.messages);
   const sending = useCompanionStore((state) => state.sending);
   const settings = useCompanionStore((state) => state.settings);
+  const last = messages.at(-1);
   const lastAssistant = [...messages].reverse().find((item) => item.role === 'assistant');
+  const pending = sending && last?.role !== 'assistant';
   const scale = uiScale(settings.modelScale);
   const fontSize = Math.max(11, Math.round(12 * scale));
   const padX = Math.round(12 * scale);
@@ -13,7 +15,7 @@ export function ThoughtBubble() {
   const radius = Math.round(16 * scale);
   const maxWidth = Math.min(settings.dockWidth - 4, Math.round(200 * scale));
 
-  if (!sending && !lastAssistant) return null;
+  if (!pending && !lastAssistant) return null;
 
   return (
     <div className="relative pl-3">
@@ -36,14 +38,12 @@ export function ThoughtBubble() {
           lineHeight: 1.4,
         }}
       >
-        {sending && !lastAssistant ? (
+        {pending ? (
           <span className="inline-flex gap-1 text-mute">
             <span className="animate-pulse">.</span>
             <span className="animate-pulse [animation-delay:120ms]">.</span>
             <span className="animate-pulse [animation-delay:240ms]">.</span>
           </span>
-        ) : sending ? (
-          <p className="text-ink/70">Thinking…</p>
         ) : (
           <p>{lastAssistant?.content}</p>
         )}

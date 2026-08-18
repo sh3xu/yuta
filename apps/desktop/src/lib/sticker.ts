@@ -57,7 +57,8 @@ export function stickerSize(
 ): { width: number; height: number } {
   const stage = visibleStage(settings);
   const dockOpen = mode !== 'collapsed' && mode !== 'place';
-  const dock = dockOpen ? settings.dockWidth + Math.max(0, settings.dockGap) : 0;
+  const dockWidth = mode === 'settings' ? Math.max(settings.dockWidth, 280) : settings.dockWidth;
+  const dock = dockOpen ? dockWidth + settings.dockGap : 0;
   const placeExtra = mode === 'place' ? PLACE_CHIP_HEIGHT : 0;
   const dockTop = Math.round(stage.height * clamp(settings.dockOffsetY, 0, 0.7));
   let height = stage.height + placeExtra + WINDOW_PAD * 2;
@@ -65,7 +66,7 @@ export function stickerSize(
     height = Math.max(height, dockTop + 420 + WINDOW_PAD * 2);
   }
   return {
-    width: stage.width + dock + WINDOW_PAD * 2,
+    width: Math.max(stage.width + WINDOW_PAD * 2, stage.width + dock + WINDOW_PAD * 2),
     height,
   };
 }
@@ -73,13 +74,13 @@ export function stickerSize(
 export function stickerMode(input: {
   onboardingComplete: boolean;
   positionLocked: boolean;
-  chatOpen: boolean;
+  composerOpen: boolean;
   settingsOpen: boolean;
   bubbleVisible: boolean;
 }): StickerMode {
   if (!input.onboardingComplete) return 'onboarding';
   if (input.settingsOpen) return 'settings';
-  if (input.chatOpen) return 'chat';
+  if (input.composerOpen) return 'chat';
   if (input.bubbleVisible) return 'linger';
   if (!input.positionLocked) return 'place';
   return 'collapsed';
