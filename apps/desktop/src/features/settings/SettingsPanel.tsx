@@ -2,6 +2,7 @@ import { Button, Field, Input, Switch, Textarea, toast } from '@yuta/ui';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useState } from 'react';
 import { useCompanionStore } from '../../stores/companion-store';
+import { AnimationPreview } from './AnimationPreview';
 
 export function SettingsPanel() {
   const settings = useCompanionStore((state) => state.settings);
@@ -26,56 +27,62 @@ export function SettingsPanel() {
   };
 
   return (
-    <form className="flex h-full min-h-0 flex-col gap-4 overflow-auto" onSubmit={(event) => void onSubmit(event)}>
-      <h2 className="shrink-0 font-display text-xl">Settings</h2>
-      <div className="flex min-w-0 flex-col gap-4">
-        <Field label="Companion name">
-          <Input
-            value={draft.companionName}
-            onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              setDraft({ ...draft, companionName: event.target.value })
-            }
-          />
-        </Field>
-        <Field label="Personality">
-          <Textarea
-            value={draft.personality}
-            onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
-              setDraft({ ...draft, personality: event.target.value })
-            }
-          />
-        </Field>
-        <Field label="Gemini API key" hint="Stored on this machine. Leave empty to use the mock provider.">
-          <Input
-            type="password"
-            autoComplete="off"
-            value={draft.geminiApiKey}
-            onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              setDraft({ ...draft, geminiApiKey: event.target.value })
-            }
-          />
-        </Field>
-        <Field label="Gemini model">
-          <Input
-            value={draft.geminiModel}
-            onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              setDraft({ ...draft, geminiModel: event.target.value })
-            }
-          />
-        </Field>
-        <div className="flex h-10 w-full min-w-0 items-center justify-between gap-3 rounded-lg border border-line bg-ink px-3">
-          <span className="text-sm">Voice replies</span>
-          <Switch
-            checked={draft.voiceEnabled}
-            onCheckedChange={(voiceEnabled) => setDraft({ ...draft, voiceEnabled })}
-          />
+    <div className="flex h-full min-h-0 flex-col gap-4 overflow-auto">
+      <form className="flex min-h-0 flex-col gap-4" onSubmit={(event) => void onSubmit(event)}>
+        <h2 className="shrink-0 font-display text-xl">Settings</h2>
+        <div className="flex min-w-0 flex-col gap-4">
+          <Field label="Companion name">
+            <Input
+              value={draft.companionName}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                setDraft({ ...draft, companionName: event.target.value })
+              }
+            />
+          </Field>
+          <Field label="Personality">
+            <Textarea
+              value={draft.personality}
+              onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
+                setDraft({ ...draft, personality: event.target.value })
+              }
+            />
+          </Field>
+          <Field
+            label="Gemini API key"
+            hint="Stored on this machine. Leave empty to use the mock provider."
+          >
+            <Input
+              type="password"
+              autoComplete="off"
+              value={draft.geminiApiKey}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                setDraft({ ...draft, geminiApiKey: event.target.value })
+              }
+            />
+          </Field>
+          <Field label="Gemini model">
+            <Input
+              value={draft.geminiModel}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                setDraft({ ...draft, geminiModel: event.target.value })
+              }
+            />
+          </Field>
+          <div className="flex h-10 w-full min-w-0 items-center justify-between gap-3 rounded-lg border border-line bg-ink px-3">
+            <span className="text-sm">Voice replies</span>
+            <Switch
+              checked={draft.voiceEnabled}
+              onCheckedChange={(voiceEnabled) => setDraft({ ...draft, voiceEnabled })}
+            />
+          </div>
         </div>
-      </div>
-      <div className="mt-auto shrink-0 pt-2">
-        <Button type="submit" loading={saving}>
-          {saving ? 'Saving' : 'Save'}
-        </Button>
-      </div>
-    </form>
+        <div className="shrink-0 pt-2">
+          <Button type="submit" loading={saving}>
+            {saving ? 'Saving' : 'Save'}
+          </Button>
+        </div>
+      </form>
+      <AnimationPreview />
+    </div>
   );
 }

@@ -2,7 +2,39 @@ export const APP_ID = 'yuta';
 export const APP_NAME = 'Yuta';
 
 export const EMOTIONS = ['neutral', 'happy', 'sad', 'surprised', 'curious'] as const;
-export const ACTIONS = ['idle', 'nod', 'wave', 'headTilt', 'laugh', 'jump'] as const;
+export const ACTIONS = [
+  'idle',
+  'nod',
+  'wave',
+  'headTilt',
+  'laugh',
+  'jump',
+  'bow',
+  'shrug',
+  'lookLeft',
+  'lookRight',
+  'lookUp',
+  'lookDown',
+  'think',
+  'shy',
+  'stretch',
+  'celebrate',
+  'shakeNo',
+  'wink',
+  'leanIn',
+  'clap',
+  'point',
+  'gasp',
+  'sway',
+  'salute',
+  'facepalm',
+  'fidget',
+  'bounce',
+  'peek',
+  'sleep',
+  'blowKiss',
+  'dance',
+] as const;
 export const MEMORY_CATEGORIES = [
   'profile',
   'preferences',

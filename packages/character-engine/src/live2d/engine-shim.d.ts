@@ -8,8 +8,12 @@ declare module 'untitled-pixi-live2d-engine/cubism' {
     motion(group: string, index?: number): Promise<unknown>;
     internalModel?: {
       coreModel?: {
-        setParameterValueById?: (id: string, value: number) => void;
+        setParameterValueById?: (id: unknown, value: number) => void;
+        addParameterValueById?: (id: unknown, value: number) => void;
+        setPartOpacityById?: (id: unknown, value: number) => void;
       };
+      pose?: unknown;
+      getIdSafe?: (id: string) => unknown;
     };
   }
 }

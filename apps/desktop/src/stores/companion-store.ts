@@ -1,9 +1,15 @@
-import { IDLE_CHARACTER_STATE, type CharacterState, type ChatTurn, type RetrievedMemory } from '@yuta/shared';
+import {
+  type ActionName,
+  type CharacterState,
+  type ChatTurn,
+  IDLE_CHARACTER_STATE,
+  type RetrievedMemory,
+} from '@yuta/shared';
 import { toast } from '@yuta/ui';
 import { create } from 'zustand';
-import { session, type AppError } from '../app/session';
-import { DEFAULT_SETTINGS, type AppSettings } from '../lib/settings';
+import { type AppError, session } from '../app/session';
 import { notifyError } from '../lib/notify';
+import { type AppSettings, DEFAULT_SETTINGS } from '../lib/settings';
 
 export type Screen = 'chat' | 'memory' | 'behavior' | 'settings' | 'debug';
 
@@ -25,6 +31,7 @@ interface CompanionStore {
   setScreen: (screen: Screen) => void;
   send: (text: string) => Promise<void>;
   saveSettings: (settings: AppSettings) => Promise<void>;
+  playAction: (action: ActionName, intensity?: number) => void;
   refreshMemories: () => Promise<void>;
   clearMemories: () => Promise<void>;
 }
@@ -99,6 +106,16 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
     await session.persist(settings);
     set({ settings, provider: session.debug.provider });
     toast({ variant: 'success', title: 'settings', description: 'Saved on this machine.' });
+  },
+
+  playAction(action, intensity = 1) {
+    const characterState = session.preview(action, intensity);
+    set({
+      characterState,
+      playedAction: action,
+      plannedAction: action,
+      llmAction: undefined,
+    });
   },
 
   async refreshMemories() {

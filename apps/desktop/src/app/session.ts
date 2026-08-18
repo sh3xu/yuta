@@ -3,16 +3,17 @@ import { BehaviorTracker } from '@yuta/behavior';
 import { EMOTION_PROFILES, EmotionEngine } from '@yuta/emotion-engine';
 import { MemoryService } from '@yuta/memory';
 import {
+  type ActionName,
   APP_ID,
-  IDLE_CHARACTER_STATE,
   type CharacterState,
   type ChatTurn,
+  IDLE_CHARACTER_STATE,
   type RetrievedMemory,
 } from '@yuta/shared';
 import { VoiceError, WebSpeechSTT, WebSpeechTTS } from '@yuta/voice';
 import { BrowserFileSystem } from '../lib/browser-fs';
+import { type AppSettings, loadSettings, saveSettings } from '../lib/settings';
 import { isTauri, TauriFileSystem } from '../lib/tauri-fs';
-import { loadSettings, saveSettings, type AppSettings } from '../lib/settings';
 
 export interface AppError {
   source: 'ai' | 'tts' | 'stt' | 'memory';
@@ -69,6 +70,25 @@ export class CompanionSession {
     await saveSettings(settings);
   }
 
+  preview(action: ActionName, intensity = 1): CharacterState {
+    const characterState = this.emotion.apply({
+      emotion: this.emotion.currentEmotion(),
+      action: { name: action, intensity },
+    });
+    this.characterState = {
+      ...characterState,
+      speaking: this.characterState.speaking,
+      mouthOpen: this.characterState.mouthOpen,
+    };
+    this.debug = {
+      ...this.debug,
+      llmAction: undefined,
+      plannedAction: action,
+      playedAction: action,
+    };
+    return this.characterState;
+  }
+
   async send(userMessage: string, onState: (state: CharacterState) => void): Promise<string> {
     if (!this.orchestrator || !this.settings) {
       throw new Error('Session is not ready');
@@ -77,11 +97,11 @@ export class CompanionSession {
     this.history.push({ role: 'user', content: userMessage });
     const { response, memories, characterState, plannedAction, llmAction } =
       await this.orchestrator.respond({
-      companionName: this.settings.companionName,
-      personality: this.settings.personality,
-      userMessage,
-      history: this.history,
-    });
+        companionName: this.settings.companionName,
+        personality: this.settings.personality,
+        userMessage,
+        history: this.history,
+      });
 
     this.history.push({ role: 'assistant', content: response.message });
     this.characterState = { ...characterState, speaking: this.settings.voiceEnabled };
@@ -123,7 +143,10 @@ export class CompanionSession {
     return response.message;
   }
 
-  listen(onText: (text: string, isFinal: boolean) => void, onError: (message: string) => void): WebSpeechSTT {
+  listen(
+    onText: (text: string, isFinal: boolean) => void,
+    onError: (message: string) => void,
+  ): WebSpeechSTT {
     const stt = new WebSpeechSTT({ onResult: onText, onError });
     void stt.start();
     return stt;

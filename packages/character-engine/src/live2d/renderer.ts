@@ -1,27 +1,28 @@
-import { Application, extensions, Ticker } from 'pixi.js';
-import { IDLE_CHARACTER_STATE, clamp01, type CharacterState } from '@yuta/shared';
-import { actionMotion, emotionParams, PARAM } from './mappings';
+import { type CharacterState, clamp01, IDLE_CHARACTER_STATE } from '@yuta/shared';
+import { Application, extensions } from 'pixi.js';
+import { CLIPS, ClipPlayer } from '../motion';
 import type { CharacterRenderer } from '../types';
+import { applyLive2D } from './controller';
+import { type CoreModel, ParamTable } from './params';
 
-type CoreModel = {
-  setParameterValueById?: (id: string, value: number) => void;
-  addParameterValueById?: (id: string, value: number) => void;
+type InternalModel = {
+  on?: (event: string, fn: () => void) => void;
+  off?: (event: string, fn: () => void) => void;
+  getIdSafe?: (id: string) => unknown;
+  coreModel?: CoreModel;
+  pose?: unknown;
+  originalWidth?: number;
+  originalHeight?: number;
+  width?: number;
+  height?: number;
 };
 
 type Live2DInstance = {
-  motion: (group: string, index?: number) => Promise<unknown> | unknown;
+  stopMotions?: () => void;
   anchor: { set: (x: number, y?: number) => void };
   position: { set: (x: number, y: number) => void };
   scale: { set: (x: number, y?: number) => void };
-  width: number;
-  height: number;
-  internalModel?: {
-    coreModel?: CoreModel;
-    originalWidth?: number;
-    originalHeight?: number;
-    width?: number;
-    height?: number;
-  };
+  internalModel?: InternalModel;
   destroy?: () => void;
 };
 
@@ -48,11 +49,13 @@ export class Live2DRenderer implements CharacterRenderer {
   private pending: CharacterState | null = null;
   private restX = 0;
   private restY = 0;
-  private hopUntil = 0;
-  private hopHeight = 0;
+  private restScale = 1;
+  private player = new ClipPlayer();
+  private params: ParamTable | null = null;
+  private lastTick = 0;
+  private onBeforeModelUpdate: (() => void) | null = null;
   private resizeObserver: ResizeObserver | null = null;
   private destroyed = false;
-  private tickerFn: ((ticker: Ticker) => void) | null = null;
 
   async mount(host: HTMLElement, modelUrl: string): Promise<void> {
     this.host = host;
@@ -77,7 +80,7 @@ export class Live2DRenderer implements CharacterRenderer {
     app.canvas.style.height = '100%';
     app.canvas.style.maxWidth = '100%';
     app.canvas.style.maxHeight = '100%';
-    const model = (await Live2DModel.from(modelUrl)) as Live2DInstance;
+    const model = (await Live2DModel.from(modelUrl)) as unknown as Live2DInstance;
     if (this.destroyed) {
       model.destroy?.();
       app.destroy(true);
@@ -86,18 +89,25 @@ export class Live2DRenderer implements CharacterRenderer {
 
     model.anchor.set(0.5, 0.5);
     app.stage.addChild(model as never);
+    model.stopMotions?.();
     this.app = app;
     this.model = model;
+
+    const internal = model.internalModel;
+    if (internal) internal.pose = null;
+    if (internal?.coreModel) {
+      this.params = new ParamTable(internal.coreModel, (id) => internal.getIdSafe?.(id) ?? id);
+    }
+    this.onBeforeModelUpdate = () => this.tick();
+    internal?.on?.('beforeModelUpdate', this.onBeforeModelUpdate);
+
     this.fit();
     requestAnimationFrame(() => this.fit());
-    this.playAction('idle');
     if (this.pending) {
       this.applyState(this.pending);
       this.pending = null;
     }
 
-    this.tickerFn = (ticker) => this.tick(ticker.deltaMS);
-    app.ticker.add(this.tickerFn);
     this.resizeObserver = new ResizeObserver(() => this.fit());
     this.resizeObserver.observe(host);
   }
@@ -115,15 +125,23 @@ export class Live2DRenderer implements CharacterRenderer {
     this.destroyed = true;
     this.pending = null;
     this.resizeObserver?.disconnect();
-    if (this.app && this.tickerFn) this.app.ticker.remove(this.tickerFn);
+    if (this.onBeforeModelUpdate) {
+      this.model?.internalModel?.off?.('beforeModelUpdate', this.onBeforeModelUpdate);
+    }
     this.model?.destroy?.();
     this.app?.destroy(true, { children: true });
     this.app = null;
     this.model = null;
     this.host = null;
+    this.params = null;
   }
 
-  private tick(deltaMs: number): void {
+  private tick(): void {
+    if (!this.params) return;
+    if (this.model?.internalModel) this.model.internalModel.pose = null;
+    const now = performance.now();
+    const deltaMs = this.lastTick === 0 ? 16 : now - this.lastTick;
+    this.lastTick = now;
     const t = clamp01(deltaMs / 120);
     this.current = {
       ...this.current,
@@ -134,37 +152,18 @@ export class Live2DRenderer implements CharacterRenderer {
       speaking: this.target.speaking,
       mouthOpen: lerp(this.current.mouthOpen, this.target.mouthOpen, 0.35),
     };
-
-    const face = emotionParams(this.current.emotion, this.current.emotionIntensity);
-    const action = actionMotion(this.current.action);
-    this.setParam(PARAM.eyeLOpen, face.eyeOpen);
-    this.setParam(PARAM.eyeROpen, face.eyeOpen);
-    this.setParam(PARAM.eyeLSmile, face.eyeSmile);
-    this.setParam(PARAM.eyeRSmile, face.eyeSmile);
-    this.setParam(PARAM.browLY, face.browY);
-    this.setParam(PARAM.browRY, face.browY);
-    this.setParam(PARAM.mouthForm, face.mouthForm);
-    this.setParam(PARAM.cheek, face.cheek);
-    this.setParam(PARAM.angleZ, face.tiltZ + action.headTilt * this.current.actionIntensity);
-    this.setParam(PARAM.angleX, Math.sin(performance.now() / 420) * action.headNod * 0.15);
-    this.setParam(PARAM.mouthOpen, this.current.mouthOpen);
-    this.applyHop(action.hop * this.current.actionIntensity);
+    applyLive2D(this.params, this.current, this.player.sample(now), now);
   }
 
   private consumeAction(state: CharacterState): void {
     if (state.actionToken === this.lastActionToken) return;
-    this.playAction(state.action);
     this.lastActionToken = state.actionToken;
-  }
-
-  private playAction(actionName: CharacterState['action']): void {
-    if (!this.model) return;
-    const motion = actionMotion(actionName);
-    if (motion.hop > 0) {
-      this.hopUntil = performance.now() + 620;
-      this.hopHeight = 120 * Math.max(this.target.actionIntensity, 0.55);
+    const clip = CLIPS[state.action ?? 'idle'];
+    if (!clip) {
+      this.player.stop();
+      return;
     }
-    void this.model.motion(motion.motionGroup, motion.motionIndex);
+    this.player.play(clip, state.actionIntensity);
   }
 
   private fit(): void {
@@ -173,23 +172,11 @@ export class Live2DRenderer implements CharacterRenderer {
     const viewH = this.app.screen.height || this.host.clientHeight;
     const { width, height } = this.nativeSize();
     if (viewW < 2 || viewH < 2 || width < 2 || height < 2) return;
-    const scale = Math.min(viewW / width, viewH / height) * FIT_PADDING;
-    this.model.scale.set(scale);
+    this.restScale = Math.min(viewW / width, viewH / height) * FIT_PADDING;
     this.restX = viewW / 2;
     this.restY = viewH * 0.52;
+    this.model.scale.set(this.restScale);
     this.model.position.set(this.restX, this.restY);
-  }
-
-  private applyHop(hopStrength: number): void {
-    if (!this.model) return;
-    const now = performance.now();
-    let offset = 0;
-    if (now < this.hopUntil && hopStrength > 0) {
-      const t = 1 - (this.hopUntil - now) / 620;
-      offset = Math.sin(Math.PI * Math.min(1, Math.max(0, t))) * this.hopHeight;
-      this.setParam(PARAM.bodyX, Math.sin(Math.PI * t) * -8);
-    }
-    this.model.position.set(this.restX, this.restY - offset);
   }
 
   private nativeSize(): { width: number; height: number } {
@@ -197,11 +184,6 @@ export class Live2DRenderer implements CharacterRenderer {
     const width = internal?.originalWidth || internal?.width || 2400;
     const height = internal?.originalHeight || internal?.height || 4800;
     return { width, height };
-  }
-
-  private setParam(id: string, value: number): void {
-    const core = this.model?.internalModel?.coreModel;
-    core?.setParameterValueById?.(id, value);
   }
 }
 
