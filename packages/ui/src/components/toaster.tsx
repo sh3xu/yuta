@@ -17,19 +17,21 @@ export function Toaster() {
   if (items.length === 0) return null;
 
   return (
-    <div className="pointer-events-none fixed top-4 right-4 z-50 flex w-[min(22rem,calc(100vw-2rem))] flex-col gap-2">
+    <div className="pointer-events-none fixed top-3 right-3 left-3 z-50 flex flex-col items-end gap-2">
       {items.map((item) => (
         <div
           key={item.id}
           className={cn(
-            'pointer-events-auto rounded-xl border px-3 py-3 shadow-lg',
+            'pointer-events-auto w-full max-w-sm rounded-xl border px-3 py-3 shadow-lg',
             TONE[item.variant],
           )}
         >
           <div className="flex items-start gap-2">
             <div className="min-w-0 flex-1">
               <p className="text-xs font-medium tracking-wide uppercase opacity-70">{item.title}</p>
-              {item.description ? <p className="mt-1 text-sm leading-5">{item.description}</p> : null}
+              {item.description ? (
+                <p className="mt-1 text-sm leading-5">{item.description}</p>
+              ) : null}
             </div>
             <button
               type="button"

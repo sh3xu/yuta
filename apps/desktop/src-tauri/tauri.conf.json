@@ -12,10 +12,20 @@
   "app": {
     "windows": [
       {
+        "label": "main",
         "title": "Yuta",
-        "width": 1280,
-        "height": 820,
-        "resizable": true
+        "width": 296,
+        "height": 536,
+        "resizable": false,
+        "maximizable": false,
+        "minimizable": false,
+        "decorations": false,
+        "transparent": true,
+        "shadow": false,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "visible": true,
+        "backgroundColor": "#00000000"
       }
     ],
     "security": {

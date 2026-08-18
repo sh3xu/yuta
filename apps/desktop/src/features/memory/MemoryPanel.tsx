@@ -12,25 +12,27 @@ export function MemoryPanel() {
   }, [refresh]);
 
   return (
-    <div className="flex h-full flex-col gap-3">
-      <div className="flex items-center justify-between">
-        <h2 className="font-display text-xl">Memory</h2>
+    <div className="flex min-h-0 flex-col gap-2">
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="text-sm font-medium">Memory</h3>
         <Button variant="outline" size="sm" onClick={() => void clear()}>
           Clear
         </Button>
       </div>
-      <div className="space-y-3 overflow-auto">
+      <div className="space-y-2">
         {memories.length === 0 ? (
-          <p className="text-sm text-mute">Nothing stored yet. Durable facts will land here as markdown files.</p>
+          <p className="text-xs text-mute">
+            Nothing stored yet. Durable facts land here as markdown files.
+          </p>
         ) : (
           memories.map((memory) => (
-            <article key={memory.id} className="rounded-2xl border border-line bg-panel p-4">
-              <div className="mb-2 flex items-center gap-2">
+            <article key={memory.id} className="rounded-xl border border-line bg-ink/70 p-3">
+              <div className="mb-1 flex items-center gap-2">
                 <Badge>{memory.category}</Badge>
-                <span className="text-xs text-mute">{memory.path}</span>
+                <span className="truncate text-[10px] text-mute">{memory.path}</span>
               </div>
-              <h3 className="text-sm font-medium">{memory.title}</h3>
-              <p className="mt-1 text-sm text-cream/80">{memory.content}</p>
+              <h4 className="text-sm font-medium">{memory.title}</h4>
+              <p className="mt-1 text-xs leading-5 text-cream/80">{memory.content}</p>
             </article>
           ))
         )}

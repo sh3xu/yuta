@@ -1,4 +1,12 @@
-import { BaseDirectory, exists, mkdir, readDir, readTextFile, remove, writeTextFile } from '@tauri-apps/plugin-fs';
+import {
+  BaseDirectory,
+  exists,
+  mkdir,
+  readDir,
+  readTextFile,
+  remove,
+  writeTextFile,
+} from '@tauri-apps/plugin-fs';
 import type { DirEntry, FileSystemAdapter } from '@yuta/memory';
 
 const base = { baseDir: BaseDirectory.AppData };

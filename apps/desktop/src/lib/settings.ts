@@ -9,16 +9,43 @@ export interface AppSettings {
   voiceEnabled: boolean;
   voiceName: string;
   onboardingComplete: boolean;
+  positionLocked: boolean;
+  windowX: number | null;
+  windowY: number | null;
+  alwaysOnTop: boolean;
+  modelScale: number;
+  cropTop: number;
+  cropBottom: number;
+  cropLeft: number;
+  cropRight: number;
+  dockWidth: number;
+  dockGap: number;
+  dockOffsetY: number;
+  followCursor: boolean;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
   companionName: DEFAULT_COMPANION_NAME,
-  personality: 'A warm, slightly teasing friend who remembers what matters and keeps answers grounded.',
+  personality:
+    'A warm, slightly teasing friend who remembers what matters and keeps answers grounded.',
   geminiApiKey: '',
   geminiModel: DEFAULT_GEMINI_MODEL,
   voiceEnabled: true,
   voiceName: '',
   onboardingComplete: false,
+  positionLocked: false,
+  windowX: null,
+  windowY: null,
+  alwaysOnTop: true,
+  modelScale: 1,
+  cropTop: 0,
+  cropBottom: 0,
+  cropLeft: 0,
+  cropRight: 0,
+  dockWidth: 240,
+  dockGap: 2,
+  dockOffsetY: 0.08,
+  followCursor: true,
 };
 
 const KEY = `${APP_ID}-settings`;

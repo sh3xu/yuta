@@ -6,6 +6,8 @@ export function notifyError(error: AppError): void {
     variant: 'error',
     title: error.source,
     description:
-      error.detail && !error.detail.includes('\n') ? `${error.message} ${error.detail}` : error.message,
+      error.detail && !error.detail.includes('\n')
+        ? `${error.message} ${error.detail}`
+        : error.message,
   });
 }

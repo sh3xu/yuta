@@ -1,0 +1,90 @@
+import type { AppSettings } from './settings';
+
+export const BASE_STAGE_WIDTH = 280;
+export const BASE_STAGE_HEIGHT = 520;
+export const WINDOW_PAD = 8;
+export const PLACE_CHIP_HEIGHT = 40;
+export const BUBBLE_MS = 4500;
+export const CURSOR_MOVE_EVENT = 'cursor-move';
+
+export type StickerMode = 'collapsed' | 'place' | 'linger' | 'chat' | 'settings' | 'onboarding';
+
+export interface VisibleStage {
+  width: number;
+  height: number;
+  layoutWidth: number;
+  layoutHeight: number;
+  cropLeftPx: number;
+  cropTopPx: number;
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
+export function layoutSize(settings: Pick<AppSettings, 'modelScale'>): {
+  width: number;
+  height: number;
+} {
+  const scale = clamp(settings.modelScale, 0.5, 2);
+  return {
+    width: Math.round(BASE_STAGE_WIDTH * scale),
+    height: Math.round(BASE_STAGE_HEIGHT * scale),
+  };
+}
+
+export function visibleStage(settings: AppSettings): VisibleStage {
+  const layout = layoutSize(settings);
+  const cropLeft = clamp(settings.cropLeft, 0, 0.45);
+  const cropRight = clamp(settings.cropRight, 0, 0.45);
+  const cropTop = clamp(settings.cropTop, 0, 0.45);
+  const cropBottom = clamp(settings.cropBottom, 0, 0.7);
+  const cropLeftPx = Math.round(layout.width * cropLeft);
+  const cropTopPx = Math.round(layout.height * cropTop);
+  return {
+    layoutWidth: layout.width,
+    layoutHeight: layout.height,
+    cropLeftPx,
+    cropTopPx,
+    width: Math.max(120, layout.width - cropLeftPx - Math.round(layout.width * cropRight)),
+    height: Math.max(140, layout.height - cropTopPx - Math.round(layout.height * cropBottom)),
+  };
+}
+
+export function stickerSize(
+  mode: StickerMode,
+  settings: AppSettings,
+): { width: number; height: number } {
+  const stage = visibleStage(settings);
+  const dockOpen = mode !== 'collapsed' && mode !== 'place';
+  const dock = dockOpen ? settings.dockWidth + Math.max(0, settings.dockGap) : 0;
+  const placeExtra = mode === 'place' ? PLACE_CHIP_HEIGHT : 0;
+  const dockTop = Math.round(stage.height * clamp(settings.dockOffsetY, 0, 0.7));
+  let height = stage.height + placeExtra + WINDOW_PAD * 2;
+  if (mode === 'settings' || mode === 'onboarding') {
+    height = Math.max(height, dockTop + 420 + WINDOW_PAD * 2);
+  }
+  return {
+    width: stage.width + dock + WINDOW_PAD * 2,
+    height,
+  };
+}
+
+export function stickerMode(input: {
+  onboardingComplete: boolean;
+  positionLocked: boolean;
+  chatOpen: boolean;
+  settingsOpen: boolean;
+  bubbleVisible: boolean;
+}): StickerMode {
+  if (!input.onboardingComplete) return 'onboarding';
+  if (input.settingsOpen) return 'settings';
+  if (input.chatOpen) return 'chat';
+  if (input.bubbleVisible) return 'linger';
+  if (!input.positionLocked) return 'place';
+  return 'collapsed';
+}
+
+export function uiScale(modelScale: number): number {
+  return clamp(modelScale, 0.75, 1.4);
+}

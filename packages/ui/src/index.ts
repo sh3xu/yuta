@@ -1,9 +1,10 @@
-export { cn } from './lib/cn';
-export { Button } from './components/button';
-export { Input } from './components/input';
-export { Textarea } from './components/textarea';
 export { Badge } from './components/badge';
-export { Switch } from './components/switch';
+export { Button } from './components/button';
 export { Field } from './components/field';
+export { Input } from './components/input';
+export { Switch } from './components/switch';
+export { Tabs } from './components/tabs';
+export { Textarea } from './components/textarea';
 export { Toaster } from './components/toaster';
-export { toast, dismissToast } from './toast';
+export { cn } from './lib/cn';
+export { dismissToast, toast } from './toast';

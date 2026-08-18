@@ -3,22 +3,32 @@ import { type MotionSample, sampleIdle } from '../motion';
 import { BODY_REST, emotionParams, PARAM } from './mappings';
 import type { ParamTable } from './params';
 
+export interface LookTarget {
+  x: number;
+  y: number;
+}
+
 export function applyLive2D(
   table: ParamTable,
   state: CharacterState,
   motion: MotionSample,
   now: number,
+  look: LookTarget = { x: 0, y: 0 },
 ): void {
   const idle = sampleIdle(now);
   const face = emotionParams(state.emotion, state.emotionIntensity);
+  const lookMix = Math.min(1, Math.hypot(look.x, look.y));
+  const idleMix = 1 - lookMix * 0.85;
 
   for (const [id, value] of Object.entries(BODY_REST)) table.set(id, value);
 
-  table.add(PARAM.bodyX, idle.bodyX);
+  table.add(PARAM.bodyX, idle.bodyX * idleMix - look.x * 6);
   table.add(PARAM.bodyZ, idle.bodyZ);
-  table.add(PARAM.angleZ, idle.angleZ);
-  table.add(PARAM.eyeBallX, idle.eyeBallX);
-  table.add(PARAM.eyeBallY, idle.eyeBallY);
+  table.add(PARAM.angleZ, idle.angleZ * idleMix);
+  table.add(PARAM.angleX, -look.x * 18);
+  table.add(PARAM.angleY, look.y * 12);
+  table.add(PARAM.eyeBallX, idle.eyeBallX * idleMix + look.x * 0.8);
+  table.add(PARAM.eyeBallY, idle.eyeBallY * idleMix + look.y * 0.6);
 
   table.set(PARAM.eyeLSmile, face.eyeSmile);
   table.set(PARAM.eyeRSmile, face.eyeSmile);

@@ -10,7 +10,8 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: 'bg-accent text-ink hover:bg-accent/90',
-        ghost: 'border border-transparent text-cream/80 hover:border-line hover:bg-white/10 hover:text-cream',
+        ghost:
+          'border border-transparent text-cream/80 hover:border-line hover:bg-white/10 hover:text-cream',
         outline: 'border border-line bg-panel text-cream hover:bg-white/10',
         danger: 'bg-rose-700 text-white hover:bg-rose-600',
       },

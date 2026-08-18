@@ -26,7 +26,7 @@ type Live2DInstance = {
   destroy?: () => void;
 };
 
-const FIT_PADDING = 0.78;
+const FIT_PADDING = 0.9;
 
 let pluginRegistered = false;
 
@@ -53,6 +53,10 @@ export class Live2DRenderer implements CharacterRenderer {
   private player = new ClipPlayer();
   private params: ParamTable | null = null;
   private lastTick = 0;
+  private lookX = 0;
+  private lookY = 0;
+  private targetLookX = 0;
+  private targetLookY = 0;
   private onBeforeModelUpdate: (() => void) | null = null;
   private resizeObserver: ResizeObserver | null = null;
   private destroyed = false;
@@ -121,6 +125,11 @@ export class Live2DRenderer implements CharacterRenderer {
     this.consumeAction(state);
   }
 
+  setLookTarget(x: number, y: number): void {
+    this.targetLookX = Math.min(1, Math.max(-1, x));
+    this.targetLookY = Math.min(1, Math.max(-1, y));
+  }
+
   destroy(): void {
     this.destroyed = true;
     this.pending = null;
@@ -134,6 +143,10 @@ export class Live2DRenderer implements CharacterRenderer {
     this.model = null;
     this.host = null;
     this.params = null;
+    this.lookX = 0;
+    this.lookY = 0;
+    this.targetLookX = 0;
+    this.targetLookY = 0;
   }
 
   private tick(): void {
@@ -152,7 +165,12 @@ export class Live2DRenderer implements CharacterRenderer {
       speaking: this.target.speaking,
       mouthOpen: lerp(this.current.mouthOpen, this.target.mouthOpen, 0.35),
     };
-    applyLive2D(this.params, this.current, this.player.sample(now), now);
+    this.lookX = lerp(this.lookX, this.targetLookX, 0.18);
+    this.lookY = lerp(this.lookY, this.targetLookY, 0.18);
+    applyLive2D(this.params, this.current, this.player.sample(now), now, {
+      x: this.lookX,
+      y: this.lookY,
+    });
   }
 
   private consumeAction(state: CharacterState): void {
@@ -174,7 +192,7 @@ export class Live2DRenderer implements CharacterRenderer {
     if (viewW < 2 || viewH < 2 || width < 2 || height < 2) return;
     this.restScale = Math.min(viewW / width, viewH / height) * FIT_PADDING;
     this.restX = viewW / 2;
-    this.restY = viewH * 0.52;
+    this.restY = viewH * 0.5;
     this.model.scale.set(this.restScale);
     this.model.position.set(this.restX, this.restY);
   }

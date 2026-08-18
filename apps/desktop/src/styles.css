@@ -23,15 +23,11 @@ body,
 #root {
   height: 100%;
   overflow: hidden;
+  background: transparent;
 }
 
 body {
   margin: 0;
-  background: var(--color-ink);
   color: var(--color-cream);
   font-family: var(--font-sans);
-}
-
-#root {
-  min-height: 100%;
 }

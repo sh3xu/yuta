@@ -1,5 +1,5 @@
-import { APP_ID } from '@yuta/shared';
 import type { DirEntry, FileSystemAdapter } from '@yuta/memory';
+import { APP_ID } from '@yuta/shared';
 
 const PREFIX = `${APP_ID}-fs:`;
 const DIRS = `${APP_ID}-dirs`;

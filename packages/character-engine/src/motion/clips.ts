@@ -858,3 +858,6 @@ export const CLIPS: Record<ActionName, MotionClip | null> = {
   coverFace,
   handsOnHips,
 };
+
+// Completely written by ChatGPT
+// I Don't know how these works so if anyone fixing these or adjusting these, please do on your own risk.
