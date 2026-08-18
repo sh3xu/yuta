@@ -1,0 +1,93 @@
+apps/desktop/src/lib/use-sticker-window.ts
+  s_1c0ceae8e5ebe9::t_35fa64bc73e24f 48-49,58-67,71-72
+  s_1c0ceae8e5ebe9::t_ae9c4e1cb5c3ac 10,20
+  s_1c0ceae8e5ebe9::t_d347d5bdac1051 4
+  s_1c0ceae8e5ebe9::t_943fdb1e630b6c 43
+apps/desktop/src/lib/settings.ts
+  s_1c0ceae8e5ebe9::t_074f3fce4ad051 4-5
+  s_1c0ceae8e5ebe9::t_2a0ae19de76a4e 27,30-35
+  s_1c0ceae8e5ebe9::t_8d0afb86981472 59
+  s_1c0ceae8e5ebe9::t_90e850c219d019 36
+apps/desktop/src-tauri/capabilities/default.json
+  s_1c0ceae8e5ebe9::t_addab1174352cb 21
+  s_1c0ceae8e5ebe9::t_4e12cbed0a8715 4,17,20
+apps/desktop/src/app/App.tsx
+  s_1c0ceae8e5ebe9::t_8ec3b2df5bc76f 2,4-6,13-15,21-45,52-60,64-68
+  s_1c0ceae8e5ebe9::t_42ae1bd2c7d169 8
+packages/ui/src/components/switch.tsx
+  s_1c0ceae8e5ebe9::t_e3c83670e9516b 21
+apps/desktop/src/features/settings/desktop-section.tsx
+  s_1c0ceae8e5ebe9::t_015cd319a5edd2 6
+  s_1c0ceae8e5ebe9::t_0142357da91183 164-165,167,169
+  s_1c0ceae8e5ebe9::t_7963fb43d51fc0 20-29
+  s_1c0ceae8e5ebe9::t_08d29288828a55 36,39-55,59-60
+  s_1c0ceae8e5ebe9::t_873cd8a0383fc4 3-4
+apps/desktop/src/features/chat/ChatDock.tsx
+  s_1c0ceae8e5ebe9::t_dd033e905a040e 10
+  s_1c0ceae8e5ebe9::t_daee00e076e167 9
+apps/desktop/src-tauri/src/lib.rs
+  s_1c0ceae8e5ebe9::t_f128e4c1fe3ed6 77-83
+  s_1c0ceae8e5ebe9::t_ec8a248bc48ef2 54,59
+apps/desktop/src/lib/window.ts
+  s_1c0ceae8e5ebe9::t_2d1fd395fb080c 44
+  s_1c0ceae8e5ebe9::t_3f405d42846a8c 119-154
+  s_1c0ceae8e5ebe9::t_8bcdadca4a0a5f 7
+  s_1c0ceae8e5ebe9::t_46c6772910aa90 73-76,85-96
+  s_1c0ceae8e5ebe9::t_515e1f2dc79ba0 3,8
+  s_1c0ceae8e5ebe9::t_07f9a0b2e0351c 77-84
+  s_1c0ceae8e5ebe9::t_3d93cdd0486bee 9-14,19-20,22,27-29,34-36,42-43,50-52
+apps/desktop/src-tauri/tauri.conf.json
+  s_1c0ceae8e5ebe9::t_1d331785669df1 29-42
+apps/desktop/src/stores/companion-store.ts
+  s_1c0ceae8e5ebe9::t_29173355fa7c84 205
+  s_1c0ceae8e5ebe9::t_d58ece9e985809 81
+  s_1c0ceae8e5ebe9::t_3593ef3c6e3f38 27
+  s_1c0ceae8e5ebe9::t_9d6d0b30739857 192
+  s_1c0ceae8e5ebe9::t_a02be10ecb9aa1 226
+  s_1c0ceae8e5ebe9::t_0091a18142e23f 13-20
+  s_1c0ceae8e5ebe9::t_599c9995e29dcd 231-242
+  s_1c0ceae8e5ebe9::t_79227d7e0d195a 102,105,107-108,111
+  s_1c0ceae8e5ebe9::t_1821165a7197f2 43
+  s_1c0ceae8e5ebe9::t_6041db71032fe4 122,127,132-134,136,145,159-168,177-183
+  s_1c0ceae8e5ebe9::t_484b50d4f5a46a 65-67,69,71,73
+apps/desktop/src/components/layout/Shell.tsx
+  s_1c0ceae8e5ebe9::t_ae09808edb990f 100
+  s_1c0ceae8e5ebe9::t_51db4a03afa724 8
+  s_1c0ceae8e5ebe9::t_326f3ea27150c3 16
+  s_1c0ceae8e5ebe9::t_bc8a9763203736 29
+  s_1c0ceae8e5ebe9::t_9b85ff214e7ca4 61
+  s_1c0ceae8e5ebe9::t_e63f3b69e4c77b 34-35,46-47,53,57-60,62-63,69-72,76-93,102-105
+  s_1c0ceae8e5ebe9::t_737d17fc7da9ee 65
+apps/desktop/src/features/settings/input-position-picker.tsx
+  s_1c0ceae8e5ebe9::t_752d4179e72f80 1-10,12-15,17-23,25-29,31,33-37
+  s_1c0ceae8e5ebe9::t_9ac6015c66d9a8 11,16,24,30,32
+apps/desktop/src/lib/sticker.ts
+  s_1c0ceae8e5ebe9::t_652129dcead29c 73-74
+  s_1c0ceae8e5ebe9::t_1ffb2ab14f4876 71
+  s_1c0ceae8e5ebe9::t_d9b9c8b8ee278f 84,88
+  s_1c0ceae8e5ebe9::t_c2c5f203c11c75 76
+  s_1c0ceae8e5ebe9::t_173667cecbf2d8 9
+  s_1c0ceae8e5ebe9::t_70f26f915d2ee2 1
+  s_1c0ceae8e5ebe9::t_48ad7f8c314d50 55-62,69
+apps/desktop/src/features/chat/ThoughtBubble.tsx
+  s_1c0ceae8e5ebe9::t_e59b70ad895b6d 5,14,37,44
+apps/desktop/src/features/settings/tray-settings.tsx
+  s_1c0ceae8e5ebe9::t_a639052db99d56 1-8,10,16-18,20-31,33-55,63-64,67,76-79,81,89-93
+  s_1c0ceae8e5ebe9::t_bef1a3143187df 75,82-88,94
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "94396260558972625be6a59da2fa900838834845",
+  "prompts": {},
+  "sessions": {
+    "s_1c0ceae8e5ebe9": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "de4cbb72-71b7-4fca-aa28-b88b3eb39475",
+        "model": "default"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    }
+  }
+}
