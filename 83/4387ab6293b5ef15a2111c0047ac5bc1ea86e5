@@ -1,0 +1,55 @@
+apps/desktop/src/features/settings/settings-orb.tsx
+  s_1c0ceae8e5ebe9::t_4541fae2061620 19-23,104-105,108-161,163
+packages/character-engine/src/live2d/controller.ts
+  s_1c0ceae8e5ebe9::t_df94bc1ee268cf 25,28-31
+apps/desktop/src/components/layout/Shell.tsx
+  s_1c0ceae8e5ebe9::t_cd9d1ade1a4c6d 47-48,51-52,54
+  s_1c0ceae8e5ebe9::t_e499526771b2fa 65-66,70,72
+  s_1c0ceae8e5ebe9::t_b8126a23e7dfc1 20-21
+  s_1c0ceae8e5ebe9::t_638b80acd9d364 8,15,28,59,61,71,73-92,102
+apps/desktop/src/lib/use-sticker-window.ts
+  s_1c0ceae8e5ebe9::t_178e9060b456f6 9,18
+apps/desktop/src/features/chat/ChatDock.tsx
+  s_1c0ceae8e5ebe9::t_375b7980c25c79 9
+  s_1c0ceae8e5ebe9::t_8787b354531247 7,10,17
+apps/desktop/src/features/character/CharacterStage.tsx
+  s_1c0ceae8e5ebe9::t_4be4c93565ffb6 99-108
+apps/desktop/src/features/settings/settings-hud.tsx
+  s_1c0ceae8e5ebe9::t_cf93dfa6ea5afb 111
+apps/desktop/src/features/settings/desktop-section.tsx
+  s_1c0ceae8e5ebe9::t_3ceec595036cad 154
+apps/desktop/src/lib/sticker.ts
+  s_1c0ceae8e5ebe9::t_1d6a32cc6e1fdc 77
+  s_1c0ceae8e5ebe9::t_25a75f4114beb3 83
+  s_1c0ceae8e5ebe9::t_33812b8f9c618e 60-61
+  s_1c0ceae8e5ebe9::t_0e1f57f2217bdf 69
+apps/desktop/src/stores/companion-store.ts
+  s_1c0ceae8e5ebe9::t_5758fc991081fd 19
+  s_1c0ceae8e5ebe9::t_62bd34caeaa673 150
+  s_1c0ceae8e5ebe9::t_78f7d891aa79ee 91,95,104,108,117,123-139,158
+  s_1c0ceae8e5ebe9::t_71733fefe4aa2a 71
+packages/character-engine/src/live2d/renderer.ts
+  s_1c0ceae8e5ebe9::t_cfd70fdd0aba38 168-169
+apps/desktop/src/features/chat/ThoughtBubble.tsx
+  s_1c0ceae8e5ebe9::t_7ca207ee19e2f4 41
+  s_1c0ceae8e5ebe9::t_5568ed3bc6e947 8,10,18
+apps/desktop/src/app/session.ts
+  s_1c0ceae8e5ebe9::t_8856b334bc86d4 102
+  s_1c0ceae8e5ebe9::t_ffe8eb2588a2a1 72-76
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "834387ab6293b5ef15a2111c0047ac5bc1ea86e5",
+  "prompts": {},
+  "sessions": {
+    "s_1c0ceae8e5ebe9": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "de4cbb72-71b7-4fca-aa28-b88b3eb39475",
+        "model": "default"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    }
+  }
+}
