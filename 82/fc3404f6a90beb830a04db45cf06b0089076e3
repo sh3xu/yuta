@@ -1,0 +1,78 @@
+packages/shared/src/constants.ts
+  s_49b2daa5ac6fc2::t_f60bef9752cd0e 4-12,45-46
+  h_54cccc4af8e4fc 57
+packages/memory/src/retrieval/score.ts
+  s_49b2daa5ac6fc2::t_d18b8de7223e05 9-11
+packages/emotion-engine/src/planner.ts
+  s_49b2daa5ac6fc2::t_83d314c70cd110 10-13
+  s_49b2daa5ac6fc2::t_2b4bf2fcc8894b 32
+packages/memory/src/index.ts
+  s_49b2daa5ac6fc2::t_d18b8de7223e05 1-2,4-5
+packages/memory/src/facts.ts
+  s_49b2daa5ac6fc2::t_d18b8de7223e05 2
+  s_49b2daa5ac6fc2::t_9e065bd3133143 1,3-89
+packages/character-engine/src/motion/clips.ts
+  s_49b2daa5ac6fc2::t_30e2ad519597ca 20,26-39,41-47,63-78,124-131,176-195,200-217,228-243,252-259,271-278,289-296,390-429,432-441,471-478,553-563,574-582,586-594,622-630,703-712
+  s_49b2daa5ac6fc2::t_3011c3ad6c9c88 858-859
+  s_49b2daa5ac6fc2::t_fdd40981756c91 776-825
+packages/shared/src/types.ts
+  s_49b2daa5ac6fc2::t_525fa599ae1879 23-28,31,33
+packages/ai/src/orchestrator.ts
+  s_49b2daa5ac6fc2::t_d18b8de7223e05 3
+  s_49b2daa5ac6fc2::t_8234fb9c2cc721 56-57
+packages/ai/src/tools/lookup-memory.ts
+  s_49b2daa5ac6fc2::t_67ebdd917beac3 9
+packages/memory/src/format.ts
+  s_49b2daa5ac6fc2::t_cc05763b22c822 95
+  s_49b2daa5ac6fc2::t_3c49cc00c7a55e 18
+  s_49b2daa5ac6fc2::t_0d237ccd166597 27
+  s_49b2daa5ac6fc2::t_d58d5e768726d2 1
+  s_49b2daa5ac6fc2::t_d18b8de7223e05 34-36,52-55,113-119
+packages/memory/src/service.ts
+  s_49b2daa5ac6fc2::t_1cc88720e3596c 3,7,33,36,56-59,69,71-74,88-89,103-115,117,119,126-128
+  s_49b2daa5ac6fc2::t_3276a8a3976f67 60-62
+  s_49b2daa5ac6fc2::t_d18b8de7223e05 63-65
+  s_49b2daa5ac6fc2::t_0270a2b6676e5d 129
+packages/ai/src/prompts.ts
+  s_49b2daa5ac6fc2::t_46278f50d602ff 19-23
+  s_49b2daa5ac6fc2::t_6fce5d1ee2ac97 31-32
+packages/ai/src/providers/mock.ts
+  s_49b2daa5ac6fc2::t_bcbda76e2b86d8 23-24
+  s_49b2daa5ac6fc2::t_3a2ed40894c858 129
+  s_49b2daa5ac6fc2::t_1ae1caba73f58d 138-141
+  s_49b2daa5ac6fc2::t_d62d65814e0ee5 1-2
+  s_49b2daa5ac6fc2::t_d18b8de7223e05 76
+  s_49b2daa5ac6fc2::t_30e2ad519597ca 13-22
+  s_49b2daa5ac6fc2::t_e3b8abc7631d44 84-128
+  s_49b2daa5ac6fc2::t_6cae271c764037 43
+  s_49b2daa5ac6fc2::t_19f65c44047065 67
+packages/emotion-engine/src/emotions.ts
+  s_49b2daa5ac6fc2::t_21b49462f5ef02 67-70,79-89
+  s_49b2daa5ac6fc2::t_30e2ad519597ca 71-78
+packages/ai/src/schemas.ts
+  s_49b2daa5ac6fc2::t_717c9452e104fe 60-71,73
+  s_49b2daa5ac6fc2::t_240e69ed4ed879 17
+  s_49b2daa5ac6fc2::t_d18b8de7223e05 1,172-175
+  s_49b2daa5ac6fc2::t_3d679d1a080967 14-16,18-19,22,24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "82fc3404f6a90beb830a04db45cf06b0089076e3",
+  "prompts": {},
+  "humans": {
+    "h_54cccc4af8e4fc": {
+      "author": "sh3xu <s43khu@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_49b2daa5ac6fc2": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "d5a3b1d2-4f8a-4e9b-8087-3d06baa9d6fe",
+        "model": "grok-4.6"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    }
+  }
+}
