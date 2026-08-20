@@ -8,6 +8,7 @@ export function PlaceChip() {
     <Button
       type="button"
       size="sm"
+      data-yuta-hit="ui"
       className="h-8 w-full rounded-full"
       onClick={() => void place()}
     >

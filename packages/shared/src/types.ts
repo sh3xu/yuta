@@ -1,4 +1,4 @@
-import type { ActionName, EmotionName, MemoryCategory } from './constants';
+import type { ActionName, DanceMoveName, EmotionName, MemoryCategory } from './constants';
 
 export interface CharacterState {
   emotion: EmotionName;
@@ -8,6 +8,12 @@ export interface CharacterState {
   actionToken: number;
   speaking: boolean;
   mouthOpen: number;
+  dancing: boolean;
+  danceMove: DanceMoveName | null;
+  musicEnergy: number;
+  bassEnergy: number;
+  beatPulse: number;
+  musicBpm: number;
 }
 
 export interface EmotionSignal {
@@ -83,6 +89,12 @@ export const IDLE_CHARACTER_STATE: CharacterState = {
   actionToken: 0,
   speaking: false,
   mouthOpen: 0,
+  dancing: false,
+  danceMove: null,
+  musicEnergy: 0,
+  bassEnergy: 0,
+  beatPulse: 0,
+  musicBpm: 0,
 };
 
 export function clamp01(value: number): number {

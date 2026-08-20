@@ -1,52 +1,7 @@
 import type { ActionName } from '@yuta/shared';
 import { PARAM } from '../live2d/mappings';
-import type { EaseName } from './easing';
-import { ARM_POSE, type Channel, type Keyframe, type MotionClip } from './types';
-
-type Key = [number, number] | [number, number, EaseName];
-
-function keys(...items: Key[]): Keyframe[] {
-  return items.map(([t, v, ease]) => (ease ? { t, v, ease } : { t, v }));
-}
-
-function setCh(id: string, ...items: Key[]): Channel {
-  return { id, keys: keys(...items), mix: 'set' };
-}
-
-function clip(duration: number, channels: Channel[], arm: 'A' | 'B' = 'A'): MotionClip {
-  if (arm === 'A') return { duration, channels };
-  return {
-    duration,
-    channels: [setCh(ARM_POSE, [0, 1], [duration - 160, 1], [duration, 0]), ...channels],
-  };
-}
-
-function smile(duration: number, peak = 1): Channel[] {
-  return [
-    setCh(
-      PARAM.eyeLSmile,
-      [0, 0],
-      [140, peak, 'easeOutCubic'],
-      [duration - 200, peak * 0.75],
-      [duration, 0],
-    ),
-    setCh(
-      PARAM.eyeRSmile,
-      [0, 0],
-      [140, peak, 'easeOutCubic'],
-      [duration - 200, peak * 0.75],
-      [duration, 0],
-    ),
-    setCh(PARAM.mouthForm, [0, 1], [duration, 1]),
-    setCh(
-      PARAM.cheek,
-      [0, 0],
-      [160, peak * 0.85, 'easeOutCubic'],
-      [duration - 180, peak * 0.5],
-      [duration, 0],
-    ),
-  ];
-}
+import { clip, setCh, smile } from './build';
+import type { MotionClip } from './types';
 
 const nod = clip(860, [
   setCh(

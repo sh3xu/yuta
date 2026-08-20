@@ -1,6 +1,6 @@
 import { type CharacterState, clamp01, IDLE_CHARACTER_STATE } from '@yuta/shared';
-import { Application, extensions } from 'pixi.js';
-import { CLIPS, ClipPlayer } from '../motion';
+import { Application, extensions, Rectangle } from 'pixi.js';
+import { CLIPS, ClipPlayer, DANCE_LIBRARY, dancePlaybackRate } from '../motion';
 import type { CharacterRenderer } from '../types';
 import { applyLive2D } from './controller';
 import { type CoreModel, ParamTable } from './params';
@@ -27,6 +27,7 @@ type Live2DInstance = {
 };
 
 const FIT_PADDING = 0.9;
+const ALPHA_HIT = 20;
 
 let pluginRegistered = false;
 
@@ -46,6 +47,8 @@ export class Live2DRenderer implements CharacterRenderer {
   private current: CharacterState = { ...IDLE_CHARACTER_STATE };
   private target: CharacterState = { ...IDLE_CHARACTER_STATE };
   private lastActionToken = -1;
+  private lastDanceMove: CharacterState['danceMove'] = null;
+  private dancing = false;
   private pending: CharacterState | null = null;
   private restX = 0;
   private restY = 0;
@@ -69,6 +72,7 @@ export class Live2DRenderer implements CharacterRenderer {
       backgroundAlpha: 0,
       antialias: true,
       preference: 'webgl',
+      preserveDrawingBuffer: true,
       autoDensity: true,
       resolution: window.devicePixelRatio || 1,
       resizeTo: host,
@@ -84,6 +88,7 @@ export class Live2DRenderer implements CharacterRenderer {
     app.canvas.style.height = '100%';
     app.canvas.style.maxWidth = '100%';
     app.canvas.style.maxHeight = '100%';
+    app.canvas.style.pointerEvents = 'none';
     const model = (await Live2DModel.from(modelUrl)) as unknown as Live2DInstance;
     if (this.destroyed) {
       model.destroy?.();
@@ -130,6 +135,16 @@ export class Live2DRenderer implements CharacterRenderer {
     this.targetLookY = Math.min(1, Math.max(-1, y));
   }
 
+  hitTest(clientX: number, clientY: number): boolean {
+    const canvas = this.app?.canvas;
+    if (!canvas) return false;
+    const rect = canvas.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    if (x < 0 || y < 0 || x >= rect.width || y >= rect.height) return false;
+    return this.opaqueAt(x, y, rect.width, rect.height);
+  }
+
   destroy(): void {
     this.destroyed = true;
     this.pending = null;
@@ -164,6 +179,12 @@ export class Live2DRenderer implements CharacterRenderer {
       actionIntensity: lerp(this.current.actionIntensity, this.target.actionIntensity, t),
       speaking: this.target.speaking,
       mouthOpen: lerp(this.current.mouthOpen, this.target.mouthOpen, 0.35),
+      dancing: this.target.dancing,
+      danceMove: this.target.danceMove,
+      musicEnergy: lerp(this.current.musicEnergy, this.target.musicEnergy, 0.32),
+      bassEnergy: lerp(this.current.bassEnergy, this.target.bassEnergy, 0.38),
+      beatPulse: lerp(this.current.beatPulse, this.target.beatPulse, 0.55),
+      musicBpm: this.target.musicBpm,
     };
     this.lookX = lerp(this.lookX, this.targetLookX, 0.28);
     this.lookY = lerp(this.lookY, this.targetLookY, 0.28);
@@ -174,6 +195,28 @@ export class Live2DRenderer implements CharacterRenderer {
   }
 
   private consumeAction(state: CharacterState): void {
+    if (state.dancing && state.danceMove) {
+      const def = DANCE_LIBRARY[state.danceMove];
+      if (!def) return;
+      const rate = dancePlaybackRate(def, state.musicBpm);
+      const intensity = Math.max(state.actionIntensity, state.musicEnergy, 0.45);
+      if (!this.dancing || this.lastDanceMove !== state.danceMove) {
+        this.dancing = true;
+        this.lastDanceMove = state.danceMove;
+        this.player.play(def.clip, intensity, performance.now(), { loop: true, rate });
+        return;
+      }
+      this.player.setRate(rate);
+      this.player.setIntensity(intensity);
+      return;
+    }
+
+    if (this.dancing) {
+      this.dancing = false;
+      this.lastDanceMove = null;
+      this.player.stop();
+    }
+
     if (state.actionToken === this.lastActionToken) return;
     this.lastActionToken = state.actionToken;
     const clip = CLIPS[state.action ?? 'idle'];
@@ -195,6 +238,35 @@ export class Live2DRenderer implements CharacterRenderer {
     this.restY = viewH * 0.5;
     this.model.scale.set(this.restScale);
     this.model.position.set(this.restX, this.restY);
+  }
+
+  private opaqueAt(cssX: number, cssY: number, cssW: number, cssH: number): boolean {
+    const app = this.app;
+    if (!app) return false;
+    const stageX = cssX * (app.screen.width / Math.max(1, cssW));
+    const stageY = cssY * (app.screen.height / Math.max(1, cssH));
+    try {
+      const extracted = app.renderer.extract.pixels({
+        target: app.stage,
+        frame: new Rectangle(stageX, stageY, 2, 2),
+      } as never) as Uint8Array | Uint8ClampedArray | { pixels?: Uint8Array };
+      const pixels = extracted instanceof Uint8Array || extracted instanceof Uint8ClampedArray
+        ? extracted
+        : (extracted.pixels ?? new Uint8Array());
+      for (let i = 3; i < pixels.length; i += 4) {
+        if (pixels[i] > ALPHA_HIT) return true;
+      }
+    } catch {
+      // NOTE: some GPU paths refuse extract; fall through to the backbuffer.
+    }
+    const canvas = app.canvas;
+    const gl = (app.renderer as { gl?: WebGLRenderingContext | WebGL2RenderingContext }).gl;
+    if (!gl) return false;
+    const px = Math.min(canvas.width - 1, Math.max(0, Math.floor(cssX * (canvas.width / Math.max(1, cssW)))));
+    const py = Math.min(canvas.height - 1, Math.max(0, Math.floor(cssY * (canvas.height / Math.max(1, cssH)))));
+    const pixel = new Uint8Array(4);
+    gl.readPixels(px, canvas.height - py - 1, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+    return pixel[3] > ALPHA_HIT;
   }
 
   private nativeSize(): { width: number; height: number } {

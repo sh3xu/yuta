@@ -14,6 +14,7 @@ import { isTauri } from '../lib/tauri-fs';
 import {
   broadcastSettings,
   closeWindow,
+  currentWindowLabel,
   getOuterPosition,
   setAlwaysOnTop,
   showSettingsWindow,
@@ -39,6 +40,7 @@ interface CompanionStore {
   sending: boolean;
   init: () => Promise<void>;
   toggleChat: () => void;
+  wave: () => void;
   closeOverlays: () => void;
   openSettings: () => Promise<void>;
   send: (text: string) => Promise<void>;
@@ -90,12 +92,22 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
 
   async init() {
     const settings = await session.init();
+    session.setStateHandler((characterState) => set({ characterState }));
+    if ((await currentWindowLabel()) === 'main') void session.startSystemAudio();
     set({ ready: true, settings, provider: session.debug.provider });
   },
 
   toggleChat() {
     if (!get().settings.onboardingComplete) return;
     set({ composerOpen: !get().composerOpen });
+  },
+
+  wave() {
+    session.playAction('wave');
+    set({
+      characterState: session.characterState,
+      playedAction: session.characterState.action ?? undefined,
+    });
   },
 
   closeOverlays() {

@@ -25,6 +25,7 @@ export function Toaster() {
             'pointer-events-auto w-full max-w-sm rounded-xl border px-3 py-3 shadow-lg',
             TONE[item.variant],
           )}
+          data-yuta-hit="ui"
         >
           <div className="flex items-start gap-2">
             <div className="min-w-0 flex-1">

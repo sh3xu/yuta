@@ -5,7 +5,14 @@ import { CharacterStage } from '../../features/character/CharacterStage';
 import { ChatDock } from '../../features/chat/ChatDock';
 import { Onboarding } from '../../features/onboarding/Onboarding';
 import { PlaceChip } from '../../features/placement/PlaceChip';
-import { isInputLeft, isInputTop, stickerMode, stickerSize, WINDOW_PAD } from '../../lib/sticker';
+import {
+  characterInsetX,
+  dockInsetX,
+  isInputTop,
+  stickerMode,
+  stickerSize,
+  WINDOW_PAD,
+} from '../../lib/sticker';
 import { useStickerWindow } from '../../lib/use-sticker-window';
 import { useCompanionStore } from '../../stores/companion-store';
 
@@ -16,8 +23,7 @@ export function Shell() {
   const sending = useCompanionStore((state) => state.sending);
   const closeOverlays = useCompanionStore((state) => state.closeOverlays);
   const setPositionLocked = useCompanionStore((state) => state.setPositionLocked);
-  const [badgeHint, setBadgeHint] = useState(true);
-  const [badgePulse, setBadgePulse] = useState(0);
+  const [chrome, setChrome] = useState(false);
 
   useStickerWindow();
 
@@ -30,9 +36,14 @@ export function Shell() {
   });
   const size = stickerSize(mode, settings);
   const showDock = mode !== 'collapsed' && mode !== 'place';
-  const showPlace = mode === 'place';
-  const dockLeft = isInputLeft(settings.inputCorner);
+  const showPlace = !settings.positionLocked && settings.onboardingComplete && chrome;
+  const showLock = settings.onboardingComplete && settings.positionLocked && chrome;
   const dockTop = isInputTop(settings.inputCorner);
+  const characterLeft = characterInsetX(mode, settings);
+  const dockLeftPx = dockInsetX(mode, settings);
+  const dockOffset = Math.round(settings.dockOffsetY);
+  const dockMax = Math.max(48, size.height - WINDOW_PAD * 2 - 48);
+  const dockY = Math.min(dockMax, Math.max(4, WINDOW_PAD + (dockTop ? dockOffset : -dockOffset)));
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -43,41 +54,25 @@ export function Shell() {
   }, [closeOverlays]);
 
   useEffect(() => {
-    if (!settings.positionLocked) {
-      setBadgeHint(false);
-      return;
-    }
-    setBadgeHint(true);
-    const timer = window.setTimeout(() => setBadgeHint(false), 2000);
+    if (!chrome || !settings.positionLocked) return;
+    const timer = window.setTimeout(() => setChrome(false), 5000);
     return () => window.clearTimeout(timer);
-  }, [settings.positionLocked, composerOpen, badgePulse]);
+  }, [chrome, settings.positionLocked]);
 
   return (
-    <div
-      className="flex overflow-visible bg-transparent p-2"
-      style={{
-        width: size.width,
-        height: size.height,
-        flexDirection: dockLeft ? 'row-reverse' : 'row',
-        alignItems: dockTop ? 'flex-start' : 'flex-end',
-      }}
-    >
-      <div className="relative z-10 flex shrink-0 flex-col gap-2">
-        <div
-          className="relative"
-          onClickCapture={() => {
-            if (settings.positionLocked) {
-              setBadgeHint(true);
-              setBadgePulse((value) => value + 1);
-            }
-          }}
-        >
-          <CharacterStage />
-          {settings.onboardingComplete && settings.positionLocked && badgeHint ? (
+    <div className="pointer-events-none relative bg-transparent" style={{ width: size.width, height: size.height }}>
+      <div
+        className="pointer-events-none absolute z-10"
+        style={{ left: characterLeft, top: WINDOW_PAD }}
+      >
+        <div className="relative">
+          <CharacterStage onActivate={() => setChrome(true)} />
+          {showLock ? (
             <button
               type="button"
               title="Unlock position"
               aria-label="Unlock position"
+              data-yuta-hit="ui"
               className="absolute right-1 bottom-1 z-40 inline-flex size-5 items-center justify-center rounded-full border border-white/20 bg-panel/85 text-cream shadow-[0_6px_16px_rgba(0,0,0,0.35)] backdrop-blur-md hover:border-accent/70"
               onClick={(event) => {
                 event.stopPropagation();
@@ -92,21 +87,28 @@ export function Shell() {
               <Lock className="size-2.5" />
             </button>
           ) : null}
+          {showPlace ? (
+            <div className="absolute inset-x-2 bottom-2 z-40">
+              <PlaceChip />
+            </div>
+          ) : null}
         </div>
-        {showPlace ? <PlaceChip /> : null}
       </div>
       {showDock ? (
         <section
-          className="relative z-30 flex min-h-0 min-w-0 flex-col overflow-visible"
+          className="pointer-events-none absolute z-30 flex w-max max-w-full flex-col"
           style={{
-            width: settings.dockWidth,
-            [dockLeft ? 'marginRight' : 'marginLeft']: settings.dockGap,
-            height: Math.max(120, size.height - WINDOW_PAD * 2),
-            justifyContent: dockTop ? 'flex-start' : 'flex-end',
+            left: dockLeftPx,
+            ...(dockTop ? { top: dockY } : { bottom: dockY }),
+            ...(mode === 'onboarding' ? { width: settings.dockWidth, height: size.height - WINDOW_PAD * 2 } : undefined),
           }}
         >
           {settings.onboardingComplete ? null : <Onboarding />}
-          {settings.onboardingComplete ? <ChatDock /> : null}
+          {settings.onboardingComplete ? (
+            <div style={{ width: settings.dockWidth }}>
+              <ChatDock />
+            </div>
+          ) : null}
         </section>
       ) : null}
     </div>

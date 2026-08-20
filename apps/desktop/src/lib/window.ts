@@ -1,6 +1,5 @@
 import type { AppSettings } from './settings';
-import type { StickerMode } from './sticker';
-import { SETTINGS_CHANGED_EVENT, stickerSize } from './sticker';
+import { characterInsetX, SETTINGS_CHANGED_EVENT, stickerSize, type StickerMode } from './sticker';
 import { isTauri } from './tauri-fs';
 
 export const UNLOCK_POSITION_EVENT = 'unlock-position';
@@ -13,13 +12,44 @@ async function stickerWindow() {
   return WebviewWindow.getByLabel(MAIN_WINDOW_LABEL);
 }
 
-export async function setStickerSize(mode: StickerMode, settings: AppSettings): Promise<void> {
+async function clampOnScreen(
+  window: NonNullable<Awaited<ReturnType<typeof stickerWindow>>>,
+  x: number,
+  y: number,
+): Promise<{ x: number; y: number }> {
+  const outer = await window.outerSize();
+  const monitor = await window.currentMonitor();
+  if (!monitor) return { x: Math.round(x), y: Math.round(y) };
+  const area = monitor.workArea ?? { position: monitor.position, size: monitor.size };
+  const minX = area.position.x;
+  const minY = area.position.y;
+  const maxX = area.position.x + area.size.width - outer.width;
+  const maxY = area.position.y + area.size.height - outer.height;
+  return {
+    x: Math.round(Math.min(Math.max(x, minX), Math.max(minX, maxX))),
+    y: Math.round(Math.min(Math.max(y, minY), Math.max(minY, maxY))),
+  };
+}
+
+export async function setStickerSize(
+  mode: StickerMode,
+  settings: AppSettings,
+  previous?: { mode: StickerMode; settings: AppSettings },
+): Promise<void> {
   if (!isTauri()) return;
-  const { LogicalSize } = await import('@tauri-apps/api/dpi');
+  const { LogicalSize, PhysicalPosition } = await import('@tauri-apps/api/dpi');
   const window = await stickerWindow();
   if (!window) return;
-  const size = stickerSize(mode, settings);
-  await window.setSize(new LogicalSize(size.width, size.height));
+  const next = stickerSize(mode, settings);
+  const scale = await window.scaleFactor();
+  const position = await window.outerPosition();
+  const oldInset = previous ? characterInsetX(previous.mode, previous.settings) : characterInsetX(mode, settings);
+  const newInset = characterInsetX(mode, settings);
+  const dx = (newInset - oldInset) * scale;
+  await window.setSize(new LogicalSize(next.width, next.height));
+  const nextPos = await clampOnScreen(window, position.x - dx, position.y);
+  if (Math.abs(nextPos.x - position.x) < 1 && Math.abs(nextPos.y - position.y) < 1) return;
+  await window.setPosition(new PhysicalPosition(nextPos.x, nextPos.y));
 }
 
 export async function setAlwaysOnTop(value: boolean): Promise<void> {
@@ -56,6 +86,14 @@ export async function startWindowDrag(): Promise<void> {
   if (!isTauri()) return;
   const { getCurrentWindow } = await import('@tauri-apps/api/window');
   await getCurrentWindow().startDragging();
+}
+
+export async function setIgnoreCursorEvents(ignore: boolean): Promise<void> {
+  if (!isTauri()) return;
+  const { getCurrentWindow } = await import('@tauri-apps/api/window');
+  const current = getCurrentWindow();
+  if (current.label !== MAIN_WINDOW_LABEL) return;
+  await current.setIgnoreCursorEvents(ignore);
 }
 
 export async function closeWindow(): Promise<void> {

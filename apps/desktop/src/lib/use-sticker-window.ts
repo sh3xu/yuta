@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useCompanionStore } from '../stores/companion-store';
-import { stickerMode } from './sticker';
+import { stickerMode, type StickerMode } from './sticker';
+import type { AppSettings } from './settings';
 import { restoreWindow, setStickerSize, subscribePositionLocked, subscribeUnlockPosition } from './window';
 
 export function useStickerWindow(): void {
@@ -11,6 +12,8 @@ export function useStickerWindow(): void {
   const bubbleVisible = useCompanionStore((state) => state.bubbleVisible);
   const setPositionLocked = useCompanionStore((state) => state.setPositionLocked);
   const restored = useRef(false);
+  const previous = useRef<{ mode: StickerMode; settings: AppSettings } | null>(null);
+  const queue = useRef(Promise.resolve());
 
   const mode = stickerMode({
     onboardingComplete: settings.onboardingComplete,
@@ -22,13 +25,20 @@ export function useStickerWindow(): void {
 
   useEffect(() => {
     if (!ready) return;
-    void (async () => {
-      if (!restored.current) {
-        restored.current = true;
-        await restoreWindow(useCompanionStore.getState().settings);
-      }
-      await setStickerSize(mode, useCompanionStore.getState().settings);
-    })();
+    queue.current = queue.current
+      .then(async () => {
+        if (!restored.current) {
+          restored.current = true;
+          await restoreWindow(useCompanionStore.getState().settings);
+        }
+        const live = useCompanionStore.getState().settings;
+        const from = previous.current;
+        previous.current = { mode, settings: live };
+        await setStickerSize(mode, live, from ?? undefined);
+      })
+      .catch((error: unknown) => {
+        console.error('[yuta] sticker size', error);
+      });
   }, [
     ready,
     mode,
@@ -39,7 +49,6 @@ export function useStickerWindow(): void {
     settings.cropRight,
     settings.dockWidth,
     settings.dockGap,
-    settings.dockOffsetY,
     settings.inputCorner,
   ]);
 

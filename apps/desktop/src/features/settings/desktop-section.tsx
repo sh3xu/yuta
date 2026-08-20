@@ -1,4 +1,4 @@
-import { Switch } from '@yuta/ui';
+import { Toggle } from '@yuta/ui';
 import { Minimize2, Pin, Scaling } from 'lucide-react';
 import { isTauri } from '../../lib/tauri-fs';
 import { requestPositionLocked } from '../../lib/window';
@@ -30,7 +30,7 @@ export function DesktopSection() {
   const applyAppearance = useCompanionStore((state) => state.applyAppearance);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex shrink-0 flex-col gap-3">
       <SectionCard
         title="Placement"
         description="Lock keeps the sticker where it is. Unlock lets you drag it."
@@ -68,16 +68,16 @@ export function DesktopSection() {
             Place here
           </button>
         )}
-        <div className="flex h-10 items-center justify-between gap-3 rounded-lg border border-line bg-ink px-3">
+        <div className="flex min-h-10 items-center justify-between gap-3 rounded-lg border border-line bg-ink px-3 py-1.5">
           <span className="text-sm">Always on top</span>
-          <Switch
+          <Toggle
             checked={settings.alwaysOnTop}
             onCheckedChange={(value) => void applyAlwaysOnTop(value)}
           />
         </div>
-        <div className="flex h-10 items-center justify-between gap-3 rounded-lg border border-line bg-ink px-3">
+        <div className="flex min-h-10 items-center justify-between gap-3 rounded-lg border border-line bg-ink px-3 py-1.5">
           <span className="text-sm">Look at cursor</span>
-          <Switch
+          <Toggle
             checked={settings.followCursor}
             onCheckedChange={(followCursor) => applyAppearance({ followCursor })}
           />
@@ -182,6 +182,15 @@ export function DesktopSection() {
           suffix="px"
           value={settings.dockGap}
           onChange={(dockGap) => applyAppearance({ dockGap })}
+        />
+        <RangeField
+          label="Move up / down"
+          min={-160}
+          max={160}
+          step={4}
+          suffix="px"
+          value={settings.dockOffsetY}
+          onChange={(dockOffsetY) => applyAppearance({ dockOffsetY })}
         />
       </SectionCard>
     </div>

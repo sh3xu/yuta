@@ -14,7 +14,7 @@ export function ThoughtBubble() {
   const waiting = sending && !bubbleText;
 
   return (
-    <div className="relative pl-3">
+    <div className="relative pl-3" data-yuta-hit="ui">
       <span
         className="absolute top-6 left-0 rounded-full bg-cream/90"
         style={{ width: 8 * scale, height: 8 * scale }}

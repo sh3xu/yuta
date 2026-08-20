@@ -13,7 +13,7 @@ export function ChatDock({ className }: { className?: string }) {
   if (!showBubble && !showComposer) return null;
 
   return (
-    <div className={cn('flex min-h-0 flex-col gap-1.5 overflow-visible', className)}>
+    <div data-yuta-hit="ui" className={cn('flex min-h-0 flex-col gap-1.5 overflow-visible', className)}>
       {showBubble ? <ThoughtBubble /> : null}
       {showComposer ? <Composer /> : null}
     </div>

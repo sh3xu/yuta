@@ -12,7 +12,7 @@ export function SectionCard({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-line bg-ink/70 p-3">
+    <section className="shrink-0 rounded-2xl border border-line bg-ink/70 p-3">
       <div className="mb-3 flex items-start gap-2">
         {icon ? <div className="mt-0.5 text-accent">{icon}</div> : null}
         <div className="min-w-0">

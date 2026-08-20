@@ -23,6 +23,13 @@ export function DebugPanel() {
         <Row label="Played" value={playedAction ?? characterState.action ?? 'none'} />
         <Row label="Speaking" value={String(characterState.speaking)} />
         <Row label="Mouth" value={characterState.mouthOpen.toFixed(2)} />
+        <Row label="Dancing" value={String(characterState.dancing)} />
+        <Row label="Dance move" value={characterState.danceMove ?? 'none'} />
+        <Row label="System audio" value={characterState.musicEnergy.toFixed(2)} />
+        <Row
+          label="BPM"
+          value={characterState.musicBpm ? characterState.musicBpm.toFixed(0) : '0'}
+        />
         <Row label="LLM" value={provider} />
       </div>
       {lastError ? (

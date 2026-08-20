@@ -26,6 +26,7 @@ export function Composer() {
 
   return (
     <form
+      data-yuta-hit="ui"
       className="grid items-center gap-1"
       style={{ gridTemplateColumns: `${control}px minmax(0, 1fr) ${control}px` }}
       onSubmit={(event) => {

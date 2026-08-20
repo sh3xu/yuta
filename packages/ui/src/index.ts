@@ -3,6 +3,7 @@ export { Button } from './components/button';
 export { Field } from './components/field';
 export { Input } from './components/input';
 export { Switch } from './components/switch';
+export { Toggle } from './components/toggle';
 export { Tabs } from './components/tabs';
 export { Textarea } from './components/textarea';
 export { Toaster } from './components/toaster';

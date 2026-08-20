@@ -5,6 +5,11 @@ import { ARM_POSE, type Channel, type MotionClip, type MotionSample } from './ty
 
 const FADE_MS = 180;
 
+export interface PlayOptions {
+  loop?: boolean;
+  rate?: number;
+}
+
 export function emptySample(): MotionSample {
   return { add: {}, set: {}, armPose: 0 };
 }
@@ -16,12 +21,32 @@ export class ClipPlayer {
   private fadeFrom: MotionSample | null = null;
   private fadeAt = 0;
   private last: MotionSample = emptySample();
+  private loop = false;
+  private rate = 1;
 
-  play(clip: MotionClip, intensity: number, now = performance.now()): void {
+  play(
+    clip: MotionClip,
+    intensity: number,
+    now = performance.now(),
+    options: PlayOptions = {},
+  ): void {
+    if (this.clip || hasMotion(this.last)) {
+      this.fadeFrom = this.last;
+      this.fadeAt = now;
+    }
     this.clip = clip;
     this.startedAt = now;
     this.intensity = clamp01(Math.max(intensity, 0.35));
-    this.fadeFrom = null;
+    this.loop = options.loop ?? false;
+    this.rate = Math.max(0.35, options.rate ?? 1);
+  }
+
+  setRate(rate: number): void {
+    this.rate = Math.max(0.35, rate);
+  }
+
+  setIntensity(intensity: number): void {
+    this.intensity = clamp01(Math.max(intensity, 0.35));
   }
 
   stop(now = performance.now()): void {
@@ -30,24 +55,32 @@ export class ClipPlayer {
       this.fadeAt = now;
     }
     this.clip = null;
+    this.loop = false;
   }
 
   sample(now: number): MotionSample {
+    let current = emptySample();
     if (this.clip) {
-      const elapsed = now - this.startedAt;
-      if (elapsed >= this.clip.duration) {
+      const elapsed = (now - this.startedAt) * this.rate;
+      if (!this.loop && elapsed >= this.clip.duration) {
         this.fadeFrom = evaluate(this.clip, this.clip.duration, this.intensity);
         this.fadeAt = now;
         this.clip = null;
       } else {
-        this.last = evaluate(this.clip, elapsed, this.intensity);
-        return this.last;
+        const time = this.loop ? elapsed % this.clip.duration : elapsed;
+        current = evaluate(this.clip, time, this.intensity);
+        if (!this.fadeFrom) {
+          this.last = current;
+          return this.last;
+        }
       }
     }
 
     if (this.fadeFrom) {
       const t = clamp01((now - this.fadeAt) / FADE_MS);
-      this.last = scaleSample(this.fadeFrom, 1 - t);
+      this.last = this.clip
+        ? mixSamples(this.fadeFrom, current, t)
+        : scaleSample(this.fadeFrom, 1 - t);
       if (t >= 1) this.fadeFrom = null;
       return this.last;
     }
@@ -93,6 +126,21 @@ function sampleChannel(channel: Channel, time: number): number {
   }
 
   return last.v;
+}
+
+function mixSamples(from: MotionSample, to: MotionSample, t: number): MotionSample {
+  const add: Record<string, number> = {};
+  const set: Record<string, number> = {};
+  for (const id of new Set([...Object.keys(from.add), ...Object.keys(to.add)])) {
+    add[id] = (from.add[id] ?? 0) * (1 - t) + (to.add[id] ?? 0) * t;
+  }
+  for (const id of new Set([...Object.keys(from.set), ...Object.keys(to.set)])) {
+    const rest = PARAM_REST[id] ?? 0;
+    const a = from.set[id] ?? rest;
+    const b = to.set[id] ?? rest;
+    set[id] = a + (b - a) * t;
+  }
+  return { add, set, armPose: from.armPose * (1 - t) + to.armPose * t };
 }
 
 function scaleSample(from: MotionSample, keep: number): MotionSample {

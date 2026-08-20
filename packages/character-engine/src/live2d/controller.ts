@@ -22,11 +22,11 @@ export function applyLive2D(
 
   for (const [id, value] of Object.entries(BODY_REST)) table.set(id, value);
 
-  table.add(PARAM.bodyX, idle.bodyX * idleMix - look.x * 12);
+  table.add(PARAM.bodyX, idle.bodyX * idleMix - look.x * 6);
   table.add(PARAM.bodyZ, idle.bodyZ);
   table.add(PARAM.angleZ, idle.angleZ * idleMix);
-  table.add(PARAM.angleX, -look.x * 30);
-  table.add(PARAM.angleY, look.y * 22);
+  table.add(PARAM.angleX, -look.x * 18);
+  table.add(PARAM.angleY, look.y * 14);
   table.add(PARAM.eyeBallX, idle.eyeBallX * idleMix + look.x);
   table.add(PARAM.eyeBallY, idle.eyeBallY * idleMix + look.y * 0.85);
 
@@ -47,7 +47,24 @@ export function applyLive2D(
   for (const [id, value] of Object.entries(motion.add)) table.add(id, value);
   for (const [id, value] of Object.entries(motion.set)) table.set(id, value);
 
-  if (state.speaking) table.set(PARAM.mouthOpen, state.mouthOpen);
+  if (state.dancing) {
+    const bounce = state.bassEnergy * 8 + state.beatPulse * 7;
+    table.add(PARAM.bodyY, bounce);
+    table.add(PARAM.leg, state.bassEnergy * 0.28);
+    table.add(PARAM.shoulder, state.beatPulse * 0.25);
+    table.add(PARAM.angleZ, Math.sin(now / 160) * state.musicEnergy * 3.5);
 
-  table.setArmPose(motion.armPose);
+    const slow = Math.sin(now / 2400);
+    const flap = Math.sin(now / 1750);
+    table.add(PARAM.armRA, 5.5 + slow * 2);
+    table.add(PARAM.armRB, 5 + flap * 3.2);
+    table.add(PARAM.handRB, flap * 4);
+    table.add(PARAM.handR, 0.4);
+    table.add(PARAM.angleX, 5 + slow * 2);
+    table.setArmPose(Math.max(motion.armPose, 0.72));
+  } else {
+    table.setArmPose(motion.armPose);
+  }
+
+  if (state.speaking) table.set(PARAM.mouthOpen, state.mouthOpen);
 }

@@ -20,7 +20,10 @@ export function Onboarding() {
   };
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-auto rounded-[22px] border border-line bg-panel/95 p-4">
+    <div
+      data-yuta-hit="ui"
+      className="flex min-h-0 flex-1 flex-col gap-4 overflow-auto rounded-[22px] border border-line bg-panel/95 p-4"
+    >
       {step === 0 ? (
         <>
           <p className="text-[10px] uppercase tracking-[0.3em] text-accent">Yuta</p>

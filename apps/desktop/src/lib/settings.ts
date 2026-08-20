@@ -54,7 +54,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   cropRight: 0,
   dockWidth: 240,
   dockGap: 2,
-  dockOffsetY: 0.08,
+  dockOffsetY: 0,
   followCursor: true,
   inputCorner: 'left-top',
 };

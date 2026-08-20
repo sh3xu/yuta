@@ -5,6 +5,9 @@ use tauri::{
     Emitter, Manager,
 };
 
+#[cfg(windows)]
+mod loopback;
+
 #[derive(Clone, Serialize)]
 struct CursorPoint {
     x: i32,
@@ -48,6 +51,12 @@ pub fn run() {
                 std::thread::sleep(std::time::Duration::from_millis(40));
                 let _ = handle.emit("cursor-move", cursor_point());
             });
+
+            #[cfg(windows)]
+            {
+                let audio = app.handle().clone();
+                std::thread::spawn(move || loopback::run(audio));
+            }
 
             let show = MenuItem::with_id(app, "show", "Show", true, None::<&str>)?;
             let hide = MenuItem::with_id(app, "hide", "Hide", true, None::<&str>)?;

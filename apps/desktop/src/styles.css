@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,680&family=Outfit:wght@400;500;600&display=swap');
 @import 'tailwindcss';
+@source "../../../packages/ui/src";
 
 @theme {
   --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif;
@@ -26,8 +27,70 @@ body,
   background: transparent;
 }
 
+html:not(.settings-window),
+body:not(.settings-window),
+#root:not(.settings-window) {
+  pointer-events: none;
+}
+
+[data-yuta-hit='ui'] {
+  pointer-events: auto;
+}
+
 body {
   margin: 0;
   color: var(--color-cream);
   font-family: var(--font-sans);
+}
+
+html.settings-window,
+body.settings-window,
+#root.settings-window {
+  height: 100%;
+  overflow: hidden;
+  background: #12151c;
+}
+
+#root.settings-window {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+}
+
+input[type='range'].settings-range {
+  display: block;
+  width: 100%;
+  height: 20px;
+  margin: 0;
+  appearance: none;
+  background: transparent;
+}
+
+input[type='range'].settings-range::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-line);
+}
+
+input[type='range'].settings-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -4px;
+  border-radius: 999px;
+  background: var(--color-accent);
+}
+
+input[type='range'].settings-range::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-line);
+}
+
+input[type='range'].settings-range::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-accent);
 }

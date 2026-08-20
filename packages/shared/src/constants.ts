@@ -45,6 +45,37 @@ export const ACTIONS = [
   'coverFace',
   'handsOnHips',
 ] as const;
+export const DANCE_MOVES = [
+  'swayGroove',
+  'headBob',
+  'hipSway',
+  'stepTouch',
+  'shoulderRoll',
+  'leanGroove',
+  'lookSweep',
+  'bounceGroove',
+  'sideStep',
+  'armPump',
+  'twist',
+  'clapStep',
+  'waveArms',
+  'shuffle',
+  'bodyRoll',
+  'pointGroove',
+  'shimmy',
+  'wiggle',
+  'kickStep',
+  'jumpGroove',
+  'fistPump',
+  'spinTwist',
+  'stomp',
+  'doubleBounce',
+  'armSwing',
+  'dropBounce',
+  'celebrateGroove',
+  'hopSide',
+] as const;
+
 export const MEMORY_CATEGORIES = [
   'profile',
   'preferences',
@@ -62,7 +93,12 @@ export const BEHAVIOR_WINDOW = 20;
 
 export type EmotionName = (typeof EMOTIONS)[number];
 export type ActionName = (typeof ACTIONS)[number];
+export type DanceMoveName = (typeof DANCE_MOVES)[number];
 export type MemoryCategory = (typeof MEMORY_CATEGORIES)[number];
+
+export function isDanceMoveName(value: unknown): value is DanceMoveName {
+  return typeof value === 'string' && (DANCE_MOVES as readonly string[]).includes(value);
+}
 
 export function isMemoryCategory(value: unknown): value is MemoryCategory {
   return typeof value === 'string' && (MEMORY_CATEGORIES as readonly string[]).includes(value);

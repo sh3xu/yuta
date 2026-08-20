@@ -3,7 +3,6 @@ import type { AppSettings, InputCorner } from './settings';
 export const BASE_STAGE_WIDTH = 280;
 export const BASE_STAGE_HEIGHT = 520;
 export const WINDOW_PAD = 8;
-export const PLACE_CHIP_HEIGHT = 40;
 export const BUBBLE_MS = 4500;
 export const CURSOR_MOVE_EVENT = 'cursor-move';
 export const SETTINGS_CHANGED_EVENT = 'settings-changed';
@@ -60,6 +59,18 @@ export function isInputTop(corner: InputCorner): boolean {
   return corner.endsWith('top');
 }
 
+export function characterInsetX(mode: StickerMode, settings: AppSettings): number {
+  const dockOpen = mode !== 'collapsed' && mode !== 'place';
+  if (!dockOpen || !isInputLeft(settings.inputCorner)) return WINDOW_PAD;
+  return Math.max(WINDOW_PAD, WINDOW_PAD + settings.dockWidth + settings.dockGap);
+}
+
+export function dockInsetX(mode: StickerMode, settings: AppSettings): number {
+  const dockOpen = mode !== 'collapsed' && mode !== 'place';
+  if (!dockOpen || isInputLeft(settings.inputCorner)) return WINDOW_PAD;
+  return WINDOW_PAD + visibleStage(settings).width + settings.dockGap;
+}
+
 export function stickerSize(
   mode: StickerMode,
   settings: AppSettings,
@@ -67,9 +78,8 @@ export function stickerSize(
   const stage = visibleStage(settings);
   const dockOpen = mode !== 'collapsed' && mode !== 'place';
   const dock = dockOpen ? settings.dockWidth + settings.dockGap : 0;
-  const placeExtra = mode === 'place' ? PLACE_CHIP_HEIGHT : 0;
   const width = Math.max(stage.width + WINDOW_PAD * 2, stage.width + dock + WINDOW_PAD * 2);
-  let height = stage.height + placeExtra + WINDOW_PAD * 2;
+  let height = stage.height + WINDOW_PAD * 2;
   if (mode === 'onboarding') {
     height = Math.max(height, 420 + WINDOW_PAD * 2);
   }

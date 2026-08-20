@@ -5,6 +5,7 @@ import { isTauri } from '../../lib/tauri-fs';
 import {
   getOuterPosition,
   getScaleFactor,
+  setIgnoreCursorEvents,
   startWindowDrag,
   subscribeCursorMove,
 } from '../../lib/window';
@@ -13,18 +14,25 @@ import { useCompanionStore } from '../../stores/companion-store';
 const MODEL_URL = '/characters/hiyori/Hiyori.model3.json';
 const DRAG_THRESHOLD = 6;
 
-export function CharacterStage() {
+function uiHitAt(clientX: number, clientY: number): boolean {
+  return Boolean(document.elementFromPoint(clientX, clientY)?.closest('[data-yuta-hit="ui"]'));
+}
+
+export function CharacterStage({ onActivate }: { onActivate?: () => void }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<Live2DRenderer | null>(null);
   const dragRef = useRef({ active: false, dragging: false, x: 0, y: 0 });
   const winRef = useRef({ x: 0, y: 0, scale: 1 });
   const followRef = useRef(true);
   const headRef = useRef({ x: 0, y: 0 });
+  const ignoreRef = useRef(true);
+  const activateRef = useRef(onActivate);
   const characterState = useCompanionStore((state) => state.characterState);
   const settings = useCompanionStore((state) => state.settings);
-  const positionLocked = settings.positionLocked;
   const toggleChat = useCompanionStore((state) => state.toggleChat);
+  const wave = useCompanionStore((state) => state.wave);
   const stage = visibleStage(settings);
+  activateRef.current = onActivate;
 
   followRef.current = settings.followCursor;
   headRef.current = {
@@ -33,6 +41,8 @@ export function CharacterStage() {
   };
 
   useEffect(() => {
+    ignoreRef.current = true;
+    void setIgnoreCursorEvents(true);
     const host = hostRef.current;
     if (!host) return;
     const renderer = new Live2DRenderer();
@@ -49,6 +59,8 @@ export function CharacterStage() {
     return () => {
       renderer.destroy();
       rendererRef.current = null;
+      ignoreRef.current = true;
+      void setIgnoreCursorEvents(true);
     };
   }, []);
 
@@ -81,19 +93,33 @@ export function CharacterStage() {
       cancelled = true;
       window.clearInterval(timer);
     };
-  }, []);
+  }, [stage.width, stage.height]);
 
   useEffect(() => {
     let unlisten: (() => void) | undefined;
     let cancelled = false;
+    const applyIgnore = (ignore: boolean) => {
+      if (!isTauri() || ignoreRef.current === ignore) return;
+      ignoreRef.current = ignore;
+      void setIgnoreCursorEvents(ignore);
+    };
     void subscribeCursorMove((point) => {
       const renderer = rendererRef.current;
       if (!renderer) return;
+      const win = winRef.current;
+      const clientX = (point.x - win.x) / win.scale;
+      const clientY = (point.y - win.y) / win.scale;
+      const overUi = uiHitAt(clientX, clientY);
+      const overModel = renderer.hitTest(clientX, clientY);
+      applyIgnore(!overUi && !overModel && !dragRef.current.active);
       if (!followRef.current) {
         renderer.setLookTarget(0, 0);
         return;
       }
-      const win = winRef.current;
+      if (overModel) {
+        renderer.setLookTarget(0, 0);
+        return;
+      }
       const headX = win.x + headRef.current.x * win.scale;
       const headY = win.y + headRef.current.y * win.scale;
       const dx = point.x - headX;
@@ -116,50 +142,82 @@ export function CharacterStage() {
     return () => {
       cancelled = true;
       unlisten?.();
+      ignoreRef.current = true;
+      void setIgnoreCursorEvents(true);
+    };
+  }, []);
+
+  useEffect(() => {
+    const onCharacter = (clientX: number, clientY: number) => {
+      if (uiHitAt(clientX, clientY)) return false;
+      return rendererRef.current?.hitTest(clientX, clientY) ?? false;
+    };
+    const onClick = (event: MouseEvent) => {
+      if (dragRef.current.dragging) return;
+      if (!onCharacter(event.clientX, event.clientY)) return;
+      activateRef.current?.();
+      wave();
+      toggleChat();
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      if (event.button !== 0) return;
+      if (!onCharacter(event.clientX, event.clientY)) return;
+      activateRef.current?.();
+      dragRef.current = {
+        active: true,
+        dragging: false,
+        x: event.clientX,
+        y: event.clientY,
+      };
+      const locked = useCompanionStore.getState().settings.positionLocked;
+      const onMove = (move: PointerEvent) => {
+        if (!dragRef.current.active || locked || dragRef.current.dragging) return;
+        const dx = move.clientX - dragRef.current.x;
+        const dy = move.clientY - dragRef.current.y;
+        if (Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
+        dragRef.current.dragging = true;
+        void startWindowDrag();
+      };
+      const onUp = () => {
+        window.removeEventListener('pointermove', onMove);
+        window.removeEventListener('pointerup', onUp);
+        dragRef.current.active = false;
+        if (dragRef.current.dragging) {
+          window.setTimeout(() => {
+            dragRef.current.dragging = false;
+          }, 0);
+        }
+      };
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onUp);
+    };
+    window.addEventListener('click', onClick, true);
+    window.addEventListener('pointerdown', onPointerDown, true);
+    return () => {
+      window.removeEventListener('click', onClick, true);
+      window.removeEventListener('pointerdown', onPointerDown, true);
+    };
+  }, [toggleChat, wave]);
+
+  useEffect(() => {
+    const hello = window.setTimeout(() => {
+      const live = useCompanionStore.getState();
+      if (live.characterState.dancing || live.characterState.speaking) return;
+      live.wave();
+    }, 45000);
+    const timer = window.setInterval(() => {
+      const live = useCompanionStore.getState();
+      if (live.characterState.dancing || live.characterState.speaking || live.composerOpen) return;
+      live.wave();
+    }, 180000);
+    return () => {
+      window.clearTimeout(hello);
+      window.clearInterval(timer);
     };
   }, []);
 
   return (
-    <button
-      type="button"
-      aria-label="Companion"
-      className={`relative block shrink-0 overflow-hidden border-0 bg-transparent p-0 outline-none focus-visible:ring-2 focus-visible:ring-accent ${positionLocked ? 'cursor-pointer' : 'cursor-grab active:cursor-grabbing'}`}
-      style={{ width: stage.width, height: stage.height }}
-      onClick={() => {
-        if (dragRef.current.dragging) return;
-        toggleChat();
-      }}
-      onPointerDown={(event) => {
-        if (event.button !== 0) return;
-        dragRef.current = {
-          active: true,
-          dragging: false,
-          x: event.clientX,
-          y: event.clientY,
-        };
-        const locked = useCompanionStore.getState().settings.positionLocked;
-        const onMove = (move: PointerEvent) => {
-          if (!dragRef.current.active || locked || dragRef.current.dragging) return;
-          const dx = move.clientX - dragRef.current.x;
-          const dy = move.clientY - dragRef.current.y;
-          if (Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
-          dragRef.current.dragging = true;
-          void startWindowDrag();
-        };
-        const onUp = () => {
-          window.removeEventListener('pointermove', onMove);
-          window.removeEventListener('pointerup', onUp);
-          dragRef.current.active = false;
-          if (dragRef.current.dragging) {
-            window.setTimeout(() => {
-              dragRef.current.dragging = false;
-            }, 0);
-          }
-        };
-        window.addEventListener('pointermove', onMove);
-        window.addEventListener('pointerup', onUp);
-      }}
-    >
+    <div className="pointer-events-none relative block shrink-0 overflow-hidden" style={{ width: stage.width, height: stage.height }} aria-hidden>
       <div
         className="absolute left-0 top-0"
         style={{
@@ -168,8 +226,8 @@ export function CharacterStage() {
           transform: `translate(${-stage.cropLeftPx}px, ${-stage.cropTopPx}px)`,
         }}
       >
-        <div ref={hostRef} className="h-full w-full" />
+        <div ref={hostRef} className="pointer-events-none h-full w-full" />
       </div>
-    </button>
+    </div>
   );
 }

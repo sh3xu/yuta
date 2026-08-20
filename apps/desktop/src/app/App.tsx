@@ -51,10 +51,10 @@ export function App() {
 
   if (surface === 'settings') {
     return (
-      <>
+      <div className="flex h-full min-h-0 flex-col overflow-hidden bg-ink">
         <TraySettings />
         <Toaster />
-      </>
+      </div>
     );
   }
 
@@ -62,7 +62,7 @@ export function App() {
     <>
       <Shell />
       {!isTauri() && settingsOpen ? (
-        <div className="fixed inset-0 z-50 overflow-auto bg-ink/95">
+        <div className="fixed inset-0 z-50 flex flex-col overflow-hidden bg-ink/95">
           <TraySettings onClose={closeOverlays} />
         </div>
       ) : null}

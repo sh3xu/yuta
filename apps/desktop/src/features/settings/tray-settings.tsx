@@ -18,15 +18,14 @@ export function TraySettings({ onClose }: { onClose?: () => void }) {
   }, [settings]);
 
   useEffect(() => {
-    document.documentElement.style.background = '#12151c';
-    document.body.style.background = '#12151c';
-    document.body.style.overflow = 'auto';
-    document.documentElement.style.overflow = 'auto';
+    const root = document.getElementById('root');
+    document.documentElement.classList.add('settings-window');
+    document.body.classList.add('settings-window');
+    root?.classList.add('settings-window');
     return () => {
-      document.documentElement.style.background = 'transparent';
-      document.body.style.background = 'transparent';
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
+      document.documentElement.classList.remove('settings-window');
+      document.body.classList.remove('settings-window');
+      root?.classList.remove('settings-window');
     };
   }, []);
 
@@ -72,14 +71,14 @@ export function TraySettings({ onClose }: { onClose?: () => void }) {
   };
 
   return (
-    <div className="mx-auto flex min-h-full max-w-md flex-col gap-3 overflow-auto bg-ink p-4 text-cream">
-      <div>
+    <div className="mx-auto flex min-h-0 w-full max-w-md flex-1 flex-col gap-3 overflow-x-hidden overflow-y-auto bg-ink p-4 text-cream">
+      <div className="shrink-0">
         <p className="text-[10px] uppercase tracking-[0.2em] text-accent">Yuta</p>
         <h1 className="font-display text-2xl">Settings</h1>
         <p className="text-sm text-mute">Size, crop, input, companion, and AI stay here.</p>
       </div>
       <DesktopSection />
-      <form className="flex flex-col gap-3" onSubmit={(event) => void onSubmit(event)}>
+      <form className="flex shrink-0 flex-col gap-3" onSubmit={(event) => void onSubmit(event)}>
         <CompanionSection draft={draft} setDraft={setDraft} />
         <AiSection draft={draft} setDraft={setDraft} />
         <Button type="submit" loading={saving} className="h-9 w-full rounded-full">
@@ -87,7 +86,7 @@ export function TraySettings({ onClose }: { onClose?: () => void }) {
         </Button>
       </form>
       {onClose ? (
-        <Button type="button" variant="outline" className="h-9 w-full rounded-full" onClick={onClose}>
+        <Button type="button" variant="outline" className="h-9 w-full shrink-0 rounded-full" onClick={onClose}>
           Close
         </Button>
       ) : null}
