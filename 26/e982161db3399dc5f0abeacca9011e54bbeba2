@@ -1,0 +1,32 @@
+packages/character-engine/src/motion/idle.ts
+  s_0c7c79f7e173a5::t_f2704a4a64bc95 11-15
+packages/character-engine/src/motion/idle-clips.ts
+  s_0c7c79f7e173a5::t_a937682a9f9368 1-83
+packages/character-engine/src/motion/index.ts
+  s_0c7c79f7e173a5::t_cc98b4852c485e 11
+packages/character-engine/src/motion/player.ts
+  s_0c7c79f7e173a5::t_b76ce1ef4379bc 52-55
+packages/character-engine/src/live2d/renderer.ts
+  s_0c7c79f7e173a5::t_95ec7980e98d6b 3
+  s_0c7c79f7e173a5::t_b2dce894e36534 210
+  s_0c7c79f7e173a5::t_b9c4669609e8fd 222,228,237-251
+  s_0c7c79f7e173a5::t_5c0452123e355f 66-67
+  s_0c7c79f7e173a5::t_1bf1ea6aa8c28f 193-195
+  s_0c7c79f7e173a5::t_f5722125cd8689 252-253
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "26e982161db3399dc5f0abeacca9011e54bbeba2",
+  "prompts": {},
+  "sessions": {
+    "s_0c7c79f7e173a5": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "044dc9d7-d6ec-4903-a524-0af55107d394",
+        "model": "grok-4.6"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    }
+  }
+}
