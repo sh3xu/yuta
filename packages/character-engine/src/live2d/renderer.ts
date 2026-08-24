@@ -1,6 +1,6 @@
 import { type CharacterState, clamp01, IDLE_CHARACTER_STATE } from '@yuta/shared';
 import { Application, extensions, Rectangle } from 'pixi.js';
-import { CLIPS, ClipPlayer, DANCE_LIBRARY, dancePlaybackRate } from '../motion';
+import { CLIPS, ClipPlayer, DANCE_LIBRARY, dancePlaybackRate, idleGapMs, selectIdleClip } from '../motion';
 import type { CharacterRenderer } from '../types';
 import { applyLive2D } from './controller';
 import { type CoreModel, ParamTable } from './params';
@@ -63,6 +63,8 @@ export class Live2DRenderer implements CharacterRenderer {
   private onBeforeModelUpdate: (() => void) | null = null;
   private resizeObserver: ResizeObserver | null = null;
   private destroyed = false;
+  private nextIdleAt = 0;
+  private lastIdleIndex: number | null = null;
 
   async mount(host: HTMLElement, modelUrl: string): Promise<void> {
     this.host = host;
@@ -188,7 +190,9 @@ export class Live2DRenderer implements CharacterRenderer {
     };
     this.lookX = lerp(this.lookX, this.targetLookX, 0.28);
     this.lookY = lerp(this.lookY, this.targetLookY, 0.28);
-    applyLive2D(this.params, this.current, this.player.sample(now), now, {
+    const motion = this.player.sample(now);
+    this.maybeIdle(now);
+    applyLive2D(this.params, this.current, motion, now, {
       x: this.lookX,
       y: this.lookY,
     });
@@ -203,6 +207,7 @@ export class Live2DRenderer implements CharacterRenderer {
       if (!this.dancing || this.lastDanceMove !== state.danceMove) {
         this.dancing = true;
         this.lastDanceMove = state.danceMove;
+        this.nextIdleAt = 0;
         this.player.play(def.clip, intensity, performance.now(), { loop: true, rate });
         return;
       }
@@ -214,17 +219,36 @@ export class Live2DRenderer implements CharacterRenderer {
     if (this.dancing) {
       this.dancing = false;
       this.lastDanceMove = null;
+      this.nextIdleAt = 0;
       this.player.stop();
     }
 
     if (state.actionToken === this.lastActionToken) return;
     this.lastActionToken = state.actionToken;
+    this.nextIdleAt = 0;
     const clip = CLIPS[state.action ?? 'idle'];
     if (!clip) {
       this.player.stop();
       return;
     }
     this.player.play(clip, state.actionIntensity);
+  }
+
+  private maybeIdle(now: number): void {
+    if (this.dancing || this.current.speaking) {
+      this.nextIdleAt = now + 900;
+      return;
+    }
+    if (this.player.busy) return;
+    if (this.nextIdleAt === 0) {
+      this.nextIdleAt = now + idleGapMs();
+      return;
+    }
+    if (now < this.nextIdleAt) return;
+    const picked = selectIdleClip(this.lastIdleIndex);
+    this.lastIdleIndex = picked.index;
+    this.player.play(picked.clip, 0.48 + Math.random() * 0.28, now);
+    this.nextIdleAt = now + picked.clip.duration + 280 + idleGapMs();
   }
 
   private fit(): void {

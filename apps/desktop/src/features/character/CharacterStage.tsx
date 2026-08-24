@@ -199,23 +199,6 @@ export function CharacterStage({ onActivate }: { onActivate?: () => void }) {
     };
   }, [toggleChat, wave]);
 
-  useEffect(() => {
-    const hello = window.setTimeout(() => {
-      const live = useCompanionStore.getState();
-      if (live.characterState.dancing || live.characterState.speaking) return;
-      live.wave();
-    }, 45000);
-    const timer = window.setInterval(() => {
-      const live = useCompanionStore.getState();
-      if (live.characterState.dancing || live.characterState.speaking || live.composerOpen) return;
-      live.wave();
-    }, 180000);
-    return () => {
-      window.clearTimeout(hello);
-      window.clearInterval(timer);
-    };
-  }, []);
-
   return (
     <div className="pointer-events-none relative block shrink-0 overflow-hidden" style={{ width: stage.width, height: stage.height }} aria-hidden>
       <div

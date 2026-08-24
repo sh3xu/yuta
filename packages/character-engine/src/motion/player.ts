@@ -49,6 +49,10 @@ export class ClipPlayer {
     this.intensity = clamp01(Math.max(intensity, 0.35));
   }
 
+  get busy(): boolean {
+    return this.clip !== null || this.fadeFrom !== null;
+  }
+
   stop(now = performance.now()): void {
     if (this.clip || hasMotion(this.last)) {
       this.fadeFrom = this.last;
