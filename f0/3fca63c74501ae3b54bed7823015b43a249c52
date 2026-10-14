@@ -1,0 +1,45 @@
+apps/desktop/src/features/character/CharacterStage.tsx
+  s_b7209cff7ccaa9::t_a3d82e840fa292 138-141
+  s_b7209cff7ccaa9::t_5e9a4077315777 151-158
+apps/desktop/src-tauri/src/click_through.rs
+  s_b7209cff7ccaa9::t_0f957a025bc32a 174-175
+  s_b7209cff7ccaa9::t_3b77ef6722e6a4 107-108
+  s_b7209cff7ccaa9::t_21212654afa80f 98
+  s_b7209cff7ccaa9::t_5aa13998985b8b 87
+  s_b7209cff7ccaa9::t_17809f586d003b 176,184-185,191
+  s_b7209cff7ccaa9::t_029cf0df609be5 187
+  s_b7209cff7ccaa9::t_c51b992cd12e28 194,198,201,205,207-209
+  s_b7209cff7ccaa9::t_9d02ae6812afe0 89-91
+  s_b7209cff7ccaa9::t_4aefa13ac7769a 1-86,88,92-97,99-106,109-173,177-183,186,188-190,192-193,196-197,199-200,202-204,206,210-266
+  s_b7209cff7ccaa9::t_f706be53cb81ea 195
+apps/desktop/src-tauri/capabilities/default.json
+  s_b7209cff7ccaa9::t_51455555112476 17-18
+apps/desktop/src-tauri/src/lib.rs
+  s_b7209cff7ccaa9::t_d4b747ddae0272 83
+  s_b7209cff7ccaa9::t_7cb942f38a2b9a 84-92
+  s_b7209cff7ccaa9::t_271ed874aecd0f 5
+  s_b7209cff7ccaa9::t_d89c8112bc3b79 9
+apps/desktop/src-tauri/Cargo.toml
+  s_b7209cff7ccaa9::t_85d4dcba8682ba 26
+apps/desktop/src/lib/window.ts
+  s_b7209cff7ccaa9::t_e1300a32c57b3e 75-76
+  s_b7209cff7ccaa9::t_5ad324cb63e02f 74
+apps/desktop/src-tauri/src/pointer.rs
+  s_b7209cff7ccaa9::t_42cb1e59d15f76 151-153
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f03fca63c74501ae3b54bed7823015b43a249c52",
+  "prompts": {},
+  "sessions": {
+    "s_b7209cff7ccaa9": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "41f95a00-d45c-414b-93e2-d7b7682dddc9",
+        "model": "default"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    }
+  }
+}
