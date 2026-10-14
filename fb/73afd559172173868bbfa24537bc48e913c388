@@ -1,0 +1,225 @@
+apps/desktop/src/app/session.ts
+  s_77ff7b8dc4e7e0::t_733be19c697a3a 47,49-50,52-53
+  s_77ff7b8dc4e7e0::t_043c3335bd3374 262-268,270-271,286,294-296,304-308,310
+  s_77ff7b8dc4e7e0::t_6a188bc0460659 169
+  s_77ff7b8dc4e7e0::t_ea01da8223d188 323-327
+  s_77ff7b8dc4e7e0::t_706e4aeb46be28 15
+  s_77ff7b8dc4e7e0::t_93a3e4cb70c426 92-96
+  s_77ff7b8dc4e7e0::t_5cf2f2992bfe24 10
+  s_77ff7b8dc4e7e0::t_62b7f8c8c7463e 121-142
+  s_77ff7b8dc4e7e0::t_d3d53edb0f607f 210,215-219,221
+  s_77ff7b8dc4e7e0::t_cf0c3e0a79fc4b 273-277
+  s_77ff7b8dc4e7e0::t_2dbe2d4f438a22 175-209,211-214,220,222-252
+  s_77ff7b8dc4e7e0::t_b3a2dbb4369991 309
+packages/ai/src/providers/mock.ts
+  s_77ff7b8dc4e7e0::t_878f7a0d185eec 91-98
+  s_77ff7b8dc4e7e0::t_1edd549a615b78 64-73
+apps/desktop/src/features/chat/ChatDock.tsx
+  s_77ff7b8dc4e7e0::t_f00340af16e421 13-16
+  s_77ff7b8dc4e7e0::t_f43225211861fd 10,18-20
+apps/desktop/src/stores/companion-store.ts
+  s_b7209cff7ccaa9::t_8bc75369617852 46
+  s_77ff7b8dc4e7e0::t_c6f85787150ddf 102-105
+  s_b7209cff7ccaa9::t_c032f45e6bc3eb 113-114
+  s_b7209cff7ccaa9::t_7a3bd8fb9c7fa3 232-235,237,241
+  s_b7209cff7ccaa9::t_290a0cfdb18ab2 53
+  s_77ff7b8dc4e7e0::t_9552930c8fe6b7 236
+  s_77ff7b8dc4e7e0::t_801745595154f0 286-319,321-395
+  s_77ff7b8dc4e7e0::t_710c5bb1a26094 320
+  s_b7209cff7ccaa9::t_50366709ed397f 2
+  s_b7209cff7ccaa9::t_702b5c34ccb104 20
+  s_77ff7b8dc4e7e0::t_e493c8a90c4d6d 197,200-201
+  s_77ff7b8dc4e7e0::t_68d4bc1428b73b 22
+  s_77ff7b8dc4e7e0::t_4e5107234ef18f 99,101
+apps/desktop/src/lib/activity.ts
+  s_77ff7b8dc4e7e0::t_37259839bb1ca3 1-16
+packages/shared/src/types.ts
+  s_77ff7b8dc4e7e0::t_621da32f502654 72
+  s_77ff7b8dc4e7e0::t_021c9ae1189f83 17
+  s_77ff7b8dc4e7e0::t_ddd84c070107d5 100
+packages/character-engine/src/motion/pack.ts
+  s_77ff7b8dc4e7e0::t_804de24f439f8e 199
+  s_77ff7b8dc4e7e0::t_402344cad4913c 216
+  s_77ff7b8dc4e7e0::t_7329acc36f98f3 13,16-25
+  s_77ff7b8dc4e7e0::t_75d3a5273803f1 65
+  s_77ff7b8dc4e7e0::t_40972d3804afad 43
+  s_77ff7b8dc4e7e0::t_6f8d932a6f9d30 32-42,44-47,53-64,66-67,69-71,74-75,82-140
+  s_77ff7b8dc4e7e0::t_37a96305eeca8a 48-52
+  s_7dae6a80b35876::t_361b107303902f 76-81
+  s_77ff7b8dc4e7e0::t_1fdc3bde2c2cd8 1-6,9-12,26-31,68,72-73,141-175,177-181,183-198,200-215,217-218
+  s_7dae6a80b35876::t_8b6e7974610ffe 14
+  s_77ff7b8dc4e7e0::t_e01577697a347c 176
+  s_77ff7b8dc4e7e0::t_738aa26cfa0294 7-8
+  s_77ff7b8dc4e7e0::t_f4eede8e1fff4f 182
+  s_7dae6a80b35876::t_ce227e11e29740 15
+apps/desktop/src/lib/window.ts
+  s_b7209cff7ccaa9::t_e4b56c59d3ec3a 107-114
+  s_b7209cff7ccaa9::t_cd3ebcde486e47 95-105
+  s_77ff7b8dc4e7e0::t_3eba22e501ec25 32
+  s_77ff7b8dc4e7e0::t_f00340af16e421 2,26-28
+apps/desktop/src/styles.css
+  s_77ff7b8dc4e7e0::t_4d9f1513e9d343 52-83
+apps/desktop/src/components/layout/Shell.tsx
+  s_b7209cff7ccaa9::t_36bae192d6c1cf 54
+  s_b7209cff7ccaa9::t_21e785d92ce5b5 1
+packages/character-engine/src/types.ts
+  s_77ff7b8dc4e7e0::t_4ac2d59ddcb33e 4
+apps/desktop/src-tauri/src/pointer.rs
+  s_b7209cff7ccaa9::t_232a5290a78110 115
+  s_b7209cff7ccaa9::t_b98584f7837fee 1
+  s_b7209cff7ccaa9::t_7d597e6fc84b8d 2-114,116-158
+packages/character-engine/src/live2d/renderer.ts
+  s_b7209cff7ccaa9::t_ae719a74b84644 186-189
+  s_77ff7b8dc4e7e0::t_f8a41d7165cc69 238,251-252,254-255
+  s_b7209cff7ccaa9::t_3bc6e9eec9b61a 191-194
+  s_b7209cff7ccaa9::t_a38e206d55f59f 253,259-270
+  s_b7209cff7ccaa9::t_deef2971692a46 106
+  s_77ff7b8dc4e7e0::t_52f92874fcf55a 215-217
+  s_77ff7b8dc4e7e0::t_5aefd953623b83 399,403,410
+  s_77ff7b8dc4e7e0::t_5e3f5e5e652979 155
+  s_b7209cff7ccaa9::t_8a66045830ba4f 50
+  s_77ff7b8dc4e7e0::t_a30c3fab3acc3d 249,256
+  s_7dae6a80b35876::t_bc8edc29e046a1 151
+  s_7dae6a80b35876::t_b20fccf5d81b84 370-381
+  s_77ff7b8dc4e7e0::t_6a81c474770b2d 304,308-309,313-336
+  s_77ff7b8dc4e7e0::t_08d75b20c1d02b 530-531
+  s_77ff7b8dc4e7e0::t_c0113123313a8a 114
+  s_77ff7b8dc4e7e0::t_542985c1ceb5fd 417-421
+  s_77ff7b8dc4e7e0::t_37a96305eeca8a 472-477,544,548
+  s_77ff7b8dc4e7e0::t_f08b71d4095a41 52-57
+  s_77ff7b8dc4e7e0::t_19f32b86880c79 340
+  s_77ff7b8dc4e7e0::t_85fc3f0ced6929 337,356,359-363,367-369,382-385,387-393,398,400-402,404,409,411-413,415,422,482,494-497,499-507
+  s_b7209cff7ccaa9::t_e0c0b59235560c 28-31,37
+  s_77ff7b8dc4e7e0::t_bcfb3bd8fcfbcd 274
+  s_77ff7b8dc4e7e0::t_0d50dc083f3bc1 386,394-397,405-408
+  s_77ff7b8dc4e7e0::t_af8d482e8e63f2 357-358,364-366
+  s_77ff7b8dc4e7e0::t_1c688b21cfe923 13-14,19-20,22,25
+  s_77ff7b8dc4e7e0::t_4fc2bd4952fcc6 416,423-471,478-480,484
+  s_77ff7b8dc4e7e0::t_a00a71788e7785 498
+  s_77ff7b8dc4e7e0::t_fe9508dd0b9767 15-18
+  s_77ff7b8dc4e7e0::t_74cbce89b67363 139
+  s_b7209cff7ccaa9::t_bb861316529d45 140-141
+  s_77ff7b8dc4e7e0::t_f8b4d49fd0032e 96,99-100,102
+  s_77ff7b8dc4e7e0::t_5a6e1938d80f8a 88-89
+  s_77ff7b8dc4e7e0::t_806ec4596e1229 108
+  s_77ff7b8dc4e7e0::t_e60163be9857a9 39-42
+  s_77ff7b8dc4e7e0::t_3a141547e97b32 101
+  s_77ff7b8dc4e7e0::t_8b6e43fbaca995 414
+  s_7dae6a80b35876::t_20346965b82c16 21
+  s_77ff7b8dc4e7e0::t_b08b18e01235ce 162,164
+  s_77ff7b8dc4e7e0::t_53beeecb211b43 3-10,12
+  s_77ff7b8dc4e7e0::t_1ee1eb25fbaf54 97-98
+  s_b7209cff7ccaa9::t_0b89d5d9414c92 195
+  s_77ff7b8dc4e7e0::t_653e68afbe3ae8 149-150,152-153
+  s_77ff7b8dc4e7e0::t_bed30b8e785ee2 481,483,485-493
+  s_77ff7b8dc4e7e0::t_a61aa4a64c9644 11
+  s_77ff7b8dc4e7e0::t_1fca408b7e99be 338
+  s_77ff7b8dc4e7e0::t_c7f44af3a0043a 541-543
+  s_77ff7b8dc4e7e0::t_577374e6d97d66 545-547
+packages/ai/src/orchestrator.ts
+  s_77ff7b8dc4e7e0::t_5cd28fef8339cd 61,63,65,68-71
+  s_77ff7b8dc4e7e0::t_738612aab9516a 18-25,30
+  s_77ff7b8dc4e7e0::t_76478aa31778d4 39,45
+  s_77ff7b8dc4e7e0::t_0728bdb62967ea 88-95
+apps/desktop/src/vite-env.d.ts
+  s_77ff7b8dc4e7e0::t_7b779dbbaf2673 3-6
+apps/desktop/src/lib/motion-pack.ts
+  s_77ff7b8dc4e7e0::t_eae8322bd72d9f 1
+packages/character-engine/src/motion/slow-wave.ts
+  s_77ff7b8dc4e7e0::t_758e89f15345db 1-25
+apps/desktop/src-tauri/src/lib.rs
+  s_77ff7b8dc4e7e0::t_6190f2e7ff922d 83-85
+  s_b7209cff7ccaa9::t_fed86991f9a4c7 14,18-21,32-35,38,43-50,55-62
+  s_b7209cff7ccaa9::t_b63adb3eb216fc 98
+  s_77ff7b8dc4e7e0::t_5c8ff3a6a0af95 8
+  s_b7209cff7ccaa9::t_a91425e6006dff 9
+  s_b7209cff7ccaa9::t_b07808ccb55743 75-78
+  s_b7209cff7ccaa9::t_17cdef50f2bac5 81-82
+apps/desktop/vite.config.ts
+  s_77ff7b8dc4e7e0::t_6eeaa165ca0de8 1,6,10-44,47-51
+  s_77ff7b8dc4e7e0::t_cf2914906a8335 64
+apps/desktop/src/lib/use-sticker-window.ts
+  s_b7209cff7ccaa9::t_7b58ecb3beb6fc 5
+apps/desktop/src-tauri/src/activity.rs
+  s_77ff7b8dc4e7e0::t_001b072c0ccff3 1-91,93-99,101-112
+  s_77ff7b8dc4e7e0::t_c2f87586fd8eb5 92
+  s_77ff7b8dc4e7e0::t_232467fcb2e11c 100
+apps/desktop/src-tauri/Cargo.toml
+  s_77ff7b8dc4e7e0::t_ff263e8aaaae7b 25-26
+apps/desktop/src/features/settings/desktop-section.tsx
+  s_b7209cff7ccaa9::t_d3756af09d814b 58-59
+  s_b7209cff7ccaa9::t_8cada388edf9b6 35
+  s_b7209cff7ccaa9::t_f8de2a0165a237 61-68
+  s_77ff7b8dc4e7e0::t_1f72d8771294b4 161,195
+apps/desktop/src/features/onboarding/Onboarding.tsx
+  s_b7209cff7ccaa9::t_d13a7b4231cb1e 16
+  s_b7209cff7ccaa9::t_268ff2adf3ba5a 32
+apps/desktop/src/features/character/CharacterStage.tsx
+  s_b7209cff7ccaa9::t_a832051121d507 5
+  s_b7209cff7ccaa9::t_3fc3f0f853f939 19-44
+  s_b7209cff7ccaa9::t_b5d9cfc8b1973e 152-153
+  s_b7209cff7ccaa9::t_dd806c11bbf266 180
+  s_b7209cff7ccaa9::t_d67e369a75caa4 190
+  s_b7209cff7ccaa9::t_8ce9688268b638 12
+  s_b7209cff7ccaa9::t_e672ad1ade4812 2
+  s_b7209cff7ccaa9::t_18153e24aba156 61
+  s_b7209cff7ccaa9::t_faf902d8129828 102
+  s_b7209cff7ccaa9::t_7b16ccc4cbe2d4 178,182-185
+  s_b7209cff7ccaa9::t_5968ec8268acf5 47-58
+  s_77ff7b8dc4e7e0::t_a6e167e24d90ff 82
+  s_b7209cff7ccaa9::t_433ee63c0f485e 59-60
+  s_b7209cff7ccaa9::t_282c66c1f6d6fb 172-175
+  s_b7209cff7ccaa9::t_1c1cac20914886 17
+  s_b7209cff7ccaa9::t_490a646ebf1fb2 69-70
+  s_b7209cff7ccaa9::t_a6b1d35af757a0 142-145
+  s_77ff7b8dc4e7e0::t_a4956138230eb1 4
+  s_b7209cff7ccaa9::t_96252197b59a67 146,154
+  s_b7209cff7ccaa9::t_8f5878122a7100 179,181,186-187
+  s_b7209cff7ccaa9::t_270a20b9303125 189
+  s_b7209cff7ccaa9::t_b11b60f0db7730 137
+  s_77ff7b8dc4e7e0::t_f00340af16e421 196,199,201
+  s_b7209cff7ccaa9::t_82fa86bb207967 147
+  s_b7209cff7ccaa9::t_d378d97de89051 155
+  s_b7209cff7ccaa9::t_37b4778a3afa2f 176
+  s_b7209cff7ccaa9::t_e00795cc8c0a4e 188
+  s_b7209cff7ccaa9::t_29f28fef6e48f5 191
+  s_77ff7b8dc4e7e0::t_5f7469ea420d40 200
+  s_77ff7b8dc4e7e0::t_51245ae4ec47c9 202-203
+packages/ai/src/prompts.ts
+  s_77ff7b8dc4e7e0::t_d9632e1c81594c 33-35
+  s_77ff7b8dc4e7e0::t_b7c037c6774add 47-50
+packages/character-engine/src/motion/index.ts
+  s_77ff7b8dc4e7e0::t_1f989cbce586f8 12,14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fb73afd559172173868bbfa24537bc48e913c388",
+  "prompts": {},
+  "sessions": {
+    "s_77ff7b8dc4e7e0": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "1c34137b-689a-480e-89d5-bc37797213b5",
+        "model": "default"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    },
+    "s_7dae6a80b35876": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "1298885a-7d0c-45f2-beec-904cb19e5a40",
+        "model": "default"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    },
+    "s_b7209cff7ccaa9": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "41f95a00-d45c-414b-93e2-d7b7682dddc9",
+        "model": "default"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    }
+  }
+}
