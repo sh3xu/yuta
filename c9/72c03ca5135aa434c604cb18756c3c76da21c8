@@ -1,0 +1,28 @@
+apps/desktop/src/lib/window.ts
+  s_b7209cff7ccaa9::t_a15d48e02e4606 65-70
+apps/desktop/src/features/character/CharacterStage.tsx
+  s_b7209cff7ccaa9::t_3b4d610b2c26e3 212,214-218
+  s_b7209cff7ccaa9::t_813458f50012a9 209-211,213
+  s_b7209cff7ccaa9::t_6f58658ab7e3d6 226,230
+  s_b7209cff7ccaa9::t_904bce867d9dde 69-70
+  s_b7209cff7ccaa9::t_ca44df05a76aef 184-204
+  s_b7209cff7ccaa9::t_d723cc407c7941 151-152
+  s_b7209cff7ccaa9::t_c00c5f50a5a289 78
+  s_b7209cff7ccaa9::t_d57cb66d4da380 18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c972c03ca5135aa434c604cb18756c3c76da21c8",
+  "prompts": {},
+  "sessions": {
+    "s_b7209cff7ccaa9": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "41f95a00-d45c-414b-93e2-d7b7682dddc9",
+        "model": "default"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    }
+  }
+}
