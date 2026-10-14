@@ -88,7 +88,6 @@ export function stickerSize(
 
 export function stickerMode(input: {
   onboardingComplete: boolean;
-  positionLocked: boolean;
   composerOpen: boolean;
   bubbleVisible: boolean;
   sending?: boolean;
@@ -96,7 +95,6 @@ export function stickerMode(input: {
   if (!input.onboardingComplete) return 'onboarding';
   if (input.composerOpen) return 'chat';
   if (input.bubbleVisible || input.sending) return 'linger';
-  if (!input.positionLocked) return 'place';
   return 'collapsed';
 }
 

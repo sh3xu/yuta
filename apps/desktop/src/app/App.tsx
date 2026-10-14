@@ -66,7 +66,6 @@ export function App() {
           <TraySettings onClose={closeOverlays} />
         </div>
       ) : null}
-      <Toaster />
     </>
   );
 }

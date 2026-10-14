@@ -3,7 +3,6 @@ import { Minimize2, Pin, Scaling } from 'lucide-react';
 import { isTauri } from '../../lib/tauri-fs';
 import { requestPositionLocked } from '../../lib/window';
 import { applyAlwaysOnTop, useCompanionStore } from '../../stores/companion-store';
-import { InputPositionPicker } from './input-position-picker';
 import { RangeField } from './range-field';
 import { SectionCard } from './section-card';
 
@@ -33,7 +32,7 @@ export function DesktopSection() {
     <div className="flex shrink-0 flex-col gap-3">
       <SectionCard
         title="Placement"
-        description="Lock keeps the sticker where it is. Unlock lets you drag it."
+        description="The sticker always lets clicks through. Lock and unlock only happen here."
         icon={<Pin className="size-4" />}
       >
         <div className="grid grid-cols-2 gap-2">
@@ -56,18 +55,17 @@ export function DesktopSection() {
         </div>
         <p className="text-[11px] leading-4 text-mute">
           {settings.positionLocked
-            ? 'Position is locked. Unlock, drag the companion, then lock again.'
-            : 'Position is unlocked. Drag the companion, then press Lock.'}
+            ? 'Position is locked. Unlock, then use Place here with the pointer where you want her.'
+            : 'Position is unlocked. Move the pointer, then press Place here.'}
         </p>
-        {settings.positionLocked ? null : (
-          <button
-            type="button"
-            className="h-9 rounded-lg border border-line bg-panel text-sm text-cream hover:bg-white/10"
-            onClick={() => void placeCompanion()}
-          >
-            Place here
-          </button>
-        )}
+        <button
+          type="button"
+          className="h-9 rounded-lg border border-line bg-panel text-sm text-cream hover:bg-white/10 disabled:opacity-40"
+          disabled={settings.positionLocked}
+          onClick={(event) => void placeCompanion({ x: event.screenX, y: event.screenY })}
+        >
+          Place here
+        </button>
         <div className="flex min-h-10 items-center justify-between gap-3 rounded-lg border border-line bg-ink px-3 py-1.5">
           <span className="text-sm">Always on top</span>
           <Toggle
@@ -160,6 +158,7 @@ export function DesktopSection() {
         />
       </SectionCard>
 
+      {/* NOTE: text input stays closed. She talks on her own.
       <SectionCard
         title="Chat input"
         description="Where the input sits around the companion. Default is top left."
@@ -193,6 +192,7 @@ export function DesktopSection() {
           onChange={(dockOffsetY) => applyAppearance({ dockOffsetY })}
         />
       </SectionCard>
+      */}
     </div>
   );
 }

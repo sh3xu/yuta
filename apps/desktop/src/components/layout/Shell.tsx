@@ -1,10 +1,7 @@
-import { toast } from '@yuta/ui';
-import { Lock } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { CharacterStage } from '../../features/character/CharacterStage';
 import { ChatDock } from '../../features/chat/ChatDock';
 import { Onboarding } from '../../features/onboarding/Onboarding';
-import { PlaceChip } from '../../features/placement/PlaceChip';
 import {
   characterInsetX,
   dockInsetX,
@@ -22,22 +19,17 @@ export function Shell() {
   const bubbleVisible = useCompanionStore((state) => state.bubbleVisible);
   const sending = useCompanionStore((state) => state.sending);
   const closeOverlays = useCompanionStore((state) => state.closeOverlays);
-  const setPositionLocked = useCompanionStore((state) => state.setPositionLocked);
-  const [chrome, setChrome] = useState(false);
 
   useStickerWindow();
 
   const mode = stickerMode({
     onboardingComplete: settings.onboardingComplete,
-    positionLocked: settings.positionLocked,
     composerOpen,
     bubbleVisible,
     sending,
   });
   const size = stickerSize(mode, settings);
   const showDock = mode !== 'collapsed' && mode !== 'place';
-  const showPlace = !settings.positionLocked && settings.onboardingComplete && chrome;
-  const showLock = settings.onboardingComplete && settings.positionLocked && chrome;
   const dockTop = isInputTop(settings.inputCorner);
   const characterLeft = characterInsetX(mode, settings);
   const dockLeftPx = dockInsetX(mode, settings);
@@ -53,46 +45,13 @@ export function Shell() {
     return () => window.removeEventListener('keydown', onKey);
   }, [closeOverlays]);
 
-  useEffect(() => {
-    if (!chrome || !settings.positionLocked) return;
-    const timer = window.setTimeout(() => setChrome(false), 5000);
-    return () => window.clearTimeout(timer);
-  }, [chrome, settings.positionLocked]);
-
   return (
     <div className="pointer-events-none relative bg-transparent" style={{ width: size.width, height: size.height }}>
       <div
         className="pointer-events-none absolute z-10"
         style={{ left: characterLeft, top: WINDOW_PAD }}
       >
-        <div className="relative">
-          <CharacterStage onActivate={() => setChrome(true)} />
-          {showLock ? (
-            <button
-              type="button"
-              title="Unlock position"
-              aria-label="Unlock position"
-              data-yuta-hit="ui"
-              className="absolute right-1 bottom-1 z-40 inline-flex size-5 items-center justify-center rounded-full border border-white/20 bg-panel/85 text-cream shadow-[0_6px_16px_rgba(0,0,0,0.35)] backdrop-blur-md hover:border-accent/70"
-              onClick={(event) => {
-                event.stopPropagation();
-                void setPositionLocked(false);
-                toast({
-                  variant: 'info',
-                  title: 'unlocked',
-                  description: 'Drag the companion, then lock it from tray Settings.',
-                });
-              }}
-            >
-              <Lock className="size-2.5" />
-            </button>
-          ) : null}
-          {showPlace ? (
-            <div className="absolute inset-x-2 bottom-2 z-40">
-              <PlaceChip />
-            </div>
-          ) : null}
-        </div>
+        <CharacterStage />
       </div>
       {showDock ? (
         <section

@@ -49,6 +49,38 @@ body.settings-window,
   height: 100%;
   overflow: hidden;
   background: #12151c;
+  color-scheme: dark;
+}
+
+html.settings-window,
+html.settings-window * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
+}
+
+html.settings-window *::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+html.settings-window *::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html.settings-window *::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background: var(--color-line);
+  background-clip: padding-box;
+}
+
+html.settings-window *::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+  background-clip: padding-box;
+}
+
+html.settings-window *::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 #root.settings-window {

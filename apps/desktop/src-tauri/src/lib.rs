@@ -5,13 +5,20 @@ use tauri::{
     Emitter, Manager,
 };
 
+mod activity;
+mod pointer;
 #[cfg(windows)]
 mod loopback;
 
 #[derive(Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
 struct CursorPoint {
     x: i32,
     y: i32,
+    screen_x: i32,
+    screen_y: i32,
+    screen_w: i32,
+    screen_h: i32,
 }
 
 fn cursor_point() -> CursorPoint {
@@ -22,21 +29,37 @@ fn cursor_point() -> CursorPoint {
             x: i32,
             y: i32,
         }
+        const SM_XVIRTUALSCREEN: i32 = 76;
+        const SM_YVIRTUALSCREEN: i32 = 77;
+        const SM_CXVIRTUALSCREEN: i32 = 78;
+        const SM_CYVIRTUALSCREEN: i32 = 79;
         extern "system" {
             fn GetCursorPos(point: *mut Point) -> i32;
+            fn GetSystemMetrics(index: i32) -> i32;
         }
         let mut point = Point { x: 0, y: 0 };
         unsafe {
             GetCursorPos(&mut point);
-        }
-        CursorPoint {
-            x: point.x,
-            y: point.y,
+            CursorPoint {
+                x: point.x,
+                y: point.y,
+                screen_x: GetSystemMetrics(SM_XVIRTUALSCREEN),
+                screen_y: GetSystemMetrics(SM_YVIRTUALSCREEN),
+                screen_w: GetSystemMetrics(SM_CXVIRTUALSCREEN).max(1),
+                screen_h: GetSystemMetrics(SM_CYVIRTUALSCREEN).max(1),
+            }
         }
     }
     #[cfg(not(windows))]
     {
-        CursorPoint { x: 0, y: 0 }
+        CursorPoint {
+            x: 0,
+            y: 0,
+            screen_x: 0,
+            screen_y: 0,
+            screen_w: 1,
+            screen_h: 1,
+        }
     }
 }
 
@@ -49,8 +72,16 @@ pub fn run() {
             let handle = app.handle().clone();
             std::thread::spawn(move || loop {
                 std::thread::sleep(std::time::Duration::from_millis(40));
-                let _ = handle.emit("cursor-move", cursor_point());
+                let point = cursor_point();
+                if let Some(window) = handle.get_webview_window("main") {
+                    let _ = window.emit("cursor-move", point);
+                }
             });
+
+            pointer::start(app.handle().clone());
+
+            let activity = app.handle().clone();
+            std::thread::spawn(move || activity::run(activity));
 
             #[cfg(windows)]
             {
@@ -61,11 +92,10 @@ pub fn run() {
             let show = MenuItem::with_id(app, "show", "Show", true, None::<&str>)?;
             let hide = MenuItem::with_id(app, "hide", "Hide", true, None::<&str>)?;
             let settings = MenuItem::with_id(app, "settings", "Settings", true, None::<&str>)?;
-            let unlock = MenuItem::with_id(app, "unlock", "Unlock position", true, None::<&str>)?;
             let quit = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
             let sep = PredefinedMenuItem::separator(app)?;
             let sep2 = PredefinedMenuItem::separator(app)?;
-            let menu = Menu::with_items(app, &[&show, &hide, &sep, &settings, &unlock, &sep2, &quit])?;
+            let menu = Menu::with_items(app, &[&show, &hide, &sep, &settings, &sep2, &quit])?;
 
             let mut tray = TrayIconBuilder::with_id("main")
                 .menu(&menu)
@@ -89,13 +119,6 @@ pub fn run() {
                             let _ = window.unminimize();
                             let _ = window.set_focus();
                         }
-                    }
-                    "unlock" => {
-                        if let Some(window) = app.get_webview_window("main") {
-                            let _ = window.show();
-                            let _ = window.set_focus();
-                        }
-                        let _ = app.emit("unlock-position", ());
                     }
                     "quit" => app.exit(0),
                     _ => {}

@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useCompanionStore } from '../stores/companion-store';
 import { stickerMode, type StickerMode } from './sticker';
 import type { AppSettings } from './settings';
-import { restoreWindow, setStickerSize, subscribePositionLocked, subscribeUnlockPosition } from './window';
+import { restoreWindow, setStickerSize, subscribePositionLocked } from './window';
 
 export function useStickerWindow(): void {
   const ready = useCompanionStore((state) => state.ready);
@@ -17,7 +17,6 @@ export function useStickerWindow(): void {
 
   const mode = stickerMode({
     onboardingComplete: settings.onboardingComplete,
-    positionLocked: settings.positionLocked,
     composerOpen,
     bubbleVisible,
     sending,
@@ -54,18 +53,8 @@ export function useStickerWindow(): void {
 
   useEffect(() => {
     if (!ready) return;
-    let unlistenUnlock: (() => void) | undefined;
     let unlistenLock: (() => void) | undefined;
     let cancelled = false;
-    void subscribeUnlockPosition(() => {
-      void setPositionLocked(false);
-    }).then((fn) => {
-      if (cancelled) {
-        fn();
-        return;
-      }
-      unlistenUnlock = fn;
-    });
     void subscribePositionLocked((locked) => {
       void setPositionLocked(locked);
     }).then((fn) => {
@@ -77,7 +66,6 @@ export function useStickerWindow(): void {
     });
     return () => {
       cancelled = true;
-      unlistenUnlock?.();
       unlistenLock?.();
     };
   }, [ready, setPositionLocked]);

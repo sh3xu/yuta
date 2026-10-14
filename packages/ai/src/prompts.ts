@@ -30,6 +30,9 @@ export function buildSystemPrompt(request: AIRequest): string {
     `memory.category if present must be one of: ${MEMORY_CATEGORIES.join(', ')}.`,
     'If storing, set memory.shouldStore true and memory.facts to an array of { category, topic, content }.',
     'Set memory.shouldStore false when there is nothing necessary to keep.',
+    request.aside
+      ? 'This turn is an unprompted aside. Reply with one casual sentence under 12 words. Do not ask a question. Do not store a memory.'
+      : '',
   ]
     .filter(Boolean)
     .join('\n');
@@ -40,6 +43,10 @@ export function buildUserPrompt(request: AIRequest): string {
     request.history.length === 0
       ? '(no earlier turns)'
       : request.history.map((turn) => `${turn.role}: ${turn.content}`).join('\n');
+
+  if (request.aside) {
+    return `Recent conversation:\n${history}\n\nNobody just spoke. Offer one short line of your own.`;
+  }
 
   return `Recent conversation:\n${history}\n\nUser: ${request.userMessage}`;
 }

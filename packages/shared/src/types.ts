@@ -14,6 +14,7 @@ export interface CharacterState {
   bassEnergy: number;
   beatPulse: number;
   musicBpm: number;
+  musicWave: boolean;
 }
 
 export interface EmotionSignal {
@@ -68,6 +69,7 @@ export interface AIRequest {
   companionName: string;
   personality: string;
   userMessage: string;
+  aside?: boolean;
   history: ChatTurn[];
   memories: RetrievedMemory[];
   behavior: BehaviorHint;
@@ -95,6 +97,7 @@ export const IDLE_CHARACTER_STATE: CharacterState = {
   bassEnergy: 0,
   beatPulse: 0,
   musicBpm: 0,
+  musicWave: false,
 };
 
 export function clamp01(value: number): number {

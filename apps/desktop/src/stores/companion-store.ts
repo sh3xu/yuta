@@ -1,4 +1,5 @@
 import {
+  type ActionName,
   type CharacterState,
   type ChatTurn,
   IDLE_CHARACTER_STATE,
@@ -16,7 +17,9 @@ import {
   closeWindow,
   currentWindowLabel,
   getOuterPosition,
+  getScaleFactor,
   setAlwaysOnTop,
+  setOuterPosition,
   showSettingsWindow,
 } from '../lib/window';
 
@@ -40,14 +43,14 @@ interface CompanionStore {
   sending: boolean;
   init: () => Promise<void>;
   toggleChat: () => void;
-  wave: () => void;
+  gesture: (action: ActionName) => void;
   closeOverlays: () => void;
   openSettings: () => Promise<void>;
   send: (text: string) => Promise<void>;
   saveSettings: (settings: AppSettings, options?: { silent?: boolean }) => Promise<void>;
   patchSettings: (patch: Partial<AppSettings>, options?: { silent?: boolean }) => Promise<void>;
   applyAppearance: (patch: Partial<AppSettings>) => void;
-  placeCompanion: () => Promise<void>;
+  placeCompanion: (screen?: { x: number; y: number }) => Promise<void>;
   setPositionLocked: (locked: boolean) => Promise<void>;
   quit: () => Promise<void>;
   refreshMemories: () => Promise<void>;
@@ -93,8 +96,13 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
   async init() {
     const settings = await session.init();
     session.setStateHandler((characterState) => set({ characterState }));
-    if ((await currentWindowLabel()) === 'main') void session.startSystemAudio();
+    const label = await currentWindowLabel();
     set({ ready: true, settings, provider: session.debug.provider });
+    if (label === 'main') {
+      void session.startSystemAudio();
+      void session.startActivity();
+      startAsides();
+    }
   },
 
   toggleChat() {
@@ -102,8 +110,8 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
     set({ composerOpen: !get().composerOpen });
   },
 
-  wave() {
-    session.playAction('wave');
+  gesture(action) {
+    session.playAction(action);
     set({
       characterState: session.characterState,
       playedAction: session.characterState.action ?? undefined,
@@ -186,13 +194,12 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
       };
       console.error('[yuta:ai]', error);
       notifyError(lastError);
+      clearLingerTimer();
       set({
         lastError,
-        bubbleVisible: true,
-        bubbleText: lastError.message,
-        messages: [...get().messages, { role: 'assistant', content: lastError.message }],
+        bubbleVisible: false,
+        bubbleText: null,
       });
-      hideBubbleLater(set);
     } finally {
       set({ sending: false });
     }
@@ -222,20 +229,16 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
     }, 280);
   },
 
-  async placeCompanion() {
-    const position = await getOuterPosition();
-    await get().patchSettings(
-      {
-        positionLocked: true,
-        windowX: position?.x ?? get().settings.windowX,
-        windowY: position?.y ?? get().settings.windowY,
-      },
-      { silent: true },
-    );
+  async placeCompanion(screen?: { x: number; y: number }) {
+    const scale = await getScaleFactor();
+    const windowX = screen ? Math.round(screen.x * scale) : get().settings.windowX;
+    const windowY = screen ? Math.round(screen.y * scale) : get().settings.windowY;
+    if (windowX != null && windowY != null) await setOuterPosition(windowX, windowY);
+    await get().patchSettings({ positionLocked: true, windowX, windowY }, { silent: true });
     toast({
       variant: 'success',
       title: 'desktop',
-      description: 'Placed. Unlock from tray Settings to move again.',
+      description: 'Placed and locked. Unlock in Settings to move her again.',
     });
   },
 
@@ -279,6 +282,116 @@ export const useCompanionStore = create<CompanionStore>((set, get) => ({
     set({ memories: [], lookupHits: [] });
   },
 }));
+
+const ASIDE_MIN_MS = 2 * 60 * 1000;
+const ASIDE_MAX_MS = 20 * 60 * 1000;
+const IDLE_LIMIT_MS = 3 * 60 * 1000;
+
+let asideTimer: ReturnType<typeof setTimeout> | undefined;
+let asideRunning = false;
+let asidesStarted = false;
+let lastLocalInput = Date.now();
+
+function asideDelayMs(): number {
+  return ASIDE_MIN_MS + Math.floor(Math.random() * (ASIDE_MAX_MS - ASIDE_MIN_MS));
+}
+
+function bindLocalInput(): void {
+  const note = () => {
+    lastLocalInput = Date.now();
+  };
+  window.addEventListener('pointerdown', note, true);
+  window.addEventListener('keydown', note, true);
+}
+
+function systemIdle(): boolean {
+  if (document.hidden) return true;
+  if (isTauri()) return session.idleMs >= IDLE_LIMIT_MS;
+  return Date.now() - lastLocalInput >= IDLE_LIMIT_MS;
+}
+
+function asideBlocked(): boolean {
+  const state = useCompanionStore.getState();
+  return (
+    !state.ready ||
+    !state.settings.onboardingComplete ||
+    state.sending ||
+    state.composerOpen ||
+    !state.settings.positionLocked ||
+    state.bubbleVisible ||
+    state.characterState.speaking ||
+    asideRunning ||
+    systemIdle()
+  );
+}
+
+function scheduleAside(): void {
+  if (asideTimer !== undefined) clearTimeout(asideTimer);
+  asideTimer = setTimeout(() => {
+    asideTimer = undefined;
+    void runAside();
+  }, asideDelayMs());
+}
+
+async function runAside(): Promise<void> {
+  if (asideBlocked()) {
+    scheduleAside();
+    return;
+  }
+  asideRunning = true;
+  try {
+    let replied = false;
+    const message = await session.aside(
+      (characterState) => useCompanionStore.setState({ characterState }),
+      (text) => {
+        const content = text.trim();
+        if (!content) return;
+        replied = true;
+        const state = useCompanionStore.getState();
+        useCompanionStore.setState({
+          messages: [...state.messages, { role: 'assistant', content }],
+          lookupHits: session.debug.loadedMemories,
+          behaviorSummary: session.debug.behavior,
+          provider: session.debug.provider,
+          lastError: session.debug.lastError,
+          llmAction: session.debug.llmAction,
+          plannedAction: session.debug.plannedAction,
+          playedAction: session.debug.playedAction,
+          bubbleVisible: true,
+          bubbleText: content,
+        });
+      },
+    );
+    useCompanionStore.setState({
+      lookupHits: session.debug.loadedMemories,
+      behaviorSummary: session.debug.behavior,
+      provider: session.debug.provider,
+      lastError: session.debug.lastError,
+      llmAction: session.debug.llmAction,
+      plannedAction: session.debug.plannedAction,
+      playedAction: session.debug.playedAction,
+    });
+    if (replied && message.trim()) hideBubbleLater(useCompanionStore.setState);
+  } catch (error) {
+    const lastError = {
+      source: 'ai' as const,
+      message: error instanceof Error ? error.message : 'The companion failed to reply.',
+      detail: error instanceof Error ? error.stack : String(error),
+    };
+    console.error('[yuta:ai]', error);
+    useCompanionStore.setState({ lastError, bubbleVisible: false, bubbleText: null });
+  } finally {
+    asideRunning = false;
+    scheduleAside();
+  }
+}
+
+function startAsides(): void {
+  if (asidesStarted) return;
+  asidesStarted = true;
+  if (!isTauri()) bindLocalInput();
+  scheduleAside();
+}
 
 export async function applyAlwaysOnTop(value: boolean): Promise<void> {
   await setAlwaysOnTop(value);

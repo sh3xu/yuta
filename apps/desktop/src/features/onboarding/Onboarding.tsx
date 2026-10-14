@@ -13,7 +13,7 @@ export function Onboarding() {
   const finish = async () => {
     setSaving(true);
     try {
-      await save({ ...draft, onboardingComplete: true, positionLocked: false }, { silent: true });
+      await save({ ...draft, onboardingComplete: true, positionLocked: true }, { silent: true });
     } finally {
       setSaving(false);
     }
@@ -29,7 +29,7 @@ export function Onboarding() {
           <p className="text-[10px] uppercase tracking-[0.3em] text-accent">Yuta</p>
           <h1 className="font-display text-2xl leading-7">A sticker that stays on your desktop.</h1>
           <p className="text-sm text-mute">
-            Click the companion to talk. Place them once, then they stay put.
+            She stays on the desktop and clicks pass through her. Move her later from Settings.
           </p>
           <Button className="self-start" onClick={next}>
             Continue

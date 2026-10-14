@@ -61,6 +61,16 @@ export class MockProvider implements AIProvider {
   readonly id = 'mock';
 
   async generate(request: AIRequest, options?: AIGenerateOptions): Promise<AIResponse> {
+    if (request.aside) {
+      const line = ASIDES[request.history.length % ASIDES.length] ?? ASIDES[0];
+      return {
+        message: line,
+        emotion: { name: 'happy', intensity: 0.45 },
+        action: { name: 'headTilt', intensity: 0.55 },
+        memory: { shouldStore: false },
+      };
+    }
+
     const hit = KEYWORDS.find((item) => item.match.test(request.userMessage));
     const emotion = hit?.emotion ?? 'neutral';
     const action = hit?.action ?? 'nod';
@@ -77,6 +87,14 @@ export class MockProvider implements AIProvider {
     };
   }
 }
+
+const ASIDES = [
+  'Still here, by the way.',
+  'You look busy. I will keep it short.',
+  'Hey. Just saying hi.',
+  'I am around if you need me.',
+  'Nice to see you at the desk.',
+];
 
 const LOOKUP_QUERY =
   /\b(remember|who is|what's my|whats my|what is my|did i (tell|say)|have i told|my name|favorite)\b/i;
