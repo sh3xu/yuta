@@ -32,7 +32,7 @@ export function DesktopSection() {
     <div className="flex shrink-0 flex-col gap-3">
       <SectionCard
         title="Placement"
-        description="The sticker always lets clicks through. Lock and unlock only happen here."
+        description="Unlock to drag her. Lock keeps her still and lets clicks pass through."
         icon={<Pin className="size-4" />}
       >
         <div className="grid grid-cols-2 gap-2">
@@ -55,8 +55,8 @@ export function DesktopSection() {
         </div>
         <p className="text-[11px] leading-4 text-mute">
           {settings.positionLocked
-            ? 'Position is locked. Unlock, then use Place here with the pointer where you want her.'
-            : 'Position is unlocked. Move the pointer, then press Place here.'}
+            ? 'Locked. She cannot be dragged, and clicks pass through her.'
+            : 'Unlocked. Drag her on the desktop, then press Lock.'}
         </p>
         <button
           type="button"

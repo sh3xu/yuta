@@ -62,6 +62,12 @@ export async function setOuterPosition(x: number, y: number): Promise<void> {
   await window.setPosition(new PhysicalPosition(x, y));
 }
 
+export async function startWindowDrag(): Promise<void> {
+  if (!isTauri()) return;
+  const { getCurrentWindow } = await import('@tauri-apps/api/window');
+  await getCurrentWindow().startDragging();
+}
+
 export async function setIgnoreCursorEvents(ignore: boolean): Promise<void> {
   if (!isTauri()) return;
   const { getCurrentWindow } = await import('@tauri-apps/api/window');
