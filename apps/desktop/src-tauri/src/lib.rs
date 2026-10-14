@@ -2,10 +2,11 @@ use serde::Serialize;
 use tauri::{
     menu::{Menu, MenuItem, PredefinedMenuItem},
     tray::TrayIconBuilder,
-    Emitter, Manager,
+    Emitter, Listener, Manager,
 };
 
 mod activity;
+mod click_through;
 mod pointer;
 #[cfg(windows)]
 mod loopback;
@@ -79,6 +80,16 @@ pub fn run() {
             });
 
             pointer::start(app.handle().clone());
+            click_through::install(app.handle().clone());
+            app.listen("set-click-through", |event| {
+                #[derive(serde::Deserialize)]
+                struct Payload {
+                    ignore: bool,
+                }
+                if let Ok(payload) = serde_json::from_str::<Payload>(event.payload()) {
+                    click_through::request(payload.ignore);
+                }
+            });
 
             let activity = app.handle().clone();
             std::thread::spawn(move || activity::run(activity));

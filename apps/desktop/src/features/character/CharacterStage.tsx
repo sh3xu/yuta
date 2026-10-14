@@ -135,9 +135,10 @@ export function CharacterStage() {
     let unlisten: (() => void) | undefined;
     let cancelled = false;
     const applyIgnore = (ignore: boolean) => {
-      if (!isTauri() || ignoreRef.current === ignore) return;
-      ignoreRef.current = ignore;
-      void setIgnoreCursorEvents(ignore);
+      const next = lockedRef.current || ignore;
+      if (!isTauri() || ignoreRef.current === next) return;
+      ignoreRef.current = next;
+      void setIgnoreCursorEvents(next);
     };
     void setIgnoreCursorEvents(true);
     void subscribeCursorMove((point) => {
@@ -147,9 +148,14 @@ export function CharacterStage() {
       const scale = win.scale || 1;
       const clientX = (point.x - win.x) / scale;
       const clientY = (point.y - win.y) / scale;
-      const overUi = Boolean(document.elementFromPoint(clientX, clientY)?.closest('[data-yuta-hit="ui"]'));
-      const overModel = !lockedRef.current && renderer.hitTest(clientX, clientY);
-      applyIgnore(!overUi && !overModel && !dragRef.current.active);
+      if (lockedRef.current) {
+        dragRef.current.active = false;
+        applyIgnore(true);
+      } else {
+        const overUi = Boolean(document.elementFromPoint(clientX, clientY)?.closest('[data-yuta-hit="ui"]'));
+        const overModel = renderer.hitTest(clientX, clientY);
+        applyIgnore(!overUi && !overModel && !dragRef.current.active);
+      }
       renderer.setLookEnabled(followRef.current);
       if (!followRef.current) {
         renderer.setLookTarget(0, 0);

@@ -71,9 +71,9 @@ export async function startWindowDrag(): Promise<void> {
 export async function setIgnoreCursorEvents(ignore: boolean): Promise<void> {
   if (!isTauri()) return;
   const { getCurrentWindow } = await import('@tauri-apps/api/window');
-  const current = getCurrentWindow();
-  if (current.label !== MAIN_WINDOW_LABEL) return;
-  await current.setIgnoreCursorEvents(ignore);
+  if (getCurrentWindow().label !== MAIN_WINDOW_LABEL) return;
+  const { emit } = await import('@tauri-apps/api/event');
+  await emit('set-click-through', { ignore });
 }
 
 export async function closeWindow(): Promise<void> {

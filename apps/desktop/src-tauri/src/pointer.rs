@@ -148,6 +148,9 @@ mod windows {
                             x: info.point.x,
                             y: info.point.y,
                         });
+                        if crate::click_through::swallow_wheel(info.point.x, info.point.y, delta) {
+                            return 1;
+                        }
                     }
                 }
                 _ => {}
